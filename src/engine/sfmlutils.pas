@@ -9,6 +9,8 @@ type
 
 function loadSprite(filename:string):TSfmlSprite ; overload ;
 function loadSprite(filename:string; options:TSpriteLoaderOptions):TSfmlSprite ; overload ;
+function createText(Font:TSfmlFont; utf8str:string; size:Integer;
+  color:TSfmlColor):TSfmlText ;
 function createSFMLColor(color:Cardinal):TSfmlColor ;
 function createSFMLColorAlpha(color:Cardinal; alpha:Byte):TSfmlColor ;
 function SfmlVector2i(X, Y: Integer): TSfmlVector2i;
@@ -31,6 +33,16 @@ begin
   Result.SetTexture(tex,True) ;
   if (sloCentered in options) then
     Result.Origin:=SfmlVector2f(tex.Size.X/2,tex.Size.Y/2) ;
+end ;
+
+function createText(font:TSfmlFont; utf8str:string; size:Integer;
+  color:TSfmlColor):TSfmlText ;
+begin
+  Result:=TSfmlText.Create;
+  Result.UnicodeString:=UTF8ToString(utf8str);
+  Result.Font:=font.Handle;
+  Result.CharacterSize:=size;
+  Result.FillColor:=color;
 end ;
 
 function createSFMLColor(color:Cardinal):TSfmlColor ;

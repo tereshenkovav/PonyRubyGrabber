@@ -80,12 +80,7 @@ begin
     SfmlImageDestroy(pimg) ;
   end;
 
-  textLevel:=TSfmlText.Create;
-  textLevel.UnicodeString:=UTF8Decode('LEVEL: 1');
-  textLevel.Font:=TCommonData.Font.Handle;
-  textLevel.CharacterSize:=18;
-  textLevel.Color:=SfmlWhite;
-  textLevel.Position:=SfmlVector2f(CELL_WIDTH*23+20,10) ;
+  textLevel:=createText(TCommonData.Font,'LEVEL 1',18,SfmlWhite) ;
 
   level:=TLevel.Create ;
   level.LoadFromFile('levels'+PATH_SEP+'level1.dat');
@@ -123,7 +118,8 @@ begin
     else
       drawSprite(window,spr_icons[i],CELL_WIDTH*23+(1024-CELL_WIDTH*23)/2,85+70*i) ;
 
-  window.Draw(textLevel) ;
+  DrawTextCentered(window,textLevel,CELL_WIDTH*23+(1024-CELL_WIDTH*23)/2,10) ;
+
   DrawSprite(window,cursor,mx,my) ;
 end ;
 

@@ -23,6 +23,8 @@ type
   private
   protected
     procedure drawSprite(window:TSfmlRenderWindow; spr:TSfmlSprite; x,y:Single) ;
+    procedure drawText(window:TSfmlRenderWindow; text:TSfmlText; x,y:Single) ;
+    procedure drawTextCentered(window:TSfmlRenderWindow; text:TSfmlText; x,y:Single) ;
   public
     constructor Create() ;
     function Init():Boolean ; virtual ;
@@ -66,6 +68,20 @@ procedure TScene.drawSprite(window: TSfmlRenderWindow; spr: TSfmlSprite; x,
 begin
   spr.Position:=SfmlVector2f(x,y) ;
   window.draw(spr) ;
+end;
+
+procedure TScene.drawText(window: TSfmlRenderWindow; text: TSfmlText; x,
+  y: Single);
+begin
+  text.Position:=SfmlVector2f(x,y) ;
+  window.Draw(text) ;
+end;
+
+procedure TScene.drawTextCentered(window: TSfmlRenderWindow; text: TSfmlText; x,
+  y: Single);
+begin
+  text.Position:=SfmlVector2f(x-text.LocalBounds.Width/2,y) ;
+  window.Draw(text) ;
 end;
 
 { TSfmlEventEx }
