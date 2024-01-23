@@ -108,6 +108,8 @@
         </DelphiCompile>
         <DCCReference Include="core\main.pas"/>
         <DCCReference Include="core\scenetest.pas"/>
+        <DCCReference Include="core\level.pas"/>
+        <DCCReference Include="core\commondata.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

@@ -10,7 +10,7 @@ type
   end;
 
 implementation
-uses Game, SceneTest ;
+uses Game, SceneTest, CommonData ;
 
 procedure TMain.Run() ;
 var game:TGame ;
@@ -18,7 +18,9 @@ var game:TGame ;
 begin
   game:=TGame.Create() ;
   scene:=TSceneTest.Create() ;
+  TCommonData.Init() ;
   game.Run(scene) ;
+  TCommonData.UnInit() ;
 end ;
 
 end.

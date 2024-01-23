@@ -33,8 +33,8 @@ begin
   ChDir(ExtractFilePath(ParamStr(0))+PATH_SEP+'..'+PATH_SEP+'data') ;
   Randomize() ;
 
-  mode.Width := 800;
-  mode.Height := 600;
+  mode.Width := 1024;
+  mode.Height := 768;
   mode.BitsPerPixel := 32;
   {$ifndef Darwin}
   if not SfmlVideoModeIsValid(Mode) then
@@ -83,6 +83,7 @@ begin
     scene.RenderFunc(window) ;
     window.Display;
   end;
+  scene.UnInit() ;
 end;
 
 destructor TGame.Destroy();
