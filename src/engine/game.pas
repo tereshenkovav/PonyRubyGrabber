@@ -18,7 +18,7 @@ type
     mode: TSfmlVideoMode;
     scene: TScene ;
   public
-    constructor Create() ;
+    constructor Create(width,height:Integer) ;
     procedure Run(initscene:TScene) ;
     destructor Destroy() ; override ;
   end;
@@ -28,13 +28,13 @@ uses Helpers ;
 
 { TGame }
 
-constructor TGame.Create();
+constructor TGame.Create(width,height:Integer);
 begin
   ChDir(ExtractFilePath(ParamStr(0))+PATH_SEP+'..'+PATH_SEP+'data') ;
   Randomize() ;
 
-  mode.Width := 1024;
-  mode.Height := 768;
+  mode.Width := width;
+  mode.Height := height;
   mode.BitsPerPixel := 32;
   {$ifndef Darwin}
   if not SfmlVideoModeIsValid(Mode) then
@@ -54,6 +54,7 @@ var lasttime,newtime:Single ;
     events:TUniList<TSfmlEventEx> ;
 begin
   scene:=initscene ;
+  scene.setWindow(window,mode.Width,mode.Height) ;
   scene.Init() ;
 
   events:=TUniList<TSfmlEventEx>.Create() ;
@@ -80,7 +81,7 @@ begin
     end ;
 
     window.Clear(SfmlBlack);
-    scene.RenderFunc(window) ;
+    scene.RenderFunc() ;
     window.Display;
   end;
   scene.UnInit() ;

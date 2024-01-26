@@ -23,7 +23,7 @@ type
   public
     function Init():Boolean ; override ;
     function FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ; override ;
-    procedure RenderFunc(window:TSfmlRenderWindow) ; override ;
+    procedure RenderFunc() ; override ;
     procedure UnInit() ; override ;
   end;
 
@@ -97,7 +97,7 @@ begin
     end ;
 end ;
 
-procedure TSceneTest.RenderFunc(window:TSfmlRenderWindow) ;
+procedure TSceneTest.RenderFunc() ;
 var mx,my:Integer ;
     i,j:Integer ;
 
@@ -107,20 +107,20 @@ begin
 
   for i := 0 to level.getWidth()-1 do
     for j := 0 to level.getHeight-1 do begin
-      if level.isBlockAt(i,j) then drawSprite(window,spr_block,CELL_WIDTH*i,CELL_HEIGHT*j) ;
-      if level.isStairAt(i,j) then drawSprite(window,spr_stair,CELL_WIDTH*i,CELL_HEIGHT*j) ;
-      if level.isCrystallAt(i,j) then drawSprite(window,spr_crystall,CELL_WIDTH*i,CELL_HEIGHT*j) ;
+      if level.isBlockAt(i,j) then drawSprite(spr_block,CELL_WIDTH*i,CELL_HEIGHT*j) ;
+      if level.isStairAt(i,j) then drawSprite(spr_stair,CELL_WIDTH*i,CELL_HEIGHT*j) ;
+      if level.isCrystallAt(i,j) then drawSprite(spr_crystall,CELL_WIDTH*i,CELL_HEIGHT*j) ;
     end;
 
   for i := 0 to Length(spr_icons)-1 do
     if i>2 then
-      drawSprite(window,spr_icons_gray[i],CELL_WIDTH*23+(1024-CELL_WIDTH*23)/2,85+70*i)
+      drawSprite(spr_icons_gray[i],(CELL_WIDTH*23+wwidth)/2,85+70*i)
     else
-      drawSprite(window,spr_icons[i],CELL_WIDTH*23+(1024-CELL_WIDTH*23)/2,85+70*i) ;
+      drawSprite(spr_icons[i],(CELL_WIDTH*23+wwidth)/2,85+70*i) ;
 
-  DrawTextCentered(window,textLevel,CELL_WIDTH*23+(1024-CELL_WIDTH*23)/2,10) ;
+  DrawTextCentered(textLevel,(CELL_WIDTH*23+wwidth)/2,10) ;
 
-  DrawSprite(window,cursor,mx,my) ;
+  DrawSprite(cursor,mx,my) ;
 end ;
 
 procedure TSceneTest.UnInit() ;

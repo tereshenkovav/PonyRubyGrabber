@@ -22,14 +22,18 @@ type
   TScene = class
   private
   protected
-    procedure drawSprite(window:TSfmlRenderWindow; spr:TSfmlSprite; x,y:Single) ;
-    procedure drawText(window:TSfmlRenderWindow; text:TSfmlText; x,y:Single) ;
-    procedure drawTextCentered(window:TSfmlRenderWindow; text:TSfmlText; x,y:Single) ;
+    window:TSfmlRenderWindow ;
+    wwidth:Integer ;
+    wheight:Integer ;
+    procedure drawSprite(spr:TSfmlSprite; x,y:Single) ;
+    procedure drawText(text:TSfmlText; x,y:Single) ;
+    procedure drawTextCentered(text:TSfmlText; x,y:Single) ;
   public
     constructor Create() ;
+    procedure setWindow(Awindow:TSfmlRenderWindow; Awidth,Aheight:Integer);
     function Init():Boolean ; virtual ;
     function FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ; virtual ;
-    procedure RenderFunc(window:TSfmlRenderWindow) ; virtual ;
+    procedure RenderFunc() ; virtual ;
     procedure UnInit() ; virtual ;
     destructor Destroy() ; override ;
   end;
@@ -50,9 +54,17 @@ function TScene.FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult
 begin
 end ;
 
-procedure TScene.RenderFunc(window:TSfmlRenderWindow) ;
+procedure TScene.RenderFunc() ;
 begin
 end ;
+
+procedure TScene.setWindow(Awindow: TSfmlRenderWindow; Awidth,
+  Aheight: Integer);
+begin
+  window:=Awindow ;
+  wwidth:=Awidth ;
+  wheight:=Aheight ;
+end;
 
 procedure TScene.UnInit() ;
 begin
@@ -63,21 +75,21 @@ begin
   inherited Destroy();
 end;
 
-procedure TScene.drawSprite(window: TSfmlRenderWindow; spr: TSfmlSprite; x,
+procedure TScene.drawSprite(spr: TSfmlSprite; x,
   y: Single);
 begin
   spr.Position:=SfmlVector2f(x,y) ;
   window.draw(spr) ;
 end;
 
-procedure TScene.drawText(window: TSfmlRenderWindow; text: TSfmlText; x,
+procedure TScene.drawText(text: TSfmlText; x,
   y: Single);
 begin
   text.Position:=SfmlVector2f(x,y) ;
   window.Draw(text) ;
 end;
 
-procedure TScene.drawTextCentered(window: TSfmlRenderWindow; text: TSfmlText; x,
+procedure TScene.drawTextCentered(text: TSfmlText; x,
   y: Single);
 begin
   text.Position:=SfmlVector2f(x-text.LocalBounds.Width/2,y) ;
