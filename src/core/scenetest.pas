@@ -4,7 +4,7 @@ interface
 
 uses
   Classes, SysUtils,
-  SfmlSystem,SfmlWindow,SfmlGraphics,
+  SfmlSystem,SfmlWindow,SfmlGraphics,SfmlAudio,
   Helpers, Scene, Level, SfmlAnimation ;
 
 type
@@ -34,6 +34,8 @@ type
     ismirr:Boolean ;
     left_scale_bot:TSfmlVector2f ;
     right_scale_bot:TSfmlVector2f ;
+    galop:TSfmlSound ;
+    grab:TSfmlSound ;
     function isWayCorrect(x, y: Integer): Boolean;
     procedure setCmdToDxy();
     function fixXifCrossed(stopx, dx:Single):Boolean ;
@@ -202,6 +204,11 @@ begin
   walkbot.Scale(0.75,0.75) ;
   walkbot.Play() ;
 
+  galop:=TSfmlSound.Create(TSfmlSoundBuffer.Create('sounds'+PATH_SEP+'galop.ogg'));
+  galop.Loop:=True ;
+  galop.Stop() ;
+  grab:=TSfmlSound.Create(TSfmlSoundBuffer.Create('sounds'+PATH_SEP+'grab.ogg'));
+
   level:=TLevel.Create ;
   level.LoadFromFile('levels'+PATH_SEP+'level1.dat');
 
@@ -279,10 +286,18 @@ begin
   // Поедание ячеек
   if level.isCrystallAt(Trunc(player_x+0.5),Trunc(player_y+0.5)) then begin
     level.clearCell(Trunc(player_x+0.5),Trunc(player_y+0.5)) ;
+    grab.Play() ;
   end;
 
   if player_dx=-1 then ismirr:=True ;
   if player_dx=1 then ismirr:=False ;
+
+  if (player_dx<>0)or(player_dy<>0) then begin
+    if galop.Status<>sfPlaying then galop.Play() ;
+  end
+  else begin
+    if galop.Status=sfPlaying then galop.Pause() ;
+  end ;
 
   walkbot.Update(dt) ;
 end ;
