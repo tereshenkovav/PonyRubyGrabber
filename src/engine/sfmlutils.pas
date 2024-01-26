@@ -6,6 +6,7 @@ uses SfmlGraphics,SfmlSystem ;
 type
   TSpriteLoaderOption = (sloCentered,sloNoSmooth,sloMipmap) ;
   TSpriteLoaderOptions = set of TSpriteLoaderOption ;
+  TFuncConvertPixel = function (c:TSfmlColor):TSfmlColor ;
 
 function loadSprite(filename:string):TSfmlSprite ; overload ;
 function loadSprite(filename:string; options:TSpriteLoaderOptions):TSfmlSprite ; overload ;
@@ -14,9 +15,30 @@ function createText(Font:TSfmlFont; utf8str:string; size:Integer;
 function createSFMLColor(color:Cardinal):TSfmlColor ;
 function createSFMLColorAlpha(color:Cardinal; alpha:Byte):TSfmlColor ;
 function SfmlVector2i(X, Y: Integer): TSfmlVector2i;
+procedure convertSpriteTexture(sprite:TSfmlSprite; converter:TFuncConvertPixel) ;
+function funcMakeGray(c:TSfmlColor):TSfmlColor ;
 
 implementation
 uses SysUtils, Helpers ;
+
+function funcMakeGray(c:TSfmlColor):TSfmlColor ;
+var gr:Integer ;
+begin
+  gr:=(c.R+c.G+c.B) div 3 ;
+  Result:=SfmlColorFromRGBA(gr,gr,gr,c.A) ;
+end;
+
+procedure convertSpriteTexture(sprite:TSfmlSprite; converter:TFuncConvertPixel) ;
+var x,y:Integer ;
+    pimg:PSfmlImage ;
+begin
+  pimg:=SfmlTextureCopyToImage(sprite.Texture) ;
+  for x:=0 to SfmlImageGetSize(pimg).x-1 do
+    for y:=0 to SfmlImageGetSize(pimg).y-1 do
+      SfmlImageSetPixel(pimg,x,y,converter(SfmlImageGetPixel(pimg,x,y))) ;
+  SfmlTextureUpdateFromImage(sprite.Texture,pimg,0,0) ;
+  SfmlImageDestroy(pimg) ;
+end;
 
 function loadSprite(filename:string):TSfmlSprite ;
 begin

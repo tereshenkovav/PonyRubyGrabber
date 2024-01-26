@@ -36,10 +36,7 @@ const CELL_HEIGHT=40 ;
 { TSceneTest }
 
 function TSceneTest.Init():Boolean ;
-var i,x,y:Integer ;
-    pimg:PSfmlImage ;
-    c:TSfmlColor ;
-    gr:Integer ;
+var i:Integer ;
 begin
   Cursor:=loadSprite('images'+PATH_SEP+'cursor.png');
   Cursor.Origin:=SfmlVector2f(0,10) ;
@@ -68,17 +65,8 @@ begin
   for i := 0 to Length(spr_icons_gray)-1 do
     spr_icons_gray[i].Scale(0.75,0.75) ;
 
-  for i := 0 to Length(spr_icons_gray)-1 do begin
-    pimg:=SfmlTextureCopyToImage(spr_icons_gray[i].Texture) ;
-    for x:=0 to SfmlImageGetSize(pimg).x-1 do
-      for y:=0 to SfmlImageGetSize(pimg).y-1 do begin
-        c:=SfmlImageGetPixel(pimg,x,y) ;
-        gr:=(c.R+c.G+c.B) div 3 ;
-        SfmlImageSetPixel(pimg,x,y,SfmlColorFromRGBA(gr,gr,gr,C.A)) ;
-      end ;
-    SfmlTextureUpdateFromImage(spr_icons_gray[i].Texture,pimg,0,0) ;
-    SfmlImageDestroy(pimg) ;
-  end;
+  for i := 0 to Length(spr_icons_gray)-1 do
+    convertSpriteTexture(spr_icons_gray[i],funcMakeGray) ;
 
   textLevel:=createText(TCommonData.Font,'LEVEL 1',18,SfmlWhite) ;
 
