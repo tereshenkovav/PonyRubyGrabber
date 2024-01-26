@@ -18,6 +18,7 @@ type
     function isBlockAt(x,y:Integer):Boolean ;
     function isStairAt(x,y:Integer):Boolean ;
     function isCrystallAt(x,y:Integer):Boolean ;
+    procedure clearCell(x,y:Integer) ;
     function getWidth():Integer ;
     function getHeight():Integer ;
   end;
@@ -26,6 +27,12 @@ implementation
 uses Classes, SysUtils ;
 
 { TLevel }
+
+procedure TLevel.clearCell(x, y: Integer);
+begin
+  if (x<0) or (x>=width) or (y<0) or (y>=height) then Exit() ;
+  map[x][y]:=TCellType.Free ;
+end;
 
 function TLevel.getHeight: Integer;
 begin

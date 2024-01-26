@@ -50,9 +50,7 @@ uses SfmlUtils, CommonData ;
 
 const CELL_HEIGHT=40 ;
       CELL_WIDTH=40 ;
-
       PLAYER_SPEED = 5 ;
-
 
 function cmd2sig(cmd:TCommand):Integer ;
 begin
@@ -277,6 +275,11 @@ begin
 
   player_x:=player_x+player_dx*PLAYER_SPEED*dt ;
   player_y:=player_y+player_dy*PLAYER_SPEED*dt ;
+
+  // Поедание ячеек
+  if level.isCrystallAt(Trunc(player_x+0.5),Trunc(player_y+0.5)) then begin
+    level.clearCell(Trunc(player_x+0.5),Trunc(player_y+0.5)) ;
+  end;
 
   if player_dx=-1 then ismirr:=True ;
   if player_dx=1 then ismirr:=False ;
