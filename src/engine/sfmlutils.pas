@@ -16,7 +16,7 @@ function createSFMLColorAlpha(color:Cardinal; alpha:Byte):TSfmlColor ;
 function SfmlVector2i(X, Y: Integer): TSfmlVector2i;
 
 implementation
-uses SysUtils ;
+uses SysUtils, Helpers ;
 
 function loadSprite(filename:string):TSfmlSprite ;
 begin

@@ -44,6 +44,10 @@ end;
 function readAllText(filename:string):string ;
 
 {$ifdef fpc}
+function UTF8ToString(const S: string): string;
+{$endif}
+
+{$ifdef fpc}
 {$ifdef unix}
 const PATH_SEP = '/' ;
 {$else}
@@ -105,5 +109,12 @@ begin
   Result:=TFile.ReadAllText(filename) ;
   {$endif}
 end ;
+
+{$ifdef fpc}
+function UTF8ToString(const S: string): string;
+begin
+  Result:=UTF8Decode(S) ;
+end ;
+{$endif}
 
 end.

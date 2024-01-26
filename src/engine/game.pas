@@ -40,7 +40,7 @@ begin
   if not SfmlVideoModeIsValid(Mode) then
     raise Exception.Create('Invalid video mode');
   {$endif}
-  window := TSfmlRenderWindow.Create(mode, UTF8Decode('Game'),
+  window := TSfmlRenderWindow.Create(mode, UTF8ToString('Game'),
     [sfClose], nil);
   window.SetVerticalSyncEnabled(True);
   window.setFramerateLimit(60);
