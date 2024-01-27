@@ -24,6 +24,7 @@ type
     textLevel:TSfmlText ;
     waitbot:TSfmlSprite ;
     walkbot:TSfmlAnimation ;
+    portal:TSfmlAnimation ;
     // Позиция игрока
     player_x:Single ;
     player_y:Single ;
@@ -204,6 +205,10 @@ begin
   walkbot.Scale(0.75,0.75) ;
   walkbot.Play() ;
 
+  portal:=TSfmlAnimation.Create('images'+PATH_SEP+'portal.png',4,4);
+  portal.Origin:=SfmlVector2f(SfmlTextureGetSize(portal.Texture).x/2,0) ;
+  portal.Play() ;
+
   galop:=TSfmlSound.Create(TSfmlSoundBuffer.Create('sounds'+PATH_SEP+'galop.ogg'));
   galop.Loop:=True ;
   galop.Stop() ;
@@ -299,6 +304,7 @@ begin
   end ;
 
   walkbot.Update(dt) ;
+  portal.Update(dt) ;
 end ;
 
 procedure TSceneTest.RenderFunc() ;
@@ -314,6 +320,7 @@ begin
       if level.isBlockAt(i,j) then drawSprite(spr_block,CELL_WIDTH*i,CELL_HEIGHT*j) ;
       if level.isStairAt(i,j) then drawSprite(spr_stair,CELL_WIDTH*i,CELL_HEIGHT*j) ;
       if level.isCrystallAt(i,j) then drawSprite(spr_crystall,CELL_WIDTH*i,CELL_HEIGHT*j) ;
+      if level.isFinishAt(i,j) then DrawSprite(portal, CELL_WIDTH*(i+0.5), CELL_HEIGHT*j) ;
     end;
 
   for i := 0 to Length(spr_icons)-1 do

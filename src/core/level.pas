@@ -14,6 +14,7 @@ type
     width:Integer ;
     height:Integer ;
     start:TPoint ;
+    finish:TPoint ;
     map:array of array of TCellType ;
   public
     procedure LoadFromFile(filename:string) ;
@@ -24,6 +25,7 @@ type
     function getWidth():Integer ;
     function getHeight():Integer ;
     procedure fillStartXY(var x:single; var y:single);
+    function isFinishAt(x,y:Integer):Boolean ;
   end;
 
 implementation
@@ -65,6 +67,12 @@ begin
   Result:=map[x][y]=TCellType.Crystall ;
 end;
 
+function TLevel.isFinishAt(x, y: Integer): Boolean;
+begin
+  if (x<0) or (x>=width) or (y<0) or (y>=height) then Exit(False) ;
+  Result:=(x=finish.X)and(y=finish.Y) ;
+end;
+
 function TLevel.isStairAt(x, y: Integer): Boolean;
 begin
   if (x<0) or (x>=width) or (y<0) or (y>=height) then Exit(False) ;
@@ -93,6 +101,10 @@ begin
       if list[2+y][x+1]='S' then begin
         start:=Point(x,y) ;
         ct:=TCellType.Free ; // Защита от спавна поверх алмаза
+      end;
+      if list[2+y][x+1]='F' then begin
+        finish:=Point(x,y) ;
+        ct:=TCellType.Free ; // Защита от портала поверх алмаза
       end;
       map[x][y]:=ct ;
     end ;
