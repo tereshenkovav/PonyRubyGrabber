@@ -81,28 +81,33 @@ end;
 
 procedure TLevel.LoadFromFile(filename:string) ;
 var list:TStringList ;
-    x,y:Integer ;
+    i,x,y:Integer ;
     ct:TCellType ;
+    str:string ;
 begin
   list:=TStringList.Create ;
   list.LoadFromFile(filename) ;
-  width:=StrToInt(list[0]) ;
-  height:=StrToInt(list[1]) ;
+  for i := 0 to list.Count-1 do
+    list[i]:=Trim(list[i]) ;
+  width:=StrToInt(list.Values['Width']) ;
+  height:=StrToInt(list.Values['Height']) ;
   SetLength(map,width) ;
   for x := 0 to width-1 do
     SetLength(map[x],height) ;
 
   for y := 0 to height-1 do
     for x := 0 to width-1 do begin
+      str:=list.Values['Row'+IntToStr(y)] ;
+      if str.Length<width then str:=str+StringOfChar(chr(32),width-str.Length) ;
       ct:=TCellType.Free ;
       if (x+y div 2)mod 2=0 then ct:=TCellType.Crystall ;
-      if list[2+y][x+1]='#' then ct:=TCellType.Stair ;
-      if list[2+y][x+1]='=' then ct:=TCellType.Block ;
-      if list[2+y][x+1]='S' then begin
+      if str[x+1]='#' then ct:=TCellType.Stair ;
+      if str[x+1]='*' then ct:=TCellType.Block ;
+      if str[x+1]='S' then begin
         start:=Point(x,y) ;
         ct:=TCellType.Free ; // Защита от спавна поверх алмаза
       end;
-      if list[2+y][x+1]='F' then begin
+      if str[x+1]='F' then begin
         finish:=Point(x,y) ;
         ct:=TCellType.Free ; // Защита от портала поверх алмаза
       end;
