@@ -3,7 +3,7 @@ unit helpers ;
 interface
 
 {$ifdef fpc}
-uses fgl, classes ;
+uses fgl, classes, SysUtils ;
 {$else}
 uses Generics.Collections, Generics.Defaults, IOUtils, SysUtils ;
 {$endif}
