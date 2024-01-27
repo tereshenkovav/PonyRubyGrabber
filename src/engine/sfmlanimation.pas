@@ -77,7 +77,7 @@ begin
     end ;
   end;
   tekt:=0 ;
-  Update(0) ;
+  setTexture(frames[0]) ;
 end;
 
 constructor TSfmlAnimation.Create(filename: string; AFrameCount: Integer;
@@ -104,7 +104,7 @@ begin
     Inc(area.Left,area.Width) ;
   end;
   tekt:=0 ;
-  Update(0) ;
+  setTexture(frames[0]) ;
 end;
 
 destructor TSfmlAnimation.Destroy;
