@@ -43,6 +43,12 @@ end;
 
 function readAllText(filename:string):string ;
 
+// Конвертирует Int в Str с учетом нуля. Т.е., вернет '', если 0
+function IntToStrWt0(a:Integer):string ;
+
+// Конвертирует Str в Int с учетом нуля. Т.е., вернет 0, если ''
+function StrToIntWt0(s:string):Integer ;
+
 {$ifdef fpc}
 function UTF8ToString(const S: string): string;
 {$endif}
@@ -116,5 +122,15 @@ begin
   Result:=UTF8Decode(S) ;
 end ;
 {$endif}
+
+function IntToStrWt0(a:Integer):string ;
+begin
+  if a=0 then Result:='' else Result:=IntToStr(a) ;
+end ;
+
+function StrToIntWt0(s:string):Integer ;
+begin
+  if Trim(s)='' then Result:=0 else Result:=StrToInt(s) ;
+end ;
 
 end.

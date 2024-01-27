@@ -215,7 +215,7 @@ begin
   grab:=TSfmlSound.Create(TSfmlSoundBuffer.Create('sounds'+PATH_SEP+'grab.ogg'));
 
   level:=TLevel.Create ;
-  level.LoadFromFile('levels'+PATH_SEP+'level1.dat');
+  level.LoadFromFile('levels'+PATH_SEP+'level0.dat');
 
   tek_cmd:=cmdNone ;
   player_dx:=0 ;

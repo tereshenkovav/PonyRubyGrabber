@@ -29,7 +29,8 @@ type
   end;
 
 implementation
-uses Classes, SysUtils ;
+uses Classes, SysUtils,
+  Helpers ;
 
 { TLevel }
 
@@ -84,35 +85,46 @@ var list:TStringList ;
     i,x,y:Integer ;
     ct:TCellType ;
     str:string ;
+    left,top:Integer ;
+    dataw,datah:Integer ;
 begin
   list:=TStringList.Create ;
   list.LoadFromFile(filename) ;
   for i := 0 to list.Count-1 do
     list[i]:=Trim(list[i]) ;
-  width:=StrToInt(list.Values['Width']) ;
-  height:=StrToInt(list.Values['Height']) ;
+  dataw:=StrToIntWt0(list.Values['Width']) ;
+  datah:=StrToIntWt0(list.Values['Height']) ;
+  left:=StrToIntWt0(list.Values['Left']) ;
+  top:=StrToIntWt0(list.Values['Top']) ;
+  width:=dataw+left ;
+  height:=datah+top ;
   SetLength(map,width) ;
   for x := 0 to width-1 do
     SetLength(map[x],height) ;
 
   for y := 0 to height-1 do
-    for x := 0 to width-1 do begin
-      str:=list.Values['Row'+IntToStr(y)] ;
-      if str.Length<width then str:=str+StringOfChar(chr(32),width-str.Length) ;
+    for x := 0 to width-1 do
+      map[x][y]:=TCellType.Free ;
+
+  for y := 0 to datah-1 do begin
+    str:=list.Values['Row'+IntToStr(y)] ;
+    if str.Length<dataw then str:=str+StringOfChar(chr(32),dataw-str.Length) ;
+    for x := 0 to dataw-1 do begin
       ct:=TCellType.Free ;
       if (x+y div 2)mod 2=0 then ct:=TCellType.Crystall ;
       if str[x+1]='#' then ct:=TCellType.Stair ;
       if str[x+1]='*' then ct:=TCellType.Block ;
       if str[x+1]='S' then begin
-        start:=Point(x,y) ;
+        start:=Point(x+left,y+top) ;
         ct:=TCellType.Free ; // Защита от спавна поверх алмаза
       end;
       if str[x+1]='F' then begin
-        finish:=Point(x,y) ;
+        finish:=Point(x+left,y+top) ;
         ct:=TCellType.Free ; // Защита от портала поверх алмаза
       end;
-      map[x][y]:=ct ;
+      map[x+left][y+top]:=ct ;
     end ;
+  end;
   list.Free ;
 end ;
 
