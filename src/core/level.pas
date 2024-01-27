@@ -26,6 +26,7 @@ type
     function getHeight():Integer ;
     procedure fillStartXY(var x:single; var y:single);
     function isFinishAt(x,y:Integer):Boolean ;
+    function getCrystallCount():Integer ;
   end;
 
 implementation
@@ -44,6 +45,15 @@ procedure TLevel.fillStartXY(var x, y: single);
 begin
   x:=start.X ;
   y:=start.Y ;
+end;
+
+function TLevel.getCrystallCount: Integer;
+var x,y:Integer ;
+begin
+  Result:=0 ;
+  for y := 0 to height-1 do
+    for x := 0 to width-1 do
+      if map[x][y]=TCellType.Crystall then Inc(Result) ;
 end;
 
 function TLevel.getHeight: Integer;

@@ -231,6 +231,7 @@ end ;
 
 function TSceneTest.FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ;
 var event:TSfmlEventEx ;
+    playermapx,playermapy:Integer ;
 begin
   Result:=Normal ;
   for event in events do
@@ -287,9 +288,11 @@ begin
   player_x:=player_x+player_dx*PLAYER_SPEED*dt ;
   player_y:=player_y+player_dy*PLAYER_SPEED*dt ;
 
+  playermapx:=Trunc(player_x+0.5) ;
+  playermapy:=Trunc(player_y+0.5) ;
   // Поедание ячеек
-  if level.isCrystallAt(Trunc(player_x+0.5),Trunc(player_y+0.5)) then begin
-    level.clearCell(Trunc(player_x+0.5),Trunc(player_y+0.5)) ;
+  if level.isCrystallAt(playermapx,playermapy) then begin
+    level.clearCell(playermapx,playermapy) ;
     grab.Play() ;
   end;
 
@@ -302,6 +305,9 @@ begin
   else begin
     if galop.Status=sfPlaying then galop.Pause() ;
   end ;
+
+  if level.isFinishAt(playermapx,playermapy) then
+    if level.getCrystallCount()=0 then Exit(TSceneResult.Close) ;
 
   walkbot.Update(dt) ;
   portal.Update(dt) ;
