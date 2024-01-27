@@ -215,8 +215,7 @@ begin
   tek_cmd:=cmdNone ;
   player_dx:=0 ;
   player_dy:=0 ;
-  player_x:=1 ;
-  player_y:=1 ;
+  level.fillStartXY(player_x,player_y) ;
   ismirr:=False ;
 
   left_scale_bot:=SfmlVector2f(-0.75,0.75) ;

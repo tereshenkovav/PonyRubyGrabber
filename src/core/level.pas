@@ -1,6 +1,7 @@
-unit Level;
+﻿unit Level;
 
 interface
+uses Types ;
 
 type
 
@@ -12,6 +13,7 @@ type
   private
     width:Integer ;
     height:Integer ;
+    start:TPoint ;
     map:array of array of TCellType ;
   public
     procedure LoadFromFile(filename:string) ;
@@ -21,6 +23,7 @@ type
     procedure clearCell(x,y:Integer) ;
     function getWidth():Integer ;
     function getHeight():Integer ;
+    procedure fillStartXY(var x:single; var y:single);
   end;
 
 implementation
@@ -32,6 +35,12 @@ procedure TLevel.clearCell(x, y: Integer);
 begin
   if (x<0) or (x>=width) or (y<0) or (y>=height) then Exit() ;
   map[x][y]:=TCellType.Free ;
+end;
+
+procedure TLevel.fillStartXY(var x, y: single);
+begin
+  x:=start.X ;
+  y:=start.Y ;
 end;
 
 function TLevel.getHeight: Integer;
@@ -81,6 +90,10 @@ begin
       if (x+y div 2)mod 2=0 then ct:=TCellType.Crystall ;
       if list[2+y][x+1]='#' then ct:=TCellType.Stair ;
       if list[2+y][x+1]='=' then ct:=TCellType.Block ;
+      if list[2+y][x+1]='S' then begin
+        start:=Point(x,y) ;
+        ct:=TCellType.Free ; // Защита от спавна поверх алмаза
+      end;
       map[x][y]:=ct ;
     end ;
   list.Free ;
