@@ -110,6 +110,7 @@
         <DCCReference Include="core\scenetest.pas"/>
         <DCCReference Include="core\level.pas"/>
         <DCCReference Include="core\commondata.pas"/>
+        <DCCReference Include="core\scenestart.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

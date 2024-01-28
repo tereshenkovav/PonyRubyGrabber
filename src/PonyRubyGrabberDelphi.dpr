@@ -8,7 +8,8 @@ uses
   main in 'core\main.pas',
   scenetest in 'core\scenetest.pas',
   level in 'core\level.pas',
-  commondata in 'core\commondata.pas';
+  commondata in 'core\commondata.pas',
+  scenestart in 'core\scenestart.pas';
 
 begin
   with TMain.Create() do begin

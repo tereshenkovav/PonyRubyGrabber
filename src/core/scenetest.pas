@@ -42,6 +42,7 @@ type
     function fixXifCrossed(stopx, dx:Single):Boolean ;
     function fixYifCrossed(stopy, dy:Single):Boolean ;
   public
+    constructor Create() ;
     function Init():Boolean ; override ;
     function FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ; override ;
     procedure RenderFunc() ; override ;
@@ -114,6 +115,11 @@ begin
     end;
     tek_cmd:=cmdNone ;
   end;
+end;
+
+constructor TSceneTest.Create;
+begin
+
 end;
 
 function TSceneTest.fixXifCrossed(stopx, dx:Single):Boolean ;

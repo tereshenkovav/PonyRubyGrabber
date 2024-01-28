@@ -25,12 +25,13 @@ type
     window:TSfmlRenderWindow ;
     wwidth:Integer ;
     wheight:Integer ;
+    nextscene:TScene ;
     procedure drawSprite(spr:TSfmlSprite; x,y:Single) ;
     procedure drawText(text:TSfmlText; x,y:Single) ;
     procedure drawTextCentered(text:TSfmlText; x,y:Single) ;
   public
-    constructor Create() ;
     procedure setWindow(Awindow:TSfmlRenderWindow; Awidth,Aheight:Integer);
+    function getNextScene():TScene ;
     function Init():Boolean ; virtual ;
     function FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ; virtual ;
     procedure RenderFunc() ; virtual ;
@@ -42,17 +43,20 @@ implementation
 
 { TScene }
 
-constructor TScene.Create();
-begin
-end ;
-
 function TScene.Init():Boolean ;
 begin
+  Result:=True ;
 end ;
 
 function TScene.FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ;
 begin
+  Result:=TSceneResult.Normal ;
 end ;
+
+function TScene.getNextScene: TScene;
+begin
+  Result:=nextscene ;
+end;
 
 procedure TScene.RenderFunc() ;
 begin

@@ -16,7 +16,8 @@ type
     window: TSfmlRenderWindow;
     clock:TSfmlClock ;
     mode: TSfmlVideoMode;
-    scene: TScene ;
+    tekscene: TScene ;
+    prevscene: TScene ;
   public
     constructor Create(width,height:Integer) ;
     procedure Run(initscene:TScene) ;
@@ -53,9 +54,11 @@ var lasttime,newtime:Single ;
     event:TSfmlEvent ;
     events:TUniList<TSfmlEventEx> ;
 begin
-  scene:=initscene ;
-  scene.setWindow(window,mode.Width,mode.Height) ;
-  scene.Init() ;
+
+  prevscene:=nil ;
+  tekscene:=initscene ;
+  tekscene.setWindow(window,mode.Width,mode.Height) ;
+  tekscene.Init() ;
 
   events:=TUniList<TSfmlEventEx>.Create() ;
 
@@ -64,27 +67,36 @@ begin
   while window.IsOpen do begin
     events.Clear ;
     while window.PollEvent(event) do begin
-      if event.EventType = sfEvtClosed then begin 
-        window.Close; 
+      if event.EventType = sfEvtClosed then begin
+        window.Close;
         break ;
       end ;
       events.Add(TSfmlEventEx.Create(event)) ;
     end ;
 
     newtime:=clock.ElapsedTime.asSeconds() ;
-    sr:=scene.FrameFunc(newtime-lasttime,events) ;
+    sr:=tekscene.FrameFunc(newtime-lasttime,events) ;
     lasttime:=newtime ;
 
-    if sr=TSceneResult.Close then begin
-      window.Close() ;
-      break ;
+    case sr of
+      TSceneResult.Close: begin
+        window.Close() ;
+        break ;
+      end;
+      TSceneResult.Switch: begin
+        tekscene.UnInit();
+        tekscene:=tekscene.getNextScene();
+        tekscene.setWindow(window,mode.Width,mode.Height) ;
+        tekscene.Init();
+        continue ;
+      end ;
     end ;
 
     window.Clear(SfmlBlack);
-    scene.RenderFunc() ;
+    tekscene.RenderFunc() ;
     window.Display;
   end;
-  scene.UnInit() ;
+  tekscene.UnInit() ;
 end;
 
 destructor TGame.Destroy();
