@@ -43,7 +43,7 @@ begin
         Exit(TSceneResult.Switch) ;
       end;
       if (event.event.key.code = sfKeySpace) then begin
-        nextscene:=TSceneTest.Create() ;
+        nextscene:=TSceneTest.Create(TCommonData.profile.getAvailLevel()) ;
         Exit(TSceneResult.Switch) ;
       end;
     end ;

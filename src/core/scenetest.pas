@@ -21,6 +21,7 @@ type
     spr_crystall:TSfmlSprite ;
     spr_icons,spr_icons_gray:array of TSfmlSprite ;
     level:TLevel ;
+    leveln:Integer ;
     textLevel:TSfmlText ;
     waitbot:TSfmlSprite ;
     walkbot:TSfmlAnimation ;
@@ -42,7 +43,7 @@ type
     function fixXifCrossed(stopx, dx:Single):Boolean ;
     function fixYifCrossed(stopy, dy:Single):Boolean ;
   public
-    constructor Create() ;
+    constructor Create(Aleveln:Integer) ;
     function Init():Boolean ; override ;
     function FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ; override ;
     procedure RenderFunc() ; override ;
@@ -117,9 +118,9 @@ begin
   end;
 end;
 
-constructor TSceneTest.Create;
+constructor TSceneTest.Create(Aleveln:Integer);
 begin
-
+  leveln:=Aleveln ;
 end;
 
 function TSceneTest.fixXifCrossed(stopx, dx:Single):Boolean ;
@@ -201,7 +202,7 @@ begin
   for i := 0 to Length(spr_icons_gray)-1 do
     convertSpriteTexture(spr_icons_gray[i],funcMakeGray) ;
 
-  textLevel:=createText(TCommonData.Font,'LEVEL 1',18,SfmlWhite) ;
+  textLevel:=createText(TCommonData.Font,'LEVEL '+IntToStr(leveln+1),18,SfmlWhite) ;
 
   waitbot:=loadSprite('images'+PATH_SEP+'waitbot.png');
   waitbot.Origin:=SfmlVector2f(SfmlTextureGetSize(waitbot.Texture).x/2,29) ;
@@ -221,7 +222,7 @@ begin
   grab:=TSfmlSound.Create(TSfmlSoundBuffer.Create('sounds'+PATH_SEP+'grab.ogg'));
 
   level:=TLevel.Create ;
-  level.LoadFromFile('levels'+PATH_SEP+'level0.dat');
+  level.LoadFromFile('levels'+PATH_SEP+'level'+IntToStr(leveln)+'.dat');
 
   tek_cmd:=cmdNone ;
   player_dx:=0 ;
@@ -317,6 +318,7 @@ begin
 
   if level.isFinishAt(playermapx,playermapy) then
     if level.getCrystallCount()=0 then begin
+      TCommonData.profile.MarkLevelCompleted(leveln) ;
       subscene:=TSubSceneMenuFin.Create() ;
       Exit(TSceneResult.SetSubScene) ;
     end;

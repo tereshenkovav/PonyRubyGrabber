@@ -39,7 +39,7 @@ begin
   Result:=Normal ;
   for event in events do
     if (event.event.EventType = sfEvtKeyPressed) then begin
-      nextscene:=TSceneTest.Create() ;
+      nextscene:=TSceneTest.Create(0) ;
       Exit(TSceneResult.Switch) ;
     end ;
 
