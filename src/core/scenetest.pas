@@ -50,7 +50,7 @@ type
   end;
 
 implementation
-uses SfmlUtils, CommonData ;
+uses SfmlUtils, CommonData, SubSceneMenuFin, SubSceneMenuGame ;
 
 const CELL_HEIGHT=40 ;
       CELL_WIDTH=40 ;
@@ -242,7 +242,10 @@ begin
   Result:=Normal ;
   for event in events do
     if (event.event.EventType = sfEvtKeyPressed) then begin
-      if (event.event.key.code = sfKeyEscape) then Exit(TSceneResult.Close) ;
+      if (event.event.key.code = sfKeyEscape) then begin
+        subscene:=TSubSceneMenuGame.Create() ;
+        Exit(TSceneResult.SetSubScene) ;
+      end;
       if (event.event.key.code = sfKeyLeft) then tek_cmd:=cmdLeft ;
       if (event.event.key.code = sfKeyRight) then tek_cmd:=cmdRight ;
       if (event.event.key.code = sfKeyUp) then tek_cmd:=cmdUp ;
@@ -313,7 +316,10 @@ begin
   end ;
 
   if level.isFinishAt(playermapx,playermapy) then
-    if level.getCrystallCount()=0 then Exit(TSceneResult.Close) ;
+    if level.getCrystallCount()=0 then begin
+      subscene:=TSubSceneMenuFin.Create() ;
+      Exit(TSceneResult.SetSubScene) ;
+    end;
 
   walkbot.Update(dt) ;
   portal.Update(dt) ;
@@ -369,6 +375,8 @@ begin
   walkbot.Free ;
   waitbot.Free ;
   textLevel.Free ;
+  galop.Free ;
+  grab.Free ;
 end ;
 
 end.

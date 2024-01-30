@@ -9,7 +9,9 @@ uses
   scenetest in 'core\scenetest.pas',
   level in 'core\level.pas',
   commondata in 'core\commondata.pas',
-  scenestart in 'core\scenestart.pas';
+  scenestart in 'core\scenestart.pas',
+  subscenemenufin in 'core\subscenemenufin.pas',
+  subscenemenugame in 'core\subscenemenugame.pas';
 
 begin
   with TMain.Create() do begin

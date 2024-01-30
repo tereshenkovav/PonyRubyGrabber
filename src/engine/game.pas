@@ -17,6 +17,7 @@ type
     clock:TSfmlClock ;
     mode: TSfmlVideoMode;
     tekscene: TScene ;
+    subscene: TScene ;
     prevscene: TScene ;
   public
     constructor Create(width,height:Integer) ;
@@ -53,9 +54,11 @@ var lasttime,newtime:Single ;
     sr:TSceneResult ;
     event:TSfmlEvent ;
     events:TUniList<TSfmlEventEx> ;
+    activescene:TScene ;
 begin
 
   prevscene:=nil ;
+  subscene:=nil ;
   tekscene:=initscene ;
   tekscene.setWindow(window,mode.Width,mode.Height) ;
   tekscene.Init() ;
@@ -75,7 +78,10 @@ begin
     end ;
 
     newtime:=clock.ElapsedTime.asSeconds() ;
-    sr:=tekscene.FrameFunc(newtime-lasttime,events) ;
+
+    if subscene<>nil then activescene:=subscene else activescene:=tekscene ;
+    sr:=activescene.FrameFunc(newtime-lasttime,events) ;
+
     lasttime:=newtime ;
 
     case sr of
@@ -84,16 +90,32 @@ begin
         break ;
       end;
       TSceneResult.Switch: begin
+        if (subscene<>nil) then begin
+          subscene.UnInit() ;
+          subscene:=nil ;
+        end;
         tekscene.UnInit();
-        tekscene:=tekscene.getNextScene();
+        tekscene:=activescene.getNextScene();
         tekscene.setWindow(window,mode.Width,mode.Height) ;
         tekscene.Init();
+        continue ;
+      end ;
+      TSceneResult.SetSubScene: begin
+        subscene:=tekscene.getSubScene() ;
+        subscene.setWindow(window,mode.Width,mode.Height) ;
+        subscene.Init();
+        continue ;
+      end ;
+      TSceneResult.ExitSubScene: begin
+        subscene.UnInit() ;
+        subscene:=nil ;
         continue ;
       end ;
     end ;
 
     window.Clear(SfmlBlack);
     tekscene.RenderFunc() ;
+    if subscene<>nil then subscene.RenderFunc() ;
     window.Display;
   end;
   tekscene.UnInit() ;
