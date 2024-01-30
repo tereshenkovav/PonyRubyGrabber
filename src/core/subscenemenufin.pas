@@ -23,7 +23,7 @@ type
   end;
 
 implementation
-uses CommonData, SfmlUtils, SceneStart, SceneGame ;
+uses CommonData, SfmlUtils, SceneMainMenu, SceneGame ;
 
 function TSubSceneMenuFin.Init():Boolean ;
 begin
@@ -39,7 +39,7 @@ begin
   for event in events do
     if (event.event.EventType = sfEvtKeyPressed) then begin
       if (event.event.key.code = sfKeyEscape) then begin
-        nextscene:=TSceneStart.Create() ;
+        nextscene:=TSceneMainMenu.Create() ;
         Exit(TSceneResult.Switch) ;
       end;
       if (event.event.key.code = sfKeySpace) then begin

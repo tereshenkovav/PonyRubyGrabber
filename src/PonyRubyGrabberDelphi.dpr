@@ -12,7 +12,8 @@ uses
   scenestart in 'core\scenestart.pas',
   subscenemenufin in 'core\subscenemenufin.pas',
   subscenemenugame in 'core\subscenemenugame.pas',
-  profile in 'core\profile.pas';
+  profile in 'core\profile.pas',
+  scenemainmenu in 'core\scenemainmenu.pas';
 
 begin
   with TMain.Create() do begin

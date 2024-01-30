@@ -23,7 +23,7 @@ type
   end;
 
 implementation
-uses CommonData, SfmlUtils, SceneStart ;
+uses CommonData, SfmlUtils, SceneMainMenu ;
 
 function TSubSceneMenuGame.Init():Boolean ;
 begin
@@ -42,7 +42,7 @@ begin
         Exit(TSceneResult.ExitSubScene) ;
       end;
       if (event.event.key.code = sfKeyF10) then begin
-        nextscene:=TSceneStart.Create() ;
+        nextscene:=TSceneMainMenu.Create() ;
         Exit(TSceneResult.Switch) ;
       end;
     end ;
