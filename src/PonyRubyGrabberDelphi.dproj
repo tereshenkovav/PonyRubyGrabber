@@ -107,7 +107,7 @@
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
         <DCCReference Include="core\main.pas"/>
-        <DCCReference Include="core\scenetest.pas"/>
+        <DCCReference Include="core\scenegame.pas"/>
         <DCCReference Include="core\level.pas"/>
         <DCCReference Include="core\commondata.pas"/>
         <DCCReference Include="core\scenestart.pas"/>

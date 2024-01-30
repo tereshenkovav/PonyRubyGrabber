@@ -6,7 +6,7 @@
 
 uses
   main in 'core\main.pas',
-  scenetest in 'core\scenetest.pas',
+  scenegame in 'core\scenegame.pas',
   level in 'core\level.pas',
   commondata in 'core\commondata.pas',
   scenestart in 'core\scenestart.pas',

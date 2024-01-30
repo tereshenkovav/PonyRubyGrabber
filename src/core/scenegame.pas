@@ -1,4 +1,4 @@
-﻿unit SceneTest;
+﻿unit SceneGame;
 
 interface
 
@@ -11,9 +11,9 @@ type
 
   TCommand = ( cmdNone, cmdStop, cmdLeft, cmdRight, cmdUp, cmdDown ) ;
 
-  { TSceneTest }
+  { TSceneGame }
 
-  TSceneTest = class(TScene)
+  TSceneGame = class(TScene)
   private
     cursor:TSfmlSprite ;
     spr_block:TSfmlSprite ;
@@ -76,9 +76,9 @@ begin
   Result:=False ;
 end;
 
-{ TSceneTest }
+{ TSceneGame }
 
-function TSceneTest.isWayCorrect(x, y: Integer): Boolean;
+function TSceneGame.isWayCorrect(x, y: Integer): Boolean;
 begin
   Result:=False ;
   if x<0 then Exit ;
@@ -89,7 +89,7 @@ begin
   Result:=True ;
 end;
 
-procedure TSceneTest.setCmdToDxy();
+procedure TSceneGame.setCmdToDxy();
 begin
   if tek_cmd<>cmdNone then begin
     case tek_cmd of
@@ -118,12 +118,12 @@ begin
   end;
 end;
 
-constructor TSceneTest.Create(Aleveln:Integer);
+constructor TSceneGame.Create(Aleveln:Integer);
 begin
   leveln:=Aleveln ;
 end;
 
-function TSceneTest.fixXifCrossed(stopx, dx:Single):Boolean ;
+function TSceneGame.fixXifCrossed(stopx, dx:Single):Boolean ;
 var borderx:Single ;
 begin
     if (player_dx=-1) then begin
@@ -146,7 +146,7 @@ begin
     end ;
 end ;
 
-function TSceneTest.fixYifCrossed(stopy, dy:Single):Boolean ;
+function TSceneGame.fixYifCrossed(stopy, dy:Single):Boolean ;
 var bordery:Single ;
 begin
     if (player_dy=-1) then begin
@@ -169,7 +169,7 @@ begin
     end ;
 end ;
 
-function TSceneTest.Init():Boolean ;
+function TSceneGame.Init():Boolean ;
 var i:Integer ;
 begin
   Cursor:=loadSprite('images'+PATH_SEP+'cursor.png');
@@ -236,7 +236,7 @@ begin
   Result:=True ;
 end ;
 
-function TSceneTest.FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ;
+function TSceneGame.FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ;
 var event:TSfmlEventEx ;
     playermapx,playermapy:Integer ;
 begin
@@ -327,7 +327,7 @@ begin
   portal.Update(dt) ;
 end ;
 
-procedure TSceneTest.RenderFunc() ;
+procedure TSceneGame.RenderFunc() ;
 var mx,my:Integer ;
     i,j:Integer ;
 
@@ -368,7 +368,7 @@ begin
   DrawSprite(cursor,mx,my) ;
 end ;
 
-procedure TSceneTest.UnInit() ;
+procedure TSceneGame.UnInit() ;
 begin
   Cursor.Free ;
   spr_block.Free ;

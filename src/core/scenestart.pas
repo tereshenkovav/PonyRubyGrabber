@@ -23,7 +23,7 @@ type
   end;
 
 implementation
-uses SceneTest, SfmlUtils ;
+uses SceneGame, SfmlUtils ;
 
 function TSceneStart.Init():Boolean ;
 begin
@@ -39,7 +39,7 @@ begin
   Result:=Normal ;
   for event in events do
     if (event.event.EventType = sfEvtKeyPressed) then begin
-      nextscene:=TSceneTest.Create(0) ;
+      nextscene:=TSceneGame.Create(0) ;
       Exit(TSceneResult.Switch) ;
     end ;
 
