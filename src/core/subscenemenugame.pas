@@ -15,6 +15,7 @@ type
   private
     textResume:TSfmlText ;
     textMenu:TSfmlText ;
+    rect:TSfmlRectangleShape ;
   public
     function Init():Boolean ; override ;
     function FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ; override ;
@@ -27,8 +28,14 @@ uses CommonData, SfmlUtils, SceneMainMenu ;
 
 function TSubSceneMenuGame.Init():Boolean ;
 begin
-  textResume:=createText(TCommonData.Font,'Resume (Esc)',18,SfmlWhite) ;
-  textMenu:=createText(TCommonData.Font,'Menu (F10)',18,SfmlWhite) ;
+  textResume:=createText(TCommonData.Font,'Resume (Esc)',24,SfmlWhite) ;
+  textMenu:=createText(TCommonData.Font,'Menu (F10)',24,SfmlWhite) ;
+  rect:=TSfmlRectangleShape.Create() ;
+  rect.OutlineThickness:=4;
+  rect.Size:=SfmlVector2f(250,130) ;
+  rect.Position:=SfmlVector2f(wwidth/2-125,wheight/2-50);
+  rect.FillColor:=SfmlColorFromRGBA(40,40,40,192) ;
+  rect.OutlineColor:=SfmlWhite ;
   Result:=True ;
 end ;
 
@@ -50,12 +57,14 @@ end ;
 
 procedure TSubSceneMenuGame.RenderFunc() ;
 begin
-  drawTextCentered(textResume,wwidth/2,100) ;
-  drawTextCentered(textMenu,wwidth/2,150) ;
+  window.Draw(rect) ;
+  drawTextCentered(textResume,wwidth/2,wheight/2-25) ;
+  drawTextCentered(textMenu,wwidth/2,wheight/2+25) ;
 end ;
 
 procedure TSubSceneMenuGame.UnInit() ;
 begin
+  rect.Free ;
   textResume.Free ;
   textMenu.Free ;
 end ;

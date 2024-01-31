@@ -17,6 +17,7 @@ type
     textMenu:TSfmlText ;
     leveln:Integer ;
     iswin:Boolean ;
+    rect:TSfmlRectangleShape ;
   public
     constructor Create(Aleveln:Integer; Aiswin:Boolean) ;
     function Init():Boolean ; override ;
@@ -30,8 +31,14 @@ uses CommonData, SfmlUtils, SceneMainMenu, SceneTotalWin, SceneGame, Level ;
 
 function TSubSceneMenuFin.Init():Boolean ;
 begin
-  textNext:=createText(TCommonData.Font,'Next (Space)',18,SfmlWhite) ;
-  textMenu:=createText(TCommonData.Font,'Menu (Esc)',18,SfmlWhite) ;
+  textNext:=createText(TCommonData.Font,'Next (Space)',24,SfmlWhite) ;
+  textMenu:=createText(TCommonData.Font,'Menu (Esc)',24,SfmlWhite) ;
+  rect:=TSfmlRectangleShape.Create() ;
+  rect.OutlineThickness:=4;
+  rect.Size:=SfmlVector2f(250,130) ;
+  rect.Position:=SfmlVector2f(wwidth/2-125,wheight/2-50);
+  rect.FillColor:=SfmlColorFromRGBA(40,40,40,192) ;
+  rect.OutlineColor:=SfmlWhite ;
   Result:=True ;
 end ;
 
@@ -63,12 +70,14 @@ end ;
 
 procedure TSubSceneMenuFin.RenderFunc() ;
 begin
-  drawTextCentered(textNext,wwidth/2,100) ;
-  drawTextCentered(textMenu,wwidth/2,150) ;
+  window.Draw(rect);
+  drawTextCentered(textNext,wwidth/2,wheight/2-25) ;
+  drawTextCentered(textMenu,wwidth/2,wheight/2+25) ;
 end ;
 
 procedure TSubSceneMenuFin.UnInit() ;
 begin
+  rect.Free ;
   textNext.Free ;
   textMenu.Free ;
 end ;
