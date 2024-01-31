@@ -115,6 +115,7 @@
         <DCCReference Include="core\subscenemenugame.pas"/>
         <DCCReference Include="core\profile.pas"/>
         <DCCReference Include="core\scenemainmenu.pas"/>
+        <DCCReference Include="core\scenelevelmenu.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

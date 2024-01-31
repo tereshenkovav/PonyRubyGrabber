@@ -1,4 +1,4 @@
-﻿unit SceneMainMenu;
+﻿unit SceneLevelMenu;
 
 interface
 
@@ -9,9 +9,9 @@ uses
 
 type
 
-  { TSceneMainMenu }
+  { TSceneLevelMenu }
 
-  TSceneMainMenu = class(TScene)
+  TSceneLevelMenu = class(TScene)
   private
     logo:TSfmlSprite ;
     menu:TMenuKeyboardText ;
@@ -24,61 +24,54 @@ type
   end;
 
 implementation
-uses SceneLevelMenu, SfmlUtils, CommonData ;
+uses SceneGame, SceneMainMenu, SfmlUtils, CommonData ;
 
-function TSceneMainMenu.Init():Boolean ;
+function TSceneLevelMenu.Init():Boolean ;
 begin
   logo:=loadSprite('images'+PATH_SEP+'intro.png');
   logo.Position:=SfmlVector2f(0,0) ;
 
-  menu:=TMenuKeyboardText.Create(TCommonData.selector,wwidth div 2-50,350,70,
-    TCommonData.Font,32,SfmlWhite) ;
+  menu:=TMenuKeyboardText.Create(TCommonData.selector,wwidth div 2-50,350,50,
+    TCommonData.Font,26,SfmlWhite) ;
   buildMenu() ;
   overscene:=menu ;
 
   Result:=True ;
 end ;
 
-procedure TSceneMainMenu.buildMenu;
+procedure TSceneLevelMenu.buildMenu;
+var i:Integer ;
 begin
   menu.clearItems() ;
-  menu.addItem('Start') ;
-  menu.addItem('About') ;
-  menu.addItem('Exit') ;
+  for I := 0 to TCommonData.profile.getAvailLevel() do
+     menu.addItem('Level '+IntToStr(i)) ;
 end;
 
-function TSceneMainMenu.FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ;
+function TSceneLevelMenu.FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ;
 var event:TSfmlEventEx ;
 begin
   Result:=Normal ;
   for event in events do
     if (event.event.EventType = sfEvtKeyPressed) then begin
-      if (event.event.key.code = sfKeyEscape) then
-        Exit(TSceneResult.Close) ;
-      if (event.event.key.code in [sfKeySpace,sfKeyReturn]) then begin
-        case menu.getSelIndex() of
-          0: begin
-            nextscene:=TSceneLevelMenu.Create() ;
-            Exit(TSceneResult.Switch) ;
-          end;
-          1: begin
-
-          end;
-          2: Exit(TSceneResult.Close) ;
-        end;
+      if (event.event.key.code = sfKeyEscape) then begin
+        nextscene:=TSceneMainMenu.Create() ;
+        Exit(TSceneResult.Switch) ;
       end;
-
+      if (event.event.key.code in [sfKeySpace,sfKeyReturn]) then begin
+        nextscene:=TSceneGame.Create(menu.getSelIndex()) ;
+        Exit(TSceneResult.Switch) ;
+      end;
     end ;
 
   TCommonData.selector.Update(dt) ;
 end ;
 
-procedure TSceneMainMenu.RenderFunc() ;
+procedure TSceneLevelMenu.RenderFunc() ;
 begin
   window.Draw(logo) ;
 end ;
 
-procedure TSceneMainMenu.UnInit() ;
+procedure TSceneLevelMenu.UnInit() ;
 begin
   logo.Free ;
   menu.Free ;
