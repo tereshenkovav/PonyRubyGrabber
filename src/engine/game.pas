@@ -79,11 +79,11 @@ begin
 
     newtime:=clock.ElapsedTime.asSeconds() ;
 
+    if window.HasFocus() then begin
+
     if subscene<>nil then activescene:=subscene else activescene:=tekscene ;
     if activescene.getOverScene()<>nil then activescene.getOverScene().FrameFunc(newtime-lasttime,events) ;
     sr:=activescene.FrameFunc(newtime-lasttime,events) ;
-
-    lasttime:=newtime ;
 
     case sr of
       TSceneResult.Close: begin
@@ -118,6 +118,10 @@ begin
         continue ;
       end ;
     end ;
+
+    end; // window.hasFocus
+
+    lasttime:=newtime ;
 
     window.Clear(SfmlBlack);
     tekscene.RenderFunc() ;
