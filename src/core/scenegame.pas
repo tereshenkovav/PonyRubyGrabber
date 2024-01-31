@@ -15,7 +15,6 @@ type
 
   TSceneGame = class(TScene)
   private
-    cursor:TSfmlSprite ;
     spr_block:TSfmlSprite ;
     spr_stair:TSfmlSprite ;
     spr_crystall:TSfmlSprite ;
@@ -172,9 +171,6 @@ end ;
 function TSceneGame.Init():Boolean ;
 var i:Integer ;
 begin
-  Cursor:=loadSprite('images'+PATH_SEP+'cursor.png');
-  Cursor.Origin:=SfmlVector2f(0,10) ;
-
   spr_block:=loadSprite('images'+PATH_SEP+'block.png');
   spr_stair:=loadSprite('images'+PATH_SEP+'stair.png');
   spr_crystall:=loadSprite('images'+PATH_SEP+'crystall.png');
@@ -328,13 +324,8 @@ begin
 end ;
 
 procedure TSceneGame.RenderFunc() ;
-var mx,my:Integer ;
-    i,j:Integer ;
-
+var i,j:Integer ;
 begin
-  mx:=window.MousePosition.X ;
-  my:=window.MousePosition.Y ;
-
   for i := 0 to level.getWidth()-1 do
     for j := 0 to level.getHeight-1 do begin
       if level.isBlockAt(i,j) then drawSprite(spr_block,CELL_WIDTH*i,CELL_HEIGHT*j) ;
@@ -364,13 +355,10 @@ begin
     DrawSprite(waitbot, CELL_WIDTH*player_x + 20, CELL_HEIGHT*player_y)
   else
     DrawSprite(walkbot, CELL_WIDTH*player_x + 20, CELL_HEIGHT*player_y) ;
-
-  DrawSprite(cursor,mx,my) ;
 end ;
 
 procedure TSceneGame.UnInit() ;
 begin
-  Cursor.Free ;
   spr_block.Free ;
   spr_stair.Free ;
   spr_crystall.Free ;
