@@ -14,7 +14,8 @@ uses
   subscenemenugame in 'core\subscenemenugame.pas',
   profile in 'core\profile.pas',
   scenemainmenu in 'core\scenemainmenu.pas',
-  scenelevelmenu in 'core\scenelevelmenu.pas';
+  scenelevelmenu in 'core\scenelevelmenu.pas',
+  scenetotalwin in 'core\scenetotalwin.pas';
 
 begin
   with TMain.Create() do begin

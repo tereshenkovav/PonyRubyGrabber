@@ -319,7 +319,7 @@ begin
   if level.isFinishAt(playermapx,playermapy) then
     if level.getCrystallCount()=0 then begin
       TCommonData.profile.MarkLevelCompleted(leveln) ;
-      subscene:=TSubSceneMenuFin.Create() ;
+      subscene:=TSubSceneMenuFin.Create(leveln,True) ;
       Exit(TSceneResult.SetSubScene) ;
     end;
 

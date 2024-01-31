@@ -18,6 +18,7 @@ type
     map:array of array of TCellType ;
   public
     procedure LoadFromFile(filename:string) ;
+    class function getMaxLevel(leveldir:string):Integer ;
     function isBlockAt(x,y:Integer):Boolean ;
     function isStairAt(x,y:Integer):Boolean ;
     function isCrystallAt(x,y:Integer):Boolean ;
@@ -59,6 +60,13 @@ end;
 function TLevel.getHeight: Integer;
 begin
   Result:=height ;
+end;
+
+class function TLevel.getMaxLevel(leveldir: string): Integer;
+begin
+  Result:=-1 ;
+  while FileExists(leveldir+PATH_SEP+'level'+IntToStr(Result+1)+'.dat') do
+    Inc(Result) ;
 end;
 
 function TLevel.getWidth: Integer;

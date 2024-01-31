@@ -15,7 +15,10 @@ type
   private
     textNext:TSfmlText ;
     textMenu:TSfmlText ;
+    leveln:Integer ;
+    iswin:Boolean ;
   public
+    constructor Create(Aleveln:Integer; Aiswin:Boolean) ;
     function Init():Boolean ; override ;
     function FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ; override ;
     procedure RenderFunc() ; override ;
@@ -23,7 +26,7 @@ type
   end;
 
 implementation
-uses CommonData, SfmlUtils, SceneMainMenu, SceneGame ;
+uses CommonData, SfmlUtils, SceneMainMenu, SceneTotalWin, SceneGame, Level ;
 
 function TSubSceneMenuFin.Init():Boolean ;
 begin
@@ -31,6 +34,12 @@ begin
   textMenu:=createText(TCommonData.Font,'Menu (Esc)',18,SfmlWhite) ;
   Result:=True ;
 end ;
+
+constructor TSubSceneMenuFin.Create(Aleveln: Integer; Aiswin: Boolean);
+begin
+  leveln:=Aleveln ;
+  iswin:=Aiswin ;
+end;
 
 function TSubSceneMenuFin.FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ;
 var event:TSfmlEventEx ;
@@ -43,7 +52,10 @@ begin
         Exit(TSceneResult.Switch) ;
       end;
       if (event.event.key.code = sfKeySpace) then begin
-        nextscene:=TSceneGame.Create(TCommonData.profile.getAvailLevel()) ;
+        if leveln=TLevel.getMaxLevel('levels') then
+          nextscene:=TSceneTotalWin.Create()
+        else
+          nextscene:=TSceneGame.Create(leveln+1) ;
         Exit(TSceneResult.Switch) ;
       end;
     end ;

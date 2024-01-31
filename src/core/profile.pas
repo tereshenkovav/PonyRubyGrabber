@@ -19,7 +19,8 @@ type
 
 implementation
 uses Classes, SysUtils,
-  Helpers, IniFiles ;
+  Helpers, IniFiles,
+  Level ;
 
 { TProfile }
 
@@ -52,7 +53,7 @@ end;
 
 procedure TProfile.MarkLevelCompleted(level: Integer);
 begin
-  if availlevel<level+1 then begin
+  if (availlevel<level+1)and(level+1<TLevel.getMaxLevel('levels')) then begin
     availlevel:=level+1 ;
     Save() ;
   end;
