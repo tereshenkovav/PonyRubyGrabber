@@ -80,6 +80,7 @@ begin
     newtime:=clock.ElapsedTime.asSeconds() ;
 
     if subscene<>nil then activescene:=subscene else activescene:=tekscene ;
+    if activescene.getOverScene()<>nil then activescene.getOverScene().FrameFunc(newtime-lasttime,events) ;
     sr:=activescene.FrameFunc(newtime-lasttime,events) ;
 
     lasttime:=newtime ;
@@ -94,10 +95,15 @@ begin
           subscene.UnInit() ;
           subscene:=nil ;
         end;
+        if tekscene.getOverScene()<>nil then tekscene.getOverScene().UnInit() ;
         tekscene.UnInit();
         tekscene:=activescene.getNextScene();
         tekscene.setWindow(window,mode.Width,mode.Height) ;
         tekscene.Init();
+        if tekscene.getOverScene()<>nil then begin
+          tekscene.getOverScene().setWindow(window,mode.Width,mode.Height) ;
+          tekscene.getOverScene().Init() ;
+        end ;
         continue ;
       end ;
       TSceneResult.SetSubScene: begin
@@ -116,6 +122,7 @@ begin
     window.Clear(SfmlBlack);
     tekscene.RenderFunc() ;
     if subscene<>nil then subscene.RenderFunc() ;
+    if tekscene.getOverScene()<>nil then tekscene.getOverScene().RenderFunc() ;
     window.Display;
   end;
   tekscene.UnInit() ;

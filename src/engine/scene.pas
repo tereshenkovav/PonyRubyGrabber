@@ -27,6 +27,7 @@ type
     wheight:Integer ;
     nextscene:TScene ;
     subscene:TScene ;
+    overscene:TScene ;
     procedure drawSprite(spr:TSfmlSprite; x,y:Single) ;
     procedure drawText(text:TSfmlText; x,y:Single) ;
     procedure drawTextCentered(text:TSfmlText; x,y:Single) ;
@@ -34,6 +35,7 @@ type
     procedure setWindow(Awindow:TSfmlRenderWindow; Awidth,Aheight:Integer);
     function getNextScene():TScene ;
     function getSubScene():TScene ;
+    function getOverScene():TScene ;
     function Init():Boolean ; virtual ;
     function FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ; virtual ;
     procedure RenderFunc() ; virtual ;
@@ -58,6 +60,11 @@ end ;
 function TScene.getNextScene: TScene;
 begin
   Result:=nextscene ;
+end;
+
+function TScene.getOverScene: TScene;
+begin
+  Result:=overscene ;
 end;
 
 function TScene.getSubScene: TScene;
