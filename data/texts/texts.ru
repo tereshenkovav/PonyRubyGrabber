@@ -9,4 +9,5 @@ TEXT_OFF=Выкл
 BUT_NEXT=Далее (Пробел)
 BUT_MENU=В меню (F10)
 BUT_RESUME=Продолжить (Esc)
+BUT_CLOSE=Закрыть игру (F10)
 

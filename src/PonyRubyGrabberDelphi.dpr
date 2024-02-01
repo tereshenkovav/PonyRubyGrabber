@@ -15,7 +15,8 @@ uses
   profile in 'core\profile.pas',
   scenemainmenu in 'core\scenemainmenu.pas',
   scenelevelmenu in 'core\scenelevelmenu.pas',
-  scenetotalwin in 'core\scenetotalwin.pas';
+  scenetotalwin in 'core\scenetotalwin.pas',
+  sceneclosehandler in 'core\sceneclosehandler.pas';
 
 begin
   with TMain.Create() do begin

@@ -9,3 +9,4 @@ TEXT_OFF=Off
 BUT_NEXT=Next (Space)
 BUT_MENU=Menu (F10)
 BUT_RESUME=Resume (Esc)
+BUT_CLOSE=Exit game (F10)

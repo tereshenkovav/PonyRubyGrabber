@@ -117,6 +117,7 @@
         <DCCReference Include="core\scenemainmenu.pas"/>
         <DCCReference Include="core\scenelevelmenu.pas"/>
         <DCCReference Include="core\scenetotalwin.pas"/>
+        <DCCReference Include="core\sceneclosehandler.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

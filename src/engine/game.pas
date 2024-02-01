@@ -55,7 +55,12 @@ var lasttime,newtime:Single ;
     event:TSfmlEvent ;
     events:TUniList<TSfmlEventEx> ;
     activescene:TScene ;
+    closehandled:Boolean ;
 begin
+  if TScene.closehandler<>nil then begin
+    TScene.closehandler.setWindow(window,mode.Width,mode.Height) ;
+    TScene.closehandler.Init() ;
+  end;
 
   prevscene:=nil ;
   subscene:=nil ;
@@ -68,13 +73,14 @@ begin
   clock:=TSfmlClock.Create() ;
   lasttime:=clock.ElapsedTime.AsSeconds() ;
   while window.IsOpen do begin
+    closehandled:=False ;
     events.Clear ;
     while window.PollEvent(event) do begin
       if event.EventType = sfEvtClosed then begin
-        window.Close;
-        break ;
-      end ;
-      events.Add(TSfmlEventEx.Create(event)) ;
+        closehandled:=True ;
+      end
+      else
+        events.Add(TSfmlEventEx.Create(event)) ;
     end ;
 
     newtime:=clock.ElapsedTime.asSeconds() ;
@@ -91,6 +97,11 @@ begin
         break ;
       end;
       TSceneResult.Switch: begin
+        if prevscene<>nil then begin
+          tekscene:=prevscene ;
+          prevscene:=nil ;
+        end
+        else begin
         if (subscene<>nil) then begin
           subscene.UnInit() ;
           subscene:=nil ;
@@ -103,6 +114,7 @@ begin
         if tekscene.getOverScene()<>nil then begin
           tekscene.getOverScene().setWindow(window,mode.Width,mode.Height) ;
           tekscene.getOverScene().Init() ;
+        end ;
         end ;
         continue ;
       end ;
@@ -123,13 +135,27 @@ begin
 
     lasttime:=newtime ;
 
+    if closehandled then begin
+      if TScene.closehandler=nil then begin
+        window.Close() ;
+        break ;
+      end
+      else begin
+        if tekscene<>TScene.closehandler then begin
+          prevscene:=tekscene ;
+          tekscene:=TScene.closehandler ;
+        end;
+      end;
+    end ;
+
     window.Clear(SfmlBlack);
     tekscene.RenderFunc() ;
     if subscene<>nil then subscene.RenderFunc() ;
     if tekscene.getOverScene()<>nil then tekscene.getOverScene().RenderFunc() ;
     window.Display;
   end;
-  tekscene.UnInit() ;
+  if tekscene<>TScene.closehandler then tekscene.UnInit() ;
+  if TScene.closehandler<>nil then TScene.closehandler.UnInit() ;
 end;
 
 destructor TGame.Destroy();
