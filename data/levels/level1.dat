@@ -1,5 +1,7 @@
 Width=23
 Height=19
+TextPos=100
+TextData=LEVELHELP_1
  Row0=***********************
  Row1=*S                    *
  Row2=*******#*********#*****

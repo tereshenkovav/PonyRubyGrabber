@@ -36,7 +36,8 @@ end;
 
 function TTexts.getText(name: string): string;
 begin
-  if texts.IndexOfName(name.ToUpper())<>-1 then Result:=texts.Values[name.ToUpper()]
+  if texts.IndexOfName(name.ToUpper())<>-1 then
+    Result:=texts.Values[name.ToUpper()].Replace('\n',chr(10))
   else Result:='???';
 end;
 

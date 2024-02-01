@@ -10,3 +10,5 @@ BUT_NEXT=Next (Space)
 BUT_MENU=Menu (F10)
 BUT_RESUME=Resume (Esc)
 BUT_CLOSE=Exit game (F10)
+LEVELHELP_0=   Control the pony by arrows, collect all rubies,\nthen follow to portal
+LEVELHELP_1=Beware of collisions with monsters!

@@ -22,6 +22,7 @@ type
     level:TLevel ;
     leveln:Integer ;
     textLevel:TSfmlText ;
+    textHelp:TSfmlText ;
     waitbot:TSfmlSprite ;
     walkbot:TSfmlAnimation ;
     portal:TSfmlAnimation ;
@@ -224,6 +225,10 @@ begin
   level:=TLevel.Create ;
   level.LoadFromFile('levels'+PATH_SEP+'level'+IntToStr(leveln)+'.dat');
 
+  if level.getTextData()<>'' then
+    textHelp:=createText(TCommonData.Font,
+      TCommonData.texts.getText(level.getTextData()),24,SfmlWhite) ;
+
   tek_cmd:=cmdNone ;
   player_dx:=0 ;
   player_dy:=0 ;
@@ -346,6 +351,8 @@ begin
 
   DrawTextCentered(textLevel,(CELL_WIDTH*23+wwidth)/2,10) ;
 
+  if textHelp<>nil then DrawTextCentered(textHelp,CELL_WIDTH*23/2,level.getTextPos()) ;
+
   if ismirr then begin
     waitbot.ScaleFactor:=left_scale_bot ;
     walkbot.ScaleFactor:=left_scale_bot ;
@@ -371,6 +378,7 @@ begin
   textLevel.Free ;
   galop.Free ;
   grab.Free ;
+  if textHelp<>nil then textHelp.Free ;
 end ;
 
 end.

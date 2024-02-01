@@ -15,6 +15,8 @@ type
     height:Integer ;
     start:TPoint ;
     finish:TPoint ;
+    textpos:Integer ;
+    textdata:string ;
     map:array of array of TCellType ;
   public
     procedure LoadFromFile(filename:string) ;
@@ -25,6 +27,8 @@ type
     procedure clearCell(x,y:Integer) ;
     function getWidth():Integer ;
     function getHeight():Integer ;
+    function getTextPos():Integer ;
+    function getTextData():string ;
     procedure fillStartXY(var x:single; var y:single);
     function isFinishAt(x,y:Integer):Boolean ;
     function getCrystallCount():Integer ;
@@ -67,6 +71,16 @@ begin
   Result:=-1 ;
   while FileExists(leveldir+PATH_SEP+'level'+IntToStr(Result+1)+'.dat') do
     Inc(Result) ;
+end;
+
+function TLevel.getTextData: string;
+begin
+  Result:=textdata ;
+end;
+
+function TLevel.getTextPos: Integer;
+begin
+  Result:=textpos ;
 end;
 
 function TLevel.getWidth: Integer;
@@ -114,6 +128,8 @@ begin
   datah:=StrToIntWt0(list.Values['Height']) ;
   left:=StrToIntWt0(list.Values['Left']) ;
   top:=StrToIntWt0(list.Values['Top']) ;
+  textpos:=StrToIntWt0(list.Values['TextPos']) ;
+  textdata:=list.Values['TextData'] ;
   width:=dataw+left ;
   height:=datah+top ;
   SetLength(map,width) ;
