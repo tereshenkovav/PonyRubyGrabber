@@ -50,7 +50,8 @@ type
   end;
 
 implementation
-uses SfmlUtils, CommonData, SubSceneMenuFin, SubSceneMenuGame ;
+uses Math,
+  SfmlUtils, CommonData, SubSceneMenuFin, SubSceneMenuGame ;
 
 const CELL_HEIGHT=40 ;
       CELL_WIDTH=40 ;
@@ -216,7 +217,9 @@ begin
   galop:=TSfmlSound.Create(TSfmlSoundBuffer.Create('sounds'+PATH_SEP+'galop.ogg'));
   galop.Loop:=True ;
   galop.Stop() ;
+  galop.Volume:=IfThen(TCommonData.soundon,100,0) ;
   grab:=TSfmlSound.Create(TSfmlSoundBuffer.Create('sounds'+PATH_SEP+'grab.ogg'));
+  grab.Volume:=IfThen(TCommonData.soundon,100,0) ;
 
   level:=TLevel.Create ;
   level.LoadFromFile('levels'+PATH_SEP+'level'+IntToStr(leveln)+'.dat');

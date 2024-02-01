@@ -1,8 +1,11 @@
 MENU_START=Start
 MENU_LANG=Language
+MENU_SOUND=Sounds
 MENU_ABOUT=About
 MENU_EXIT=Exit
 LEVEL=Level
+TEXT_ON=On
+TEXT_OFF=Off
 BUT_NEXT=Next (Space)
 BUT_MENU=Menu (F10)
 BUT_RESUME=Resume (Esc)

@@ -25,7 +25,8 @@ type
   end;
 
 implementation
-uses SceneLevelMenu, SfmlUtils, CommonData ;
+uses StrUtils,
+ SceneLevelMenu, SfmlUtils, CommonData ;
 
 function TSceneMainMenu.Init():Boolean ;
 begin
@@ -51,6 +52,8 @@ begin
   menu.clearItems() ;
   menu.addItem(TCommonData.texts.getText('MENU_START')) ;
   menu.addItem(TCommonData.texts.getText('MENU_LANG')+': '+TCommonData.languages.getCurrent().ToUpper()) ;
+  menu.addItem(TCommonData.texts.getText('MENU_SOUND')+': '+IfThen(TCommonData.soundon,
+    TCommonData.texts.getText('TEXT_ON'),TCommonData.texts.getText('TEXT_OFF'))) ;
   menu.addItem(TCommonData.texts.getText('MENU_ABOUT')) ;
   menu.addItem(TCommonData.texts.getText('MENU_EXIT')) ;
 end;
@@ -76,9 +79,13 @@ begin
             buildMenu() ;
           end;
           2: begin
+            TCommonData.soundon:=not TCommonData.soundon ;
+            buildMenu() ;
+          end;
+          3: begin
 
           end;
-          3: Exit(TSceneResult.Close) ;
+          4: Exit(TSceneResult.Close) ;
         end;
       end;
 

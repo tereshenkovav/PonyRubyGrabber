@@ -19,6 +19,7 @@ type
     class var selector:TSfmlAnimation ;
     class var texts:TTexts ;
     class var languages:TLanguages ;
+    class var soundon:Boolean ;
     class function Init():Boolean ;
     class procedure reloadTexts() ;
     class procedure UnInit() ;
@@ -43,6 +44,7 @@ begin
   languages.setCurrentByFile('texts'+PATH_SEP+'deflang');
   texts:=TTexts.Create() ;
   reloadTexts() ;
+  soundon:=True ;
   Result:=True ;
 end ;
 
