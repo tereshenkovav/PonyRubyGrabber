@@ -198,7 +198,8 @@ begin
   for i := 0 to Length(spr_icons_gray)-1 do
     convertSpriteTexture(spr_icons_gray[i],funcMakeGray) ;
 
-  textLevel:=createText(TCommonData.Font,'LEVEL '+IntToStr(leveln+1),18,SfmlWhite) ;
+  textLevel:=createText(TCommonData.Font,TCommonData.texts.getText('LEVEL')+' '+
+    IntToStr(leveln+1),18,SfmlWhite) ;
 
   waitbot:=loadSprite('images'+PATH_SEP+'waitbot.png');
   waitbot.Origin:=SfmlVector2f(SfmlTextureGetSize(waitbot.Texture).x/2,29) ;

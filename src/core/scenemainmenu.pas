@@ -16,6 +16,7 @@ type
     logo:TSfmlSprite ;
     menu:TMenuKeyboardText ;
     procedure buildMenu() ;
+    procedure loadLogo() ;
   public
     function Init():Boolean ; override ;
     function FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ; override ;
@@ -28,8 +29,7 @@ uses SceneLevelMenu, SfmlUtils, CommonData ;
 
 function TSceneMainMenu.Init():Boolean ;
 begin
-  logo:=loadSprite('images'+PATH_SEP+'intro.png');
-  logo.Position:=SfmlVector2f(0,0) ;
+  loadLogo() ;
 
   menu:=TMenuKeyboardText.Create(TCommonData.selector,wwidth div 2-50,350,70,
     TCommonData.Font,32,SfmlWhite) ;
@@ -39,12 +39,20 @@ begin
   Result:=True ;
 end ;
 
+procedure TSceneMainMenu.loadLogo;
+begin
+  if logo<>nil then logo.Free ;
+  logo:=loadSprite(TCommonData.languages.formatFileNameWithLang('images'+PATH_SEP+'intro.png'));
+  logo.Position:=SfmlVector2f(0,0) ;
+end;
+
 procedure TSceneMainMenu.buildMenu;
 begin
   menu.clearItems() ;
-  menu.addItem('Start') ;
-  menu.addItem('About') ;
-  menu.addItem('Exit') ;
+  menu.addItem(TCommonData.texts.getText('MENU_START')) ;
+  menu.addItem(TCommonData.texts.getText('MENU_LANG')+': '+TCommonData.languages.getCurrent().ToUpper()) ;
+  menu.addItem(TCommonData.texts.getText('MENU_ABOUT')) ;
+  menu.addItem(TCommonData.texts.getText('MENU_EXIT')) ;
 end;
 
 function TSceneMainMenu.FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ;
@@ -62,9 +70,15 @@ begin
             Exit(TSceneResult.Switch) ;
           end;
           1: begin
+            TCommonData.languages.switchCurrent() ;
+            TCommonData.reloadTexts() ;
+            loadLogo() ;
+            buildMenu() ;
+          end;
+          2: begin
 
           end;
-          2: Exit(TSceneResult.Close) ;
+          3: Exit(TSceneResult.Close) ;
         end;
       end;
 

@@ -31,8 +31,8 @@ uses CommonData, SfmlUtils, SceneMainMenu, SceneTotalWin, SceneGame, Level ;
 
 function TSubSceneMenuFin.Init():Boolean ;
 begin
-  textNext:=createText(TCommonData.Font,'Next (Space)',24,SfmlWhite) ;
-  textMenu:=createText(TCommonData.Font,'Menu (Esc)',24,SfmlWhite) ;
+  textNext:=createText(TCommonData.Font,TCommonData.texts.getText('BUT_NEXT'),24,SfmlWhite) ;
+  textMenu:=createText(TCommonData.Font,TCommonData.texts.getText('BUT_MENU'),24,SfmlWhite) ;
   rect:=TSfmlRectangleShape.Create() ;
   rect.OutlineThickness:=4;
   rect.Size:=SfmlVector2f(250,130) ;
@@ -54,7 +54,7 @@ begin
   Result:=Normal ;
   for event in events do
     if (event.event.EventType = sfEvtKeyPressed) then begin
-      if (event.event.key.code = sfKeyEscape) then begin
+      if (event.event.key.code = sfKeyF10) then begin
         nextscene:=TSceneMainMenu.Create() ;
         Exit(TSceneResult.Switch) ;
       end;

@@ -23,11 +23,11 @@ type
   end;
 
 implementation
-uses SceneMainMenu, SfmlUtils ;
+uses SceneMainMenu, SfmlUtils, CommonData ;
 
 function TSceneStart.Init():Boolean ;
 begin
-  intro:=loadSprite('images'+PATH_SEP+'intro.png');
+  intro:=loadSprite(TCommonData.languages.formatFileNameWithLang('images'+PATH_SEP+'intro.png'));
   intro.Position:=SfmlVector2f(0,0) ;
   intro.Color:=SfmlColorFromRGBA(255,255,255,Trunc(stage)) ;
   Result:=True ;

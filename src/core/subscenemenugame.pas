@@ -28,8 +28,8 @@ uses CommonData, SfmlUtils, SceneMainMenu ;
 
 function TSubSceneMenuGame.Init():Boolean ;
 begin
-  textResume:=createText(TCommonData.Font,'Resume (Esc)',24,SfmlWhite) ;
-  textMenu:=createText(TCommonData.Font,'Menu (F10)',24,SfmlWhite) ;
+  textResume:=createText(TCommonData.Font,TCommonData.texts.getText('BUT_RESUME'),24,SfmlWhite) ;
+  textMenu:=createText(TCommonData.Font,TCommonData.texts.getText('BUT_MENU'),24,SfmlWhite) ;
   rect:=TSfmlRectangleShape.Create() ;
   rect.OutlineThickness:=4;
   rect.Size:=SfmlVector2f(250,130) ;

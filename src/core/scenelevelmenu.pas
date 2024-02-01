@@ -28,7 +28,7 @@ uses SceneGame, SceneMainMenu, SfmlUtils, CommonData ;
 
 function TSceneLevelMenu.Init():Boolean ;
 begin
-  logo:=loadSprite('images'+PATH_SEP+'intro.png');
+  logo:=loadSprite(TCommonData.languages.formatFileNameWithLang('images'+PATH_SEP+'intro.png'));
   logo.Position:=SfmlVector2f(0,0) ;
 
   menu:=TMenuKeyboardText.Create(TCommonData.selector,wwidth div 2-50,350,50,
@@ -44,7 +44,7 @@ var i:Integer ;
 begin
   menu.clearItems() ;
   for I := 0 to TCommonData.profile.getAvailLevel() do
-     menu.addItem('Level '+IntToStr(i)) ;
+     menu.addItem(TCommonData.texts.getText('LEVEL')+' '+IntToStr(i+1)) ;
 end;
 
 function TSceneLevelMenu.FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ;

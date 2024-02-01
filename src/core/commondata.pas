@@ -5,7 +5,7 @@ interface
 uses
   Classes, SysUtils,
   SfmlSystem,SfmlWindow,SfmlGraphics,
-  Profile, SfmlAnimation ;
+  Profile, SfmlAnimation, Texts, Languages ;
 
 type
 
@@ -17,7 +17,10 @@ type
     class var Font:TSfmlFont ;
     class var profile:TProfile ;
     class var selector:TSfmlAnimation ;
+    class var texts:TTexts ;
+    class var languages:TLanguages ;
     class function Init():Boolean ;
+    class procedure reloadTexts() ;
     class procedure UnInit() ;
   end;
 
@@ -35,14 +38,26 @@ begin
   selector.Origin:=SfmlVector2f(100,30) ;
   selector.Play() ;
   profile:=TProfile.Create('PonyRubyGrabber') ;
+  languages:=TLanguages.Create() ;
+  languages.loadFromFile('texts'+PATH_SEP+'languages');
+  languages.setCurrentByFile('texts'+PATH_SEP+'deflang');
+  texts:=TTexts.Create() ;
+  reloadTexts() ;
   Result:=True ;
 end ;
+
+class procedure TCommonData.reloadTexts;
+begin
+  texts.loadFromFile('texts'+PATH_SEP+'texts.'+languages.getCurrent()) ;
+end;
 
 class procedure TCommonData.UnInit() ;
 begin
   Font.Free ;
   selector.Free ;
   profile.Free ;
+  texts.Free ;
+  languages.Free ;
 end ;
 
 end.
