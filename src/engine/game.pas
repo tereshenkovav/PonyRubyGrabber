@@ -19,10 +19,11 @@ type
     tekscene: TScene ;
     subscene: TScene ;
     prevscene: TScene ;
+    icon:TSfmlImage ;
   public
     // Нужно переместить в правильное место
     class var fullscr:Boolean ;
-    constructor Create(width,height:Integer) ;
+    constructor Create(width,height:Integer; iconfile:string='') ;
     procedure Run(initscene:TScene) ;
     destructor Destroy() ; override ;
   end;
@@ -32,7 +33,7 @@ uses Helpers ;
 
 { TGame }
 
-constructor TGame.Create(width,height:Integer);
+constructor TGame.Create(width,height:Integer; iconfile:string='');
 begin
   ChDir(ExtractFilePath(ParamStr(0))+PATH_SEP+'..'+PATH_SEP+'data') ;
   Randomize() ;
@@ -44,6 +45,8 @@ begin
   if not SfmlVideoModeIsValid(Mode) then
     raise Exception.Create('Invalid video mode');
   {$endif}
+
+  if iconfile<>'' then icon:=TSfmlImage.Create(iconfile) else icon:=nil ;
 end ;
 
 procedure TGame.Run(initscene:TScene);
@@ -67,6 +70,7 @@ rebuild_window:
   window.SetVerticalSyncEnabled(True);
   window.setFramerateLimit(60);
   window.SetMouseCursorVisible(False);
+  if icon<>nil then window.SetIcon(icon.Size.X,icon.Size.Y,icon.getPixelsPtr());
 
   // Дублирование инициализации при смене окна
   if TScene.closehandler<>nil then begin
@@ -182,6 +186,8 @@ destructor TGame.Destroy();
 begin
   window.Close() ;
   window.Free ;
+  if icon<>nil then icon.Free ;
+  
   inherited Destroy();
 end;
 
