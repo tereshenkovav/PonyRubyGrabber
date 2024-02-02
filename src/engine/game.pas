@@ -1,4 +1,4 @@
-unit Game;
+﻿unit Game;
 
 interface
 
@@ -20,6 +20,8 @@ type
     subscene: TScene ;
     prevscene: TScene ;
   public
+    // Нужно переместить в правильное место
+    class var fullscr:Boolean ;
     constructor Create(width,height:Integer) ;
     procedure Run(initscene:TScene) ;
     destructor Destroy() ; override ;
@@ -42,11 +44,6 @@ begin
   if not SfmlVideoModeIsValid(Mode) then
     raise Exception.Create('Invalid video mode');
   {$endif}
-  window := TSfmlRenderWindow.Create(mode, UTF8ToString('Game'),
-    [sfClose], nil);
-  window.SetVerticalSyncEnabled(True);
-  window.setFramerateLimit(60);
-  window.SetMouseCursorVisible(False);
 end ;
 
 procedure TGame.Run(initscene:TScene);
@@ -56,17 +53,33 @@ var lasttime,newtime:Single ;
     events:TUniList<TSfmlEventEx> ;
     activescene:TScene ;
     closehandled:Boolean ;
+label rebuild_window ;
 begin
+  fullscr:=False ;
+  prevscene:=nil ;
+  subscene:=nil ;
+  tekscene:=initscene ;
+rebuild_window:
+  if fullscr then
+    window := TSfmlRenderWindow.Create(mode, UTF8ToString('Game'),[sfFullscreen], nil)
+  else
+    window := TSfmlRenderWindow.Create(mode, UTF8ToString('Game'),[sfClose], nil);
+  window.SetVerticalSyncEnabled(True);
+  window.setFramerateLimit(60);
+  window.SetMouseCursorVisible(False);
+
+  // Дублирование инициализации при смене окна
   if TScene.closehandler<>nil then begin
     TScene.closehandler.setWindow(window,mode.Width,mode.Height) ;
     TScene.closehandler.Init() ;
   end;
 
-  prevscene:=nil ;
-  subscene:=nil ;
-  tekscene:=initscene ;
   tekscene.setWindow(window,mode.Width,mode.Height) ;
   tekscene.Init() ;
+  if tekscene.getOverScene()<>nil then begin
+     tekscene.getOverScene().setWindow(window,mode.Width,mode.Height) ;
+     tekscene.getOverScene().Init() ;
+   end ;
 
   events:=TUniList<TSfmlEventEx>.Create() ;
 
@@ -118,6 +131,13 @@ begin
         end ;
         continue ;
       end ;
+      TSceneResult.RebuildWindow: begin
+        tekscene.UnInit();
+        tekscene:=activescene.getNextScene();
+        window.Close() ;
+        window.Free ;
+        goto rebuild_window;
+      end;
       TSceneResult.SetSubScene: begin
         subscene:=tekscene.getSubScene() ;
         subscene.setWindow(window,mode.Width,mode.Height) ;

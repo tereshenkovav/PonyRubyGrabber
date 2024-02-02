@@ -26,13 +26,13 @@ type
 
 implementation
 uses StrUtils,
- SceneLevelMenu, SceneAbout, SfmlUtils, CommonData ;
+ SceneLevelMenu, SceneAbout, SfmlUtils, CommonData, Game ;
 
 function TSceneMainMenu.Init():Boolean ;
 begin
   loadLogo() ;
 
-  menu:=TMenuKeyboardText.Create(TCommonData.selector,wwidth div 2-50,350,70,
+  menu:=TMenuKeyboardText.Create(TCommonData.selector,wwidth div 2-100,350,55,
     TCommonData.Font,32,SfmlWhite) ;
   buildMenu() ;
   overscene:=menu ;
@@ -53,6 +53,8 @@ begin
   menu.addItem(TCommonData.texts.getText('MENU_START')) ;
   menu.addItem(TCommonData.texts.getText('MENU_LANG')+': '+TCommonData.languages.getCurrent().ToUpper()) ;
   menu.addItem(TCommonData.texts.getText('MENU_SOUND')+': '+IfThen(TCommonData.soundon,
+    TCommonData.texts.getText('TEXT_ON'),TCommonData.texts.getText('TEXT_OFF'))) ;
+  menu.addItem(TCommonData.texts.getText('MENU_FULLSCR')+': '+IfThen(TGame.fullscr,
     TCommonData.texts.getText('TEXT_ON'),TCommonData.texts.getText('TEXT_OFF'))) ;
   menu.addItem(TCommonData.texts.getText('MENU_ABOUT')) ;
   menu.addItem(TCommonData.texts.getText('MENU_EXIT')) ;
@@ -83,10 +85,15 @@ begin
             buildMenu() ;
           end;
           3: begin
+            TGame.fullscr:=not TGame.fullscr ;
+            nextscene:=TSceneMainMenu.Create() ;
+            Exit(TSceneResult.RebuildWindow) ;
+          end;
+          4: begin
             nextscene:=TSceneAbout.Create() ;
             Exit(TSceneResult.Switch) ;
           end;
-          4: Exit(TSceneResult.Close) ;
+          5: Exit(TSceneResult.Close) ;
         end;
       end;
 

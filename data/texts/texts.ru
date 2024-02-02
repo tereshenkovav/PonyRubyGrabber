@@ -1,6 +1,7 @@
 MENU_START=Старт
 MENU_LANG=Язык
 MENU_SOUND=Звуки
+MENU_FULLSCR=Полный экран
 MENU_ABOUT=О проекте
 MENU_EXIT=Выход
 LEVEL=Уровень
