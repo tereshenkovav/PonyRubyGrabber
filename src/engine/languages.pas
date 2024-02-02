@@ -65,7 +65,7 @@ end;
 procedure TLanguages.setCurrentByFile(filename: string);
 begin
   if FileExists(filename) then
-    setCurrentByValue(Helpers.readAllText(filename)) ;
+    setCurrentByValue(Helpers.readAllText(filename).Trim()) ;
 end;
 
 procedure TLanguages.setCurrentByValue(lang: string);
