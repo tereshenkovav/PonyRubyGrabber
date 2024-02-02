@@ -1,3 +1,4 @@
+GAME_TITLE=Пони и лабиринт рубинов
 MENU_START=Старт
 MENU_LANG=Язык
 MENU_SOUND=Звуки

@@ -20,10 +20,11 @@ type
     subscene: TScene ;
     prevscene: TScene ;
     icon:TSfmlImage ;
+    title:string ;
   public
     // Нужно переместить в правильное место
     class var fullscr:Boolean ;
-    constructor Create(width,height:Integer; iconfile:string='') ;
+    constructor Create(width,height:Integer; Atitle:string; iconfile:string='') ;
     procedure Run(initscene:TScene) ;
     destructor Destroy() ; override ;
   end;
@@ -33,9 +34,8 @@ uses Helpers ;
 
 { TGame }
 
-constructor TGame.Create(width,height:Integer; iconfile:string='');
+constructor TGame.Create(width,height:Integer; Atitle:string; iconfile:string='');
 begin
-  ChDir(ExtractFilePath(ParamStr(0))+PATH_SEP+'..'+PATH_SEP+'data') ;
   Randomize() ;
 
   mode.Width := width;
@@ -46,6 +46,7 @@ begin
     raise Exception.Create('Invalid video mode');
   {$endif}
 
+  title:=Atitle ;
   if iconfile<>'' then icon:=TSfmlImage.Create(iconfile) else icon:=nil ;
 end ;
 
@@ -64,9 +65,9 @@ begin
   tekscene:=initscene ;
 rebuild_window:
   if fullscr then
-    window := TSfmlRenderWindow.Create(mode, UTF8ToString('Game'),[sfFullscreen], nil)
+    window := TSfmlRenderWindow.Create(mode, UTF8ToString(title),[sfFullscreen], nil)
   else
-    window := TSfmlRenderWindow.Create(mode, UTF8ToString('Game'),[sfClose], nil);
+    window := TSfmlRenderWindow.Create(mode, UTF8ToString(title),[sfClose], nil);
   window.SetVerticalSyncEnabled(True);
   window.setFramerateLimit(60);
   window.SetMouseCursorVisible(False);

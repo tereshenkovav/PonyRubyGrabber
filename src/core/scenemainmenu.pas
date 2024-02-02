@@ -77,6 +77,7 @@ begin
           1: begin
             TCommonData.languages.switchCurrent() ;
             TCommonData.reloadTexts() ;
+            window.SetTitle(UTF8ToString(TCommonData.texts.getText('GAME_TITLE'))) ;
             loadLogo() ;
             buildMenu() ;
           end;
