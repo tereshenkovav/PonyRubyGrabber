@@ -66,5 +66,7 @@ __recovery/
 
 build/i386-win32
 data/texts/deflang
+data/texts/credits.txt
+data/texts/version.txt
 bin/*.dll
 

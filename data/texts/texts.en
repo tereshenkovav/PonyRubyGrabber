@@ -12,3 +12,7 @@ BUT_RESUME=Resume (Esc)
 BUT_CLOSE=Exit game (F10)
 LEVELHELP_0=   Control the pony by arrows, collect all rubies,\nthen follow to portal
 LEVELHELP_1=Beware of collisions with monsters!
+ABOUT_TITLE=Pony and the cave of rubies
+ABOUT_VERSION=%s, commit %s, branch %s
+ABOUT_INFO=   An arcade game about pony and grabbing rubies in cave\nwith using special abilities of any ponies. Developed\nwith ObjectPascal/SFML. Author - Aleksandr V. Tereshenkov.\nHome pages: tav-developer.itch.io and github.com/tereshenkovav
+ABOUT_CREDITS=Credits

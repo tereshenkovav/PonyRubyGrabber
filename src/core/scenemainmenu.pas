@@ -26,7 +26,7 @@ type
 
 implementation
 uses StrUtils,
- SceneLevelMenu, SfmlUtils, CommonData ;
+ SceneLevelMenu, SceneAbout, SfmlUtils, CommonData ;
 
 function TSceneMainMenu.Init():Boolean ;
 begin
@@ -83,7 +83,8 @@ begin
             buildMenu() ;
           end;
           3: begin
-
+            nextscene:=TSceneAbout.Create() ;
+            Exit(TSceneResult.Switch) ;
           end;
           4: Exit(TSceneResult.Close) ;
         end;
