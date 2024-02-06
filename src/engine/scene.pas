@@ -17,6 +17,9 @@ type
     class operator Equal(a: TSfmlEventEx; b: TSfmlEventEx): Boolean;
   end;
 
+  TMirrorType = (MirrorHorz,MirrorVert) ;
+  TMirrorTypeSet = set of TMirrorType ;
+
   { TScene }
 
   TScene = class
@@ -29,6 +32,7 @@ type
     subscene:TScene ;
     overscene:TScene ;
     procedure drawSprite(spr:TSfmlSprite; x,y:Single) ;
+    procedure drawSpriteMirr(spr:TSfmlSprite; x,y:Single; mirrors:TMirrorTypeSet) ;
     procedure drawText(text:TSfmlText; x,y:Single) ;
     procedure drawTextCentered(text:TSfmlText; x,y:Single) ;
   public
@@ -44,7 +48,17 @@ type
     destructor Destroy() ; override ;
   end;
 
+function Iif(b:Boolean; v1,v2:TMirrorTypeSet):TMirrorTypeSet ;
+
 implementation
+
+var
+  scale_mirr_none,scale_mirr_horz,scale_mirr_vert,scale_mirr_both:TSfmlVector2f ;
+
+function Iif(b:Boolean; v1,v2:TMirrorTypeSet):TMirrorTypeSet ;
+begin
+  if b then Result:=v1 else Result:=v2 ;  
+end;
 
 { TScene }
 
@@ -101,6 +115,24 @@ begin
   window.draw(spr) ;
 end;
 
+procedure TScene.drawSpriteMirr(spr: TSfmlSprite; x, y: Single;
+  mirrors: TMirrorTypeSet);
+begin
+  if MirrorHorz in mirrors then begin
+    if MirrorVert in mirrors then
+      spr.ScaleFactor:=scale_mirr_both
+    else
+      spr.ScaleFactor:=scale_mirr_horz ;
+  end
+  else begin
+    if MirrorVert in mirrors then
+      spr.ScaleFactor:=scale_mirr_vert
+    else
+      spr.ScaleFactor:=scale_mirr_none ;
+  end ;
+  drawSprite(spr,x,y) ;
+end;
+
 procedure TScene.drawText(text: TSfmlText; x,
   y: Single);
 begin
@@ -126,6 +158,13 @@ class operator TSfmlEventEx.Equal(a: TSfmlEventEx; b: TSfmlEventEx): Boolean;
 begin
   Result:=False ;
 end;
+
+initialization
+
+  scale_mirr_none:=SfmlVector2f(1.0,1.0) ;
+  scale_mirr_horz:=SfmlVector2f(-1.0,1.0) ;
+  scale_mirr_vert:=SfmlVector2f(1.0,-1.0) ;
+  scale_mirr_both:=SfmlVector2f(-1.0,-1.0) ;
 
 end.
 

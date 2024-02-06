@@ -1,7 +1,8 @@
 ﻿unit Level;
 
 interface
-uses Types ;
+uses Types, Classes,
+  Helpers ;
 
 type
 
@@ -18,9 +19,11 @@ type
     textpos:Integer ;
     textdata:string ;
     map:array of array of TCellType ;
+    list:TStringList ;
   public
     procedure LoadFromFile(filename:string) ;
     class function getMaxLevel(leveldir:string):Integer ;
+    function isWayCorrect(x, y: Integer): Boolean;
     function isBlockAt(x,y:Integer):Boolean ;
     function isStairAt(x,y:Integer):Boolean ;
     function isCrystallAt(x,y:Integer):Boolean ;
@@ -30,20 +33,53 @@ type
     function getTextPos():Integer ;
     function getTextData():string ;
     procedure fillStartXY(var x:single; var y:single);
+    procedure fillMonsters(monsters:TUniList<TObject>) ;
     function isFinishAt(x,y:Integer):Boolean ;
     function getCrystallCount():Integer ;
   end;
 
+function isDXDYRevers(dx1, dy1, dx2, dy2: Integer): Boolean;
+
 implementation
-uses Classes, SysUtils,
-  Helpers ;
+uses SysUtils,
+  Monster ;
+
+function isDXDYRevers(dx1, dy1, dx2, dy2: Integer): Boolean;
+begin
+  if (dy1=0)and(dy2=0) then Result:=dx1=-dx2 else
+  if (dx1=0)and(dx2=0) then Result:=dy1=-dy2 else
+  Result:=False ;
+end;
 
 { TLevel }
+
+function TLevel.isWayCorrect(x, y: Integer): Boolean;
+begin
+  Result:=False ;
+  if x<0 then Exit ;
+  if y<0 then Exit ;
+  if x>=getWidth() then Exit ;
+  if y>=getHeight() then Exit ;
+  if isBlockAt(x,y) then Exit ;
+  Result:=True ;
+end;
 
 procedure TLevel.clearCell(x, y: Integer);
 begin
   if (x<0) or (x>=width) or (y<0) or (y>=height) then Exit() ;
   map[x][y]:=TCellType.Free ;
+end;
+
+procedure TLevel.fillMonsters(monsters: TUniList<TObject>);
+var i:Integer ;
+    left,top:Integer ;
+begin
+  left:=StrToIntWt0(list.Values['Left']) ;
+  top:=StrToIntWt0(list.Values['Top']) ;
+  for i := 0 to StrToIntWt0(list.Values['MonsterCount'])-1 do
+    monsters.Add(TMonster.Create(StrToIntWt0(list.Values[Format('Monster%d_ID',[i])]),
+      StrToIntWt0(list.Values[Format('Monster%d_X',[i])])+left,
+      StrToIntWt0(list.Values[Format('Monster%d_Y',[i])])+top,Self)) ;
 end;
 
 procedure TLevel.fillStartXY(var x, y: single);
@@ -113,8 +149,7 @@ begin
 end;
 
 procedure TLevel.LoadFromFile(filename:string) ;
-var list:TStringList ;
-    i,x,y:Integer ;
+var i,x,y:Integer ;
     ct:TCellType ;
     str:string ;
     left,top:Integer ;
@@ -159,7 +194,6 @@ begin
       map[x+left][y+top]:=ct ;
     end ;
   end;
-  list.Free ;
 end ;
 
 end.

@@ -17,7 +17,8 @@ uses
   scenelevelmenu in 'core\scenelevelmenu.pas',
   scenetotalwin in 'core\scenetotalwin.pas',
   sceneclosehandler in 'core\sceneclosehandler.pas',
-  sceneabout in 'core\sceneabout.pas';
+  sceneabout in 'core\sceneabout.pas',
+  monster in 'core\monster.pas';
 
 begin
   with TMain.Create() do begin
