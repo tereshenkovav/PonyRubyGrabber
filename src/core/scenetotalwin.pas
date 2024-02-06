@@ -31,7 +31,7 @@ begin
   intro:=loadSprite('images'+PATH_SEP+'totalwin.png');
   intro.Position:=SfmlVector2f(0,0) ;
   intro.Color:=SfmlColorFromRGBA(255,255,255,Trunc(stage)) ;
-  textOK:=createText(TCommonData.Font,'All levels are completed!',24,SfmlWhite) ;
+  textOK:=createText(TCommonData.Font,TCommonData.texts.getText('TEXT_TOTALWIN'),24,SfmlWhite) ;
   Result:=True ;
 end ;
 

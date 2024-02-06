@@ -8,6 +8,7 @@ MENU_EXIT=Выход
 LEVEL=Уровень
 TEXT_ON=Вкл
 TEXT_OFF=Выкл
+TEXT_TOTALWIN=Все уровни пройдены!
 BUT_NEXT=Далее (Пробел)
 BUT_MENU=В меню (F10)
 BUT_RESUME=Продолжить (Esc)
