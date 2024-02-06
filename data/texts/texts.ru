@@ -10,6 +10,7 @@ TEXT_ON=Вкл
 TEXT_OFF=Выкл
 TEXT_TOTALWIN=Все уровни пройдены!
 BUT_NEXT=Далее (Пробел)
+BUT_REPLY=Заново (Пробел)
 BUT_MENU=В меню (F10)
 BUT_RESUME=Продолжить (Esc)
 BUT_CLOSE=Закрыть игру (F10)

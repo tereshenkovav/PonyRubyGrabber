@@ -10,6 +10,7 @@ TEXT_ON=On
 TEXT_OFF=Off
 TEXT_TOTALWIN=All levels are completed!
 BUT_NEXT=Next (Space)
+BUT_REPLY=Retry (Space)
 BUT_MENU=Menu (F10)
 BUT_RESUME=Resume (Esc)
 BUT_CLOSE=Exit game (F10)

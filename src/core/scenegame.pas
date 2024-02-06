@@ -199,10 +199,8 @@ begin
 
   waitbot:=loadSprite('images'+PATH_SEP+'waitbot.png');
   waitbot.Origin:=SfmlVector2f(SfmlTextureGetSize(waitbot.Texture).x/2,29) ;
-  waitbot.Scale(0.75,0.75) ;
   walkbot:=TSfmlAnimation.Create('images'+PATH_SEP+'walkbot.png',5,8);
   walkbot.Origin:=waitbot.Origin ;
-  walkbot.Scale(0.75,0.75) ;
   walkbot.Play() ;
 
   portal:=TSfmlAnimation.Create('images'+PATH_SEP+'portal.png',4,4);
@@ -326,8 +324,14 @@ begin
       Exit(TSceneResult.SetSubScene) ;
     end;
 
-  for m in monsters do
+  for m in monsters do begin
     m.Update(dt) ;
+    if (Abs(player_x-m.getX())<0.5*(1+spr_monsters_w[m.getTypeID()]/CELL_WIDTH))and
+       (playermapy=Trunc(m.getY()+0.5)) then begin
+      subscene:=TSubSceneMenuFin.Create(leveln,False) ;
+      Exit(TSceneResult.SetSubScene) ;
+    end ;
+  end;
 
   walkbot.Update(dt) ;
   portal.Update(dt) ;
@@ -365,9 +369,9 @@ begin
   end;
 
   if (player_dx=0)and(player_dy=0) then
-    DrawSprite(waitbot, CELL_WIDTH*player_x + 20, CELL_HEIGHT*player_y)
+    DrawSprite(waitbot, CELL_WIDTH*player_x + CELL_WIDTH/2, CELL_HEIGHT*player_y)
   else
-    DrawSprite(walkbot, CELL_WIDTH*player_x + 20, CELL_HEIGHT*player_y) ;
+    DrawSprite(walkbot, CELL_WIDTH*player_x + CELL_WIDTH/2, CELL_HEIGHT*player_y) ;
 
   for m in monsters do
     DrawSpriteMirr(spr_monsters[m.getTypeID()],

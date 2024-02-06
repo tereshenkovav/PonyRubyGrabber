@@ -31,7 +31,10 @@ uses CommonData, SfmlUtils, SceneMainMenu, SceneTotalWin, SceneGame, Level ;
 
 function TSubSceneMenuFin.Init():Boolean ;
 begin
-  textNext:=createText(TCommonData.Font,TCommonData.texts.getText('BUT_NEXT'),24,SfmlWhite) ;
+  if iswin then
+    textNext:=createText(TCommonData.Font,TCommonData.texts.getText('BUT_NEXT'),24,SfmlWhite)
+  else
+    textNext:=createText(TCommonData.Font,TCommonData.texts.getText('BUT_REPLY'),24,SfmlWhite) ;
   textMenu:=createText(TCommonData.Font,TCommonData.texts.getText('BUT_MENU'),24,SfmlWhite) ;
   rect:=TSfmlRectangleShape.Create() ;
   rect.OutlineThickness:=4;
@@ -59,10 +62,14 @@ begin
         Exit(TSceneResult.Switch) ;
       end;
       if (event.event.key.code = sfKeySpace) then begin
-        if leveln=TLevel.getMaxLevel('levels') then
-          nextscene:=TSceneTotalWin.Create()
+        if iswin then begin
+          if leveln=TLevel.getMaxLevel('levels') then
+            nextscene:=TSceneTotalWin.Create()
+          else
+            nextscene:=TSceneGame.Create(leveln+1) ;
+        end
         else
-          nextscene:=TSceneGame.Create(leveln+1) ;
+           nextscene:=TSceneGame.Create(leveln) ;
         Exit(TSceneResult.Switch) ;
       end;
     end ;
