@@ -325,7 +325,7 @@ begin
     end;
 
   for m in monsters do begin
-    m.Update(dt) ;
+    m.Update(dt,player_x,player_y) ;
     if (Abs(player_x-m.getX())<0.5*(1+spr_monsters_w[m.getTypeID()]/CELL_WIDTH))and
        (playermapy=Trunc(m.getY()+0.5)) then begin
       subscene:=TSubSceneMenuFin.Create(leveln,False) ;
