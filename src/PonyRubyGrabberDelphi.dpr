@@ -18,7 +18,8 @@ uses
   scenetotalwin in 'core\scenetotalwin.pas',
   sceneclosehandler in 'core\sceneclosehandler.pas',
   sceneabout in 'core\sceneabout.pas',
-  monster in 'core\monster.pas';
+  monster in 'core\monster.pas',
+  spawner in 'core\spawner.pas';
 
 begin
   with TMain.Create() do begin

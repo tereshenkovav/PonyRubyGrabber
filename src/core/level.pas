@@ -34,6 +34,7 @@ type
     function getTextData():string ;
     procedure fillStartXY(var x:single; var y:single);
     procedure fillMonsters(monsters:TUniList<TObject>) ;
+    procedure fillSpawns(spawns:TUniList<TObject>; monsters:TUniList<TObject>) ;
     function isFinishAt(x,y:Integer):Boolean ;
     function getCrystallCount():Integer ;
   end;
@@ -42,7 +43,7 @@ function isDXDYRevers(dx1, dy1, dx2, dy2: Integer): Boolean;
 
 implementation
 uses SysUtils,
-  Monster ;
+  Monster, Spawner ;
 
 function isDXDYRevers(dx1, dy1, dx2, dy2: Integer): Boolean;
 begin
@@ -80,6 +81,20 @@ begin
     monsters.Add(TMonster.Create(StrToIntWt0(list.Values[Format('Monster%d_ID',[i])]),
       StrToIntWt0(list.Values[Format('Monster%d_X',[i])])+left,
       StrToIntWt0(list.Values[Format('Monster%d_Y',[i])])+top,Self)) ;
+end;
+
+procedure TLevel.fillSpawns(spawns: TUniList<TObject>; monsters:TUniList<TObject>);
+var i:Integer ;
+    left,top:Integer ;
+begin
+  left:=StrToIntWt0(list.Values['Left']) ;
+  top:=StrToIntWt0(list.Values['Top']) ;
+  for i := 0 to StrToIntWt0(list.Values['SpawnCount'])-1 do
+    spawns.Add(TSpawner.Create(StrToIntWt0(list.Values[Format('Spawn%d_X',[i])])+left,
+      StrToIntWt0(list.Values[Format('Spawn%d_Y',[i])])+top,
+      Self,TUniList<TMonster>(monsters),
+      list.Values[Format('Spawn%d_seq',[i])],
+      StrToIntWt0(list.Values[Format('Spawn%d_time',[i])]))) ;
 end;
 
 procedure TLevel.fillStartXY(var x, y: single);

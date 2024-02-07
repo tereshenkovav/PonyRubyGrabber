@@ -121,6 +121,7 @@
         <DCCReference Include="core\sceneclosehandler.pas"/>
         <DCCReference Include="core\sceneabout.pas"/>
         <DCCReference Include="core\monster.pas"/>
+        <DCCReference Include="core\spawner.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

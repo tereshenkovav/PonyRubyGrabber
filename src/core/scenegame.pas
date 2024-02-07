@@ -5,7 +5,7 @@ interface
 uses
   Classes, SysUtils,
   SfmlSystem,SfmlWindow,SfmlGraphics,SfmlAudio,
-  Helpers, Scene, Level, SfmlAnimation, Monster ;
+  Helpers, Scene, Level, SfmlAnimation, Monster, Spawner ;
 
 type
 
@@ -18,12 +18,14 @@ type
     spr_block:TSfmlSprite ;
     spr_stair:TSfmlSprite ;
     spr_crystall:TSfmlSprite ;
+    spr_spawner:TSfmlSprite ;
     spr_icons,spr_icons_gray:array of TSfmlSprite ;
     spr_monsters:array of TSfmlSprite ;
     spr_monsters_w:array of Integer ;
     level:TLevel ;
     leveln:Integer ;
     monsters:TUniList<TMonster> ;
+    spawners:TUniList<TSpawner> ;
     textLevel:TSfmlText ;
     textHelp:TSfmlText ;
     waitbot:TSfmlSprite ;
@@ -160,6 +162,8 @@ begin
   spr_block:=loadSprite('images'+PATH_SEP+'block.png');
   spr_stair:=loadSprite('images'+PATH_SEP+'stair.png');
   spr_crystall:=loadSprite('images'+PATH_SEP+'crystall.png');
+  spr_spawner:=loadSprite('images'+PATH_SEP+'spawner.png');
+  spr_spawner.Origin:=SfmlVector2f(SfmlTextureGetSize(spr_spawner.Texture).x/2,0) ;
 
   SetLength(spr_icons,6) ;
   spr_icons[0]:=loadSprite('images'+PATH_SEP+'applejack_ico.png',[sloCentered]);
@@ -230,6 +234,9 @@ begin
   monsters:=TUniList<TMonster>.Create() ;
   level.fillMonsters(TUniList<TObject>(monsters)) ;
 
+  spawners:=TUniList<TSpawner>.Create() ;
+  level.fillSpawns(TUniList<TObject>(spawners),TUniList<TObject>(monsters)) ;
+
   left_scale_bot:=SfmlVector2f(-0.75,0.75) ;
   right_scale_bot:=SfmlVector2f(0.75,0.75) ;
 
@@ -240,6 +247,7 @@ function TSceneGame.FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneRe
 var event:TSfmlEventEx ;
     playermapx,playermapy:Integer ;
     m:TMonster ;
+    spawn:TSpawner ;
 begin
   Result:=Normal ;
   for event in events do
@@ -333,6 +341,9 @@ begin
     end ;
   end;
 
+  for spawn in spawners do
+    spawn.Update(dt) ;
+
   walkbot.Update(dt) ;
   portal.Update(dt) ;
 end ;
@@ -340,6 +351,7 @@ end ;
 procedure TSceneGame.RenderFunc() ;
 var i,j:Integer ;
     m:TMonster ;
+    spawn:TSpawner ;
 begin
   for i := 0 to level.getWidth()-1 do
     for j := 0 to level.getHeight-1 do begin
@@ -359,6 +371,15 @@ begin
 
   if textHelp<>nil then DrawTextCentered(textHelp,CELL_WIDTH*23/2,level.getTextPos()) ;
 
+  for spawn in spawners do
+    DrawSprite(spr_spawner,CELL_WIDTH*spawn.getX()+CELL_WIDTH/2,CELL_WIDTH*spawn.getY()) ;
+
+  for m in monsters do
+    DrawSpriteMirr(spr_monsters[m.getTypeID()],
+      CELL_WIDTH*m.getX()+CELL_WIDTH/2,
+      CELL_WIDTH*m.getY(),
+      Iif(m.isMirrHorz(),[MirrorHorz],[])) ;
+
   if ismirr then begin
     waitbot.ScaleFactor:=left_scale_bot ;
     walkbot.ScaleFactor:=left_scale_bot ;
@@ -367,17 +388,10 @@ begin
     waitbot.ScaleFactor:=right_scale_bot ;
     walkbot.ScaleFactor:=right_scale_bot ;
   end;
-
   if (player_dx=0)and(player_dy=0) then
     DrawSprite(waitbot, CELL_WIDTH*player_x + CELL_WIDTH/2, CELL_HEIGHT*player_y)
   else
     DrawSprite(walkbot, CELL_WIDTH*player_x + CELL_WIDTH/2, CELL_HEIGHT*player_y) ;
-
-  for m in monsters do
-    DrawSpriteMirr(spr_monsters[m.getTypeID()],
-      CELL_WIDTH*m.getX()+CELL_WIDTH/2,
-      CELL_WIDTH*m.getY(),
-      Iif(m.isMirrHorz(),[MirrorHorz],[])) ;
 end ;
 
 procedure TSceneGame.UnInit() ;
