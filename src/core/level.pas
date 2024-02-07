@@ -191,6 +191,9 @@ begin
         finish:=Point(x+left,y+top) ;
         ct:=TCellType.Free ; // Защита от портала поверх алмаза
       end;
+      if str[x+1]='-' then begin
+        ct:=TCellType.Free ; // Специальная зона, где нельзя спавнить алмазы
+      end;
       map[x+left][y+top]:=ct ;
     end ;
   end;

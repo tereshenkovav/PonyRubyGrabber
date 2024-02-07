@@ -53,7 +53,7 @@ end;
 
 procedure TProfile.MarkLevelCompleted(level: Integer);
 begin
-  if (availlevel<level+1)and(level+1<TLevel.getMaxLevel('levels')) then begin
+  if (availlevel<level+1)and(level+1<=TLevel.getMaxLevel('levels')) then begin
     availlevel:=level+1 ;
     Save() ;
   end;
