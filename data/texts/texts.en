@@ -20,6 +20,7 @@ LEVELHELP_2=   Some monsters guard specific corridors,\nand follow the player, i
 LEVELHELP_3=   Other monsters purposefully pursue\nthe player throughout the cave.
 LEVELHELP_4=   New monsters spawns from the doors.\nStay away from them.
 LEVELHELP_5=   Turn into Pinkie Pie by pressing the transformation key 1.\nThen crush the wall by standing close to it and pressing the\naction button Ctrl.
+LEVELHELP_6=   Turn into Rainbow by pressing the transformation key 4.\nThen, at the right moment, use the acceleration ability by pressing the\naction button Ctrl.\n   At this level, two transformations are available.
 ABOUT_TITLE=Pony and the cave of rubies
 ABOUT_VERSION=%s, commit %s, branch %s
 ABOUT_INFO=   An arcade game about pony and grabbing rubies in cave\nwith using special abilities of any ponies. Developed\nwith ObjectPascal/SFML. Author - Aleksandr V. Tereshenkov.\nHome pages: tav-developer.itch.io and github.com/tereshenkovav

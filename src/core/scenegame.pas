@@ -49,10 +49,12 @@ type
     grab:TSfmlSound ;
     active_hero:THero ;
     hero_storage:TUniDictionary<string,Integer> ;
+    active_actions:TUniList<THeroAction> ;
     procedure setCmdToDxy();
     function fixXifCrossed(stopx, dx:Single):Boolean ;
     function fixYifCrossed(stopy, dy:Single):Boolean ;
   public
+    speedup:Boolean ;
     constructor Create(Aleveln:Integer) ;
     function Init():Boolean ; override ;
     function FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ; override ;
@@ -217,6 +219,14 @@ begin
   TSfmlAnimation(spr).Play() ;
   spr_heros_walk.Add('pinkie',TSfmlAnimation(spr)) ;
 
+  spr:=loadSprite('images'+PATH_SEP+'rainbow_wait.png');
+  spr.Origin:=SfmlVector2f(SfmlTextureGetSize(spr.Texture).x/2,29) ;
+  spr_heros_wait.Add('rainbow',spr) ;
+  spr:=TSfmlAnimation.Create('images'+PATH_SEP+'rainbow_walk.png',5,8);
+  spr.Origin:=SfmlVector2f(SfmlTextureGetSize(spr.Texture).x/2,29) ;
+  TSfmlAnimation(spr).Play() ;
+  spr_heros_walk.Add('rainbow',TSfmlAnimation(spr)) ;
+
   portal:=TSfmlAnimation.Create('images'+PATH_SEP+'portal.png',4,4);
   portal.Origin:=SfmlVector2f(SfmlTextureGetSize(portal.Texture).x/2,0) ;
   portal.Play() ;
@@ -254,6 +264,9 @@ begin
   hero_storage:=TUniDictionary<string,Integer>.Create ;
   level.fillHeroStorage(hero_storage) ;
 
+  active_actions:=TUniList<THeroAction>.Create() ;
+
+  speedup:=False ;
   Result:=True ;
 end ;
 
@@ -263,6 +276,8 @@ var event:TSfmlEventEx ;
     m:TMonster ;
     spawn:TSpawner ;
     code:string ;
+    i:Integer ;
+    action:THeroAction ;
 begin
   Result:=Normal ;
 
@@ -280,22 +295,26 @@ begin
       if (event.event.key.code = sfKeyUp) then tek_cmd:=cmdUp ;
       if (event.event.key.code = sfKeyDown) then tek_cmd:=cmdDown ;
       if (event.event.key.code = sfKeySpace) then tek_cmd:=cmdStop ;
-      if (event.event.Key.code = sfKeyNum1) then begin
+      if (event.event.Key.code in
+        [sfKeyNum1,sfKeyNum2,sfKeyNum3,sfKeyNum4,sfKeyNum5,sfKeyNum6]) then begin
+        code:=THero.getHeroCodes()[ord(event.event.Key.code)-ord(sfKeyNum1)] ;
         if active_hero.isNoHero() then
-          if hero_storage[THero.getHeroCodes()[0]]>0 then begin
-            active_hero:=THero.Create(THero.getHeroCodes()[0]) ;
-            hero_storage[THero.getHeroCodes()[0]]:=hero_storage[THero.getHeroCodes()[0]]-1 ;
+          if hero_storage[code]>0 then begin
+            active_hero:=THero.Create(code) ;
+            hero_storage[code]:=hero_storage[code]-1 ;
           end ;
       end ;
       if (event.event.Key.code = sfKeyLControl) then begin
-        if not active_hero.isNoHero() then
-          with active_hero.createAction() do begin
-            if Apply(level,playermapx,playermapy,IfThen(ismirr,-1,1)) then begin
-              active_hero.Free ;
-              active_hero:=THero.getNoHero() ;
-              Free ;
-            end ;
-          end;
+        if not active_hero.isNoHero() then begin
+          action:=active_hero.createAction() ;
+          if action.Apply(level,playermapx,playermapy,IfThen(ismirr,-1,1),Self) then begin
+            active_hero.Free ;
+            active_hero:=THero.getNoHero() ;
+            active_actions.Add(action) ;
+          end
+          else
+            action.Free ;
+        end;
       end ;
     end ;
 
@@ -340,8 +359,8 @@ begin
     if not level.isWayCorrect(Trunc(player_x),Trunc(player_y)+1) then
       if fixYifCrossed(Trunc(player_y),player_dy*PLAYER_SPEED*dt) then player_dy:=0 ;
 
-  player_x:=player_x+player_dx*PLAYER_SPEED*dt ;
-  player_y:=player_y+player_dy*PLAYER_SPEED*dt ;
+  player_x:=player_x+IfThen(speedup,2,1)*player_dx*PLAYER_SPEED*dt ;
+  player_y:=player_y+IfThen(speedup,2,1)*player_dy*PLAYER_SPEED*dt ;
 
   // Поедание ячеек
   if level.isCrystallAt(playermapx,playermapy) then begin
@@ -381,6 +400,19 @@ begin
   walkbot.Update(dt) ;
   for code in spr_heros_walk.AllKeys do
     spr_heros_walk[code].Update(dt) ;
+
+  i:=0 ;
+  while i<active_actions.Count do begin
+    active_actions[i].Update(dt) ;
+    if active_actions[i].isTimeOut() then begin
+      active_actions[i].Finish() ;
+      active_actions[i].Free ;
+      active_actions.Delete(i) ;
+    end
+    else
+      Inc(i) ;
+  end;
+
 
   portal.Update(dt) ;
 end ;
