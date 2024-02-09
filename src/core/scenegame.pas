@@ -5,7 +5,7 @@ interface
 uses
   Classes, SysUtils,
   SfmlSystem,SfmlWindow,SfmlGraphics,SfmlAudio,
-  Helpers, Scene, Level, SfmlAnimation, Monster, Spawner ;
+  Helpers, Scene, Level, SfmlAnimation, Monster, Spawner, Hero ;
 
 type
 
@@ -19,9 +19,13 @@ type
     spr_stair:TSfmlSprite ;
     spr_crystall:TSfmlSprite ;
     spr_spawner:TSfmlSprite ;
-    spr_icons,spr_icons_gray:array of TSfmlSprite ;
+    spr_circle:TSfmlSprite ;
+    spr_circle_gray:TSfmlSprite ;
+    spr_icons,spr_icons_gray:TUniDictionary<string,TSfmlSprite> ;
     spr_monsters:array of TSfmlSprite ;
     spr_monsters_w:array of Integer ;
+    spr_heros_walk:TUniDictionary<string,TSfmlAnimation> ;
+    spr_heros_wait:TUniDictionary<string,TSfmlSprite> ;
     level:TLevel ;
     leveln:Integer ;
     monsters:TUniList<TMonster> ;
@@ -43,6 +47,8 @@ type
     right_scale_bot:TSfmlVector2f ;
     galop:TSfmlSound ;
     grab:TSfmlSound ;
+    active_hero:THero ;
+    hero_storage:TUniDictionary<string,Integer> ;
     procedure setCmdToDxy();
     function fixXifCrossed(stopx, dx:Single):Boolean ;
     function fixYifCrossed(stopy, dy:Single):Boolean ;
@@ -158,35 +164,28 @@ end ;
 
 function TSceneGame.Init():Boolean ;
 var i:Integer ;
+    spr:TSfmlSprite ;
+    code:string ;
 begin
   spr_block:=loadSprite('images'+PATH_SEP+'block.png');
   spr_stair:=loadSprite('images'+PATH_SEP+'stair.png');
   spr_crystall:=loadSprite('images'+PATH_SEP+'crystall.png');
   spr_spawner:=loadSprite('images'+PATH_SEP+'spawner.png');
   spr_spawner.Origin:=SfmlVector2f(SfmlTextureGetSize(spr_spawner.Texture).x/2,0) ;
+  spr_circle:=loadSprite('images'+PATH_SEP+'circle.png',[sloCentered]);
+  spr_circle_gray:=loadSprite('images'+PATH_SEP+'circle_gray.png',[sloCentered]);
 
-  SetLength(spr_icons,6) ;
-  spr_icons[0]:=loadSprite('images'+PATH_SEP+'applejack_ico.png',[sloCentered]);
-  spr_icons[1]:=loadSprite('images'+PATH_SEP+'pinki_ico.png',[sloCentered]);
-  spr_icons[2]:=loadSprite('images'+PATH_SEP+'rarity_ico.png',[sloCentered]);
-  spr_icons[3]:=loadSprite('images'+PATH_SEP+'flatter_ico.png',[sloCentered]);
-  spr_icons[4]:=loadSprite('images'+PATH_SEP+'rainbow_ico.png',[sloCentered]);
-  spr_icons[5]:=loadSprite('images'+PATH_SEP+'twily_ico.png',[sloCentered]);
-  for i := 0 to Length(spr_icons)-1 do
-    spr_icons[i].Scale(0.75,0.75) ;
-
-  SetLength(spr_icons_gray,6) ;
-  spr_icons_gray[0]:=loadSprite('images'+PATH_SEP+'applejack_ico.png',[sloCentered]);
-  spr_icons_gray[1]:=loadSprite('images'+PATH_SEP+'pinki_ico.png',[sloCentered]);
-  spr_icons_gray[2]:=loadSprite('images'+PATH_SEP+'rarity_ico.png',[sloCentered]);
-  spr_icons_gray[3]:=loadSprite('images'+PATH_SEP+'flatter_ico.png',[sloCentered]);
-  spr_icons_gray[4]:=loadSprite('images'+PATH_SEP+'rainbow_ico.png',[sloCentered]);
-  spr_icons_gray[5]:=loadSprite('images'+PATH_SEP+'twily_ico.png',[sloCentered]);
-  for i := 0 to Length(spr_icons_gray)-1 do
-    spr_icons_gray[i].Scale(0.75,0.75) ;
-
-  for i := 0 to Length(spr_icons_gray)-1 do
-    convertSpriteTexture(spr_icons_gray[i],funcMakeGray) ;
+  spr_icons:=TUniDictionary<string,TSfmlSprite>.Create() ;
+  spr_icons_gray:=TUniDictionary<string,TSfmlSprite>.Create() ;
+  for code in THero.getHeroCodes() do begin
+    spr:=loadSprite('images'+PATH_SEP+code+'_ico.png',[sloCentered]);
+    spr.Scale(0.6,0.6) ;
+    spr_icons.Add(code,spr) ;
+    spr:=loadSprite('images'+PATH_SEP+code+'_ico.png',[sloCentered]);
+    spr.Scale(0.6,0.6) ;
+    convertSpriteTexture(spr,funcMakeGray) ;
+    spr_icons_gray.Add(code,spr) ;
+  end;
 
   SetLength(spr_monsters,3) ;
   spr_monsters[0]:=loadSprite('images'+PATH_SEP+'monster0.png');
@@ -206,6 +205,17 @@ begin
   walkbot:=TSfmlAnimation.Create('images'+PATH_SEP+'walkbot.png',5,8);
   walkbot.Origin:=waitbot.Origin ;
   walkbot.Play() ;
+
+  spr_heros_wait:=TUniDictionary<string,TSfmlSprite>.Create() ;
+  spr_heros_walk:=TUniDictionary<string,TSfmlAnimation>.Create() ;
+
+  spr:=loadSprite('images'+PATH_SEP+'pinkie_wait.png');
+  spr.Origin:=SfmlVector2f(SfmlTextureGetSize(spr.Texture).x/2,29) ;
+  spr_heros_wait.Add('pinkie',spr) ;
+  spr:=TSfmlAnimation.Create('images'+PATH_SEP+'pinkie_walk.png',5,8);
+  spr.Origin:=SfmlVector2f(SfmlTextureGetSize(spr.Texture).x/2,29) ;
+  TSfmlAnimation(spr).Play() ;
+  spr_heros_walk.Add('pinkie',TSfmlAnimation(spr)) ;
 
   portal:=TSfmlAnimation.Create('images'+PATH_SEP+'portal.png',4,4);
   portal.Origin:=SfmlVector2f(SfmlTextureGetSize(portal.Texture).x/2,0) ;
@@ -240,6 +250,10 @@ begin
   left_scale_bot:=SfmlVector2f(-0.75,0.75) ;
   right_scale_bot:=SfmlVector2f(0.75,0.75) ;
 
+  active_hero:=THero.getNoHero() ;
+  hero_storage:=TUniDictionary<string,Integer>.Create ;
+  level.fillHeroStorage(hero_storage) ;
+
   Result:=True ;
 end ;
 
@@ -248,8 +262,13 @@ var event:TSfmlEventEx ;
     playermapx,playermapy:Integer ;
     m:TMonster ;
     spawn:TSpawner ;
+    code:string ;
 begin
   Result:=Normal ;
+
+  playermapx:=Trunc(player_x+0.5) ;
+  playermapy:=Trunc(player_y+0.5) ;
+
   for event in events do
     if (event.event.EventType = sfEvtKeyPressed) then begin
       if (event.event.key.code = sfKeyEscape) then begin
@@ -261,6 +280,23 @@ begin
       if (event.event.key.code = sfKeyUp) then tek_cmd:=cmdUp ;
       if (event.event.key.code = sfKeyDown) then tek_cmd:=cmdDown ;
       if (event.event.key.code = sfKeySpace) then tek_cmd:=cmdStop ;
+      if (event.event.Key.code = sfKeyNum1) then begin
+        if active_hero.isNoHero() then
+          if hero_storage[THero.getHeroCodes()[0]]>0 then begin
+            active_hero:=THero.Create(THero.getHeroCodes()[0]) ;
+            hero_storage[THero.getHeroCodes()[0]]:=hero_storage[THero.getHeroCodes()[0]]-1 ;
+          end ;
+      end ;
+      if (event.event.Key.code = sfKeyLControl) then begin
+        if not active_hero.isNoHero() then
+          with active_hero.createAction() do begin
+            if Apply(level,playermapx,playermapy,IfThen(ismirr,-1,1)) then begin
+              active_hero.Free ;
+              active_hero:=THero.getNoHero() ;
+              Free ;
+            end ;
+          end;
+      end ;
     end ;
 
   // Движение игрока
@@ -307,8 +343,6 @@ begin
   player_x:=player_x+player_dx*PLAYER_SPEED*dt ;
   player_y:=player_y+player_dy*PLAYER_SPEED*dt ;
 
-  playermapx:=Trunc(player_x+0.5) ;
-  playermapy:=Trunc(player_y+0.5) ;
   // Поедание ячеек
   if level.isCrystallAt(playermapx,playermapy) then begin
     level.clearCell(playermapx,playermapy) ;
@@ -345,6 +379,9 @@ begin
     spawn.Update(dt) ;
 
   walkbot.Update(dt) ;
+  for code in spr_heros_walk.AllKeys do
+    spr_heros_walk[code].Update(dt) ;
+
   portal.Update(dt) ;
 end ;
 
@@ -352,6 +389,8 @@ procedure TSceneGame.RenderFunc() ;
 var i,j:Integer ;
     m:TMonster ;
     spawn:TSpawner ;
+    spr_wait,spr_walk:TSfmlSprite ;
+    code:string ;
 begin
   for i := 0 to level.getWidth()-1 do
     for j := 0 to level.getHeight-1 do begin
@@ -361,11 +400,19 @@ begin
       if level.isFinishAt(i,j) then DrawSprite(portal, CELL_WIDTH*(i+0.5), CELL_HEIGHT*j) ;
     end;
 
-  for i := 0 to Length(spr_icons)-1 do
-    if i>2 then
-      drawSprite(spr_icons_gray[i],(CELL_WIDTH*23+wwidth)/2,85+70*i)
-    else
-      drawSprite(spr_icons[i],(CELL_WIDTH*23+wwidth)/2,85+70*i) ;
+  for i := 0 to THero.getHeroCodes().Count-1 do begin
+    code:=THero.getHeroCodes()[i] ;
+    if hero_storage[code]>0 then begin
+      for j := 0 to hero_storage[code]-1 do
+        drawSprite(spr_circle,(CELL_WIDTH*23+wwidth)/2+j*3,85+80*i+j*3) ;
+      j:=hero_storage[code]-1 ;
+      drawSprite(spr_icons[code],(CELL_WIDTH*23+wwidth)/2+j*3,85+80*i+j*3)
+    end
+    else begin
+      drawSprite(spr_circle_gray,(CELL_WIDTH*23+wwidth)/2,85+80*i) ;
+      drawSprite(spr_icons_gray[code],(CELL_WIDTH*23+wwidth)/2,85+80*i) ;
+    end;
+  end;
 
   DrawTextCentered(textLevel,(CELL_WIDTH*23+wwidth)/2,10) ;
 
@@ -380,18 +427,28 @@ begin
       CELL_WIDTH*m.getY(),
       Iif(m.isMirrHorz(),[MirrorHorz],[])) ;
 
-  if ismirr then begin
-    waitbot.ScaleFactor:=left_scale_bot ;
-    walkbot.ScaleFactor:=left_scale_bot ;
+// Переделать всё, добавив nohero в основной массив
+  if active_hero.isNoHero() then begin
+    spr_wait:=waitbot ;
+    spr_walk:=walkbot ;
   end
   else begin
-    waitbot.ScaleFactor:=right_scale_bot ;
-    walkbot.ScaleFactor:=right_scale_bot ;
+    spr_wait:=spr_heros_wait[active_hero.getCode()] ;
+    spr_walk:=spr_heros_walk[active_hero.getCode()] ;
+  end;
+
+  if ismirr then begin
+    spr_wait.ScaleFactor:=left_scale_bot ;
+    spr_walk.ScaleFactor:=left_scale_bot ;
+  end
+  else begin
+    spr_wait.ScaleFactor:=right_scale_bot ;
+    spr_walk.ScaleFactor:=right_scale_bot ;
   end;
   if (player_dx=0)and(player_dy=0) then
-    DrawSprite(waitbot, CELL_WIDTH*player_x + CELL_WIDTH/2, CELL_HEIGHT*player_y)
+    DrawSprite(spr_wait, CELL_WIDTH*player_x + CELL_WIDTH/2, CELL_HEIGHT*player_y)
   else
-    DrawSprite(walkbot, CELL_WIDTH*player_x + CELL_WIDTH/2, CELL_HEIGHT*player_y) ;
+    DrawSprite(spr_walk, CELL_WIDTH*player_x + CELL_WIDTH/2, CELL_HEIGHT*player_y) ;
 end ;
 
 procedure TSceneGame.UnInit() ;

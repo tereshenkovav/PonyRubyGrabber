@@ -35,6 +35,7 @@ type
     procedure fillStartXY(var x:single; var y:single);
     procedure fillMonsters(monsters:TUniList<TObject>) ;
     procedure fillSpawns(spawns:TUniList<TObject>; monsters:TUniList<TObject>) ;
+    procedure fillHeroStorage(dict:TUniDictionary<string,Integer>) ;
     function isFinishAt(x,y:Integer):Boolean ;
     function getCrystallCount():Integer ;
   end;
@@ -43,7 +44,7 @@ function isDXDYRevers(dx1, dy1, dx2, dy2: Integer): Boolean;
 
 implementation
 uses SysUtils,
-  Monster, Spawner ;
+  Monster, Spawner, Hero ;
 
 function isDXDYRevers(dx1, dy1, dx2, dy2: Integer): Boolean;
 begin
@@ -69,6 +70,14 @@ procedure TLevel.clearCell(x, y: Integer);
 begin
   if (x<0) or (x>=width) or (y<0) or (y>=height) then Exit() ;
   map[x][y]:=TCellType.Free ;
+end;
+
+procedure TLevel.fillHeroStorage(dict: TUniDictionary<string, Integer>);
+var code:string ;
+begin
+  dict.Clear() ;
+  for code in THero.getHeroCodes() do
+    dict.Add(code,StrToIntWt0(list.Values['Hero'+code])) ;
 end;
 
 procedure TLevel.fillMonsters(monsters: TUniList<TObject>);

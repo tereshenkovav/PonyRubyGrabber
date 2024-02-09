@@ -19,7 +19,8 @@ uses
   sceneclosehandler in 'core\sceneclosehandler.pas',
   sceneabout in 'core\sceneabout.pas',
   monster in 'core\monster.pas',
-  spawner in 'core\spawner.pas';
+  spawner in 'core\spawner.pas',
+  hero in 'core\hero.pas';
 
 begin
   with TMain.Create() do begin
