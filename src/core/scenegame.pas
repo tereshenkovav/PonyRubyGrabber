@@ -457,7 +457,7 @@ begin
     DrawSpriteMirr(spr_monsters[m.getTypeID()],
       CELL_WIDTH*m.getX()+CELL_WIDTH/2,
       CELL_WIDTH*m.getY(),
-      Iif(m.isMirrHorz(),[MirrorHorz],[])) ;
+      IfThen(m.isMirrHorz(),[MirrorHorz],[])) ;
 
 // Переделать всё, добавив nohero в основной массив
   if active_hero.isNoHero() then begin

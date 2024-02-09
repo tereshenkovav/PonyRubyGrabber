@@ -48,14 +48,14 @@ type
     destructor Destroy() ; override ;
   end;
 
-function Iif(b:Boolean; v1,v2:TMirrorTypeSet):TMirrorTypeSet ;
+function IfThen(b:Boolean; v1,v2:TMirrorTypeSet):TMirrorTypeSet ; overload ;
 
 implementation
 
 var
   scale_mirr_none,scale_mirr_horz,scale_mirr_vert,scale_mirr_both:TSfmlVector2f ;
 
-function Iif(b:Boolean; v1,v2:TMirrorTypeSet):TMirrorTypeSet ;
+function IfThen(b:Boolean; v1,v2:TMirrorTypeSet):TMirrorTypeSet ; overload ;
 begin
   if b then Result:=v1 else Result:=v2 ;  
 end;
