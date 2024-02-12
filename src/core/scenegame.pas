@@ -236,6 +236,14 @@ begin
   TSfmlAnimation(spr).Play() ;
   spr_heros_walk.Add('twily',TSfmlAnimation(spr)) ;
 
+  spr:=loadSprite('images'+PATH_SEP+'applejack_wait.png');
+  spr.Origin:=SfmlVector2f(SfmlTextureGetSize(spr.Texture).x/2,29) ;
+  spr_heros_wait.Add('applejack',spr) ;
+  spr:=TSfmlAnimation.Create('images'+PATH_SEP+'applejack_walk.png',5,8);
+  spr.Origin:=SfmlVector2f(SfmlTextureGetSize(spr.Texture).x/2,29) ;
+  TSfmlAnimation(spr).Play() ;
+  spr_heros_walk.Add('applejack',TSfmlAnimation(spr)) ;
+
   portal:=TSfmlAnimation.Create('images'+PATH_SEP+'portal.png',4,4);
   portal.Origin:=SfmlVector2f(SfmlTextureGetSize(portal.Texture).x/2,0) ;
   portal.Play() ;

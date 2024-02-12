@@ -28,6 +28,7 @@ type
     function isStairAt(x,y:Integer):Boolean ;
     function isCrystallAt(x,y:Integer):Boolean ;
     procedure clearCell(x,y:Integer) ;
+    procedure setWall(x,y:Integer) ;
     function getWidth():Integer ;
     function getHeight():Integer ;
     function getTextPos():Integer ;
@@ -70,6 +71,12 @@ procedure TLevel.clearCell(x, y: Integer);
 begin
   if (x<0) or (x>=width) or (y<0) or (y>=height) then Exit() ;
   map[x][y]:=TCellType.Free ;
+end;
+
+procedure TLevel.setWall(x, y: Integer);
+begin
+  if (x<0) or (x>=width) or (y<0) or (y>=height) then Exit() ;
+  map[x][y]:=TCellType.Block ;
 end;
 
 procedure TLevel.fillHeroStorage(dict: TUniDictionary<string, Integer>);
