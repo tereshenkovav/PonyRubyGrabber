@@ -37,6 +37,12 @@ type
     function Apply(level:TLevel; herox,heroy:Integer; herodx:Integer; Ascene:TObject):Boolean ; override ;
   end;
 
+  THeroActionJump = class(THeroAction)
+  private
+  public
+    function Apply(level:TLevel; herox,heroy:Integer; herodx:Integer; Ascene:TObject):Boolean ; override ;
+  end;
+
   THeroActionSpeedUp = class(THeroAction)
   private
     scene:TObject ;
@@ -52,6 +58,8 @@ uses SysUtils,
 var nohero:THero ;
     codes:TStringList ;
 
+const DIST_TELEPORT = 5 ;
+
 { THero }
 
 constructor THero.Create(Acode: string);
@@ -63,6 +71,7 @@ function THero.createAction: THeroAction;
 begin
   if code='pinkie' then Result:=THeroActionCrushWall.Create() else
   if code='rainbow' then Result:=THeroActionSpeedUp.Create() else
+  if code='twily' then Result:=THeroActionJump.Create() else
   Result:=THeroAction.Create() ;
 end;
 
@@ -137,6 +146,19 @@ end;
 procedure THeroActionSpeedUp.Finish;
 begin
   TSceneGame(scene).speedup:=False ;
+end;
+
+{ THeroActionJump }
+
+function THeroActionJump.Apply(level: TLevel; herox, heroy, herodx: Integer;
+  Ascene: TObject): Boolean;
+begin
+  if not level.isBlockAt(herox+DIST_TELEPORT*herodx,heroy) then begin
+    TSceneGame(Ascene).jumpHeroTo(herox+DIST_TELEPORT*herodx,heroy) ;
+    Result:=True ;
+  end
+  else
+    Result:=False ;
 end;
 
 initialization

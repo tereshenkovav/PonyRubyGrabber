@@ -60,6 +60,7 @@ type
     function FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ; override ;
     procedure RenderFunc() ; override ;
     procedure UnInit() ; override ;
+    procedure jumpHeroTo(newx,newy:Integer) ;
   end;
 
 implementation
@@ -227,6 +228,14 @@ begin
   TSfmlAnimation(spr).Play() ;
   spr_heros_walk.Add('rainbow',TSfmlAnimation(spr)) ;
 
+  spr:=loadSprite('images'+PATH_SEP+'twily_wait.png');
+  spr.Origin:=SfmlVector2f(SfmlTextureGetSize(spr.Texture).x/2,29) ;
+  spr_heros_wait.Add('twily',spr) ;
+  spr:=TSfmlAnimation.Create('images'+PATH_SEP+'twily_walk.png',5,8);
+  spr.Origin:=SfmlVector2f(SfmlTextureGetSize(spr.Texture).x/2,29) ;
+  TSfmlAnimation(spr).Play() ;
+  spr_heros_walk.Add('twily',TSfmlAnimation(spr)) ;
+
   portal:=TSfmlAnimation.Create('images'+PATH_SEP+'portal.png',4,4);
   portal.Origin:=SfmlVector2f(SfmlTextureGetSize(portal.Texture).x/2,0) ;
   portal.Play() ;
@@ -269,6 +278,12 @@ begin
   speedup:=False ;
   Result:=True ;
 end ;
+
+procedure TSceneGame.jumpHeroTo(newx, newy: Integer);
+begin
+  player_x:=newx ;
+  player_y:=newy ;
+end;
 
 function TSceneGame.FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ;
 var event:TSfmlEventEx ;
