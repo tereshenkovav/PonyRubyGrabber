@@ -65,9 +65,17 @@ type
     procedure Finish() ; override ;
   end;
 
+  THeroActionStun = class(THeroAction)
+  private
+    scene:TObject ;
+  public
+    function Apply(level:TLevel; herox,heroy:Integer; herodx:Integer; Ascene:TObject):Boolean ; override ;
+    procedure Finish() ; override ;
+  end;
+
 implementation
 uses SysUtils,
-  SceneGame ;
+  SceneGame, Monster ;
 
 var nohero:THero ;
     codes:TStringList ;
@@ -88,6 +96,7 @@ begin
   if code='twily' then Result:=THeroActionJump.Create() else
   if code='applejack' then Result:=THeroActionBuildWall.Create() else
   if code='rarity' then Result:=THeroActionShield.Create() else
+  if code='flatter' then Result:=THeroActionStun.Create() else
   Result:=THeroAction.Create() ;
 end;
 
@@ -204,6 +213,26 @@ end;
 procedure THeroActionShield.Finish;
 begin
   TSceneGame(scene).shield:=False ;
+end;
+
+{ THeroActionStun }
+
+function THeroActionStun.Apply(level: TLevel; herox, heroy, herodx: Integer;
+  Ascene: TObject): Boolean;
+var m:TMonster ;
+begin
+  scene:=Ascene ;
+  timeleft:=10 ;
+  for m in TSceneGame(scene).monsters do
+    m.setStun(True) ;
+  Result:=True ;
+end;
+
+procedure THeroActionStun.Finish;
+var m:TMonster ;
+begin
+  for m in TSceneGame(scene).monsters do
+    m.setStun(False) ;
 end;
 
 initialization

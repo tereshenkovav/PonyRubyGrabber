@@ -42,6 +42,7 @@ type
     way:Single ;
     level:TLevel ;
     mt:TMovingTactic ;
+    stuned:Boolean ;
     procedure genNextDir(playerx,playery:Single) ;
   public
     constructor Create(Atypeid:Integer; Ax,Ay:Single; Alevel:TLevel) ;
@@ -51,6 +52,8 @@ type
     function getX():Single ;
     function getY():Single ;
     function isMirrHorz():Boolean ;
+    procedure setStun(value:Boolean) ;
+    function isStuned():Boolean ;
   end;
 
 implementation
@@ -131,8 +134,20 @@ begin
   Result:=dx<0 ;
 end;
 
+function TMonster.isStuned: Boolean;
+begin
+  Result:=stuned ;
+end;
+
+procedure TMonster.setStun(value:Boolean);
+begin
+  stuned:=value ;
+end;
+
 procedure TMonster.Update(dt: Single; playerx,playery:Single);
 begin
+  if isStuned() then Exit ;
+
   if (dx=0) and (dy=0) then genNextDir(playerx,playery) ;
 
   x:=x+SPEED*dx*dt ;

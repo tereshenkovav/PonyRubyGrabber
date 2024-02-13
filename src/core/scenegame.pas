@@ -29,7 +29,6 @@ type
     spr_heros_wait:TUniDictionary<string,TSfmlSprite> ;
     level:TLevel ;
     leveln:Integer ;
-    monsters:TUniList<TMonster> ;
     spawners:TUniList<TSpawner> ;
     textLevel:TSfmlText ;
     textHelp:TSfmlText ;
@@ -57,6 +56,7 @@ type
   public
     speedup:Boolean ;
     shield:Boolean ;
+    monsters:TUniList<TMonster> ;
     constructor Create(Aleveln:Integer) ;
     function Init():Boolean ; override ;
     function FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ; override ;
@@ -218,45 +218,15 @@ begin
   spr_heros_wait:=TUniDictionary<string,TSfmlSprite>.Create() ;
   spr_heros_walk:=TUniDictionary<string,TSfmlAnimation>.Create() ;
 
-  spr:=loadSprite('images'+PATH_SEP+'pinkie_wait.png');
-  spr.Origin:=SfmlVector2f(SfmlTextureGetSize(spr.Texture).x/2,29) ;
-  spr_heros_wait.Add('pinkie',spr) ;
-  spr:=TSfmlAnimation.Create('images'+PATH_SEP+'pinkie_walk.png',5,8);
-  spr.Origin:=SfmlVector2f(SfmlTextureGetSize(spr.Texture).x/2,29) ;
-  TSfmlAnimation(spr).Play() ;
-  spr_heros_walk.Add('pinkie',TSfmlAnimation(spr)) ;
-
-  spr:=loadSprite('images'+PATH_SEP+'rainbow_wait.png');
-  spr.Origin:=SfmlVector2f(SfmlTextureGetSize(spr.Texture).x/2,29) ;
-  spr_heros_wait.Add('rainbow',spr) ;
-  spr:=TSfmlAnimation.Create('images'+PATH_SEP+'rainbow_walk.png',5,8);
-  spr.Origin:=SfmlVector2f(SfmlTextureGetSize(spr.Texture).x/2,29) ;
-  TSfmlAnimation(spr).Play() ;
-  spr_heros_walk.Add('rainbow',TSfmlAnimation(spr)) ;
-
-  spr:=loadSprite('images'+PATH_SEP+'twily_wait.png');
-  spr.Origin:=SfmlVector2f(SfmlTextureGetSize(spr.Texture).x/2,29) ;
-  spr_heros_wait.Add('twily',spr) ;
-  spr:=TSfmlAnimation.Create('images'+PATH_SEP+'twily_walk.png',5,8);
-  spr.Origin:=SfmlVector2f(SfmlTextureGetSize(spr.Texture).x/2,29) ;
-  TSfmlAnimation(spr).Play() ;
-  spr_heros_walk.Add('twily',TSfmlAnimation(spr)) ;
-
-  spr:=loadSprite('images'+PATH_SEP+'applejack_wait.png');
-  spr.Origin:=SfmlVector2f(SfmlTextureGetSize(spr.Texture).x/2,29) ;
-  spr_heros_wait.Add('applejack',spr) ;
-  spr:=TSfmlAnimation.Create('images'+PATH_SEP+'applejack_walk.png',5,8);
-  spr.Origin:=SfmlVector2f(SfmlTextureGetSize(spr.Texture).x/2,29) ;
-  TSfmlAnimation(spr).Play() ;
-  spr_heros_walk.Add('applejack',TSfmlAnimation(spr)) ;
-
-  spr:=loadSprite('images'+PATH_SEP+'rarity_wait.png');
-  spr.Origin:=SfmlVector2f(SfmlTextureGetSize(spr.Texture).x/2,29) ;
-  spr_heros_wait.Add('rarity',spr) ;
-  spr:=TSfmlAnimation.Create('images'+PATH_SEP+'rarity_walk.png',5,8);
-  spr.Origin:=SfmlVector2f(SfmlTextureGetSize(spr.Texture).x/2,29) ;
-  TSfmlAnimation(spr).Play() ;
-  spr_heros_walk.Add('rarity',TSfmlAnimation(spr)) ;
+  for code in THero.getHeroCodes() do begin
+    spr:=loadSprite('images'+PATH_SEP+code+'_wait.png');
+    spr.Origin:=SfmlVector2f(SfmlTextureGetSize(spr.Texture).x/2,29) ;
+    spr_heros_wait.Add(code,spr) ;
+    spr:=TSfmlAnimation.Create('images'+PATH_SEP+code+'_walk.png',5,8);
+    spr.Origin:=SfmlVector2f(SfmlTextureGetSize(spr.Texture).x/2,29) ;
+    TSfmlAnimation(spr).Play() ;
+    spr_heros_walk.Add(code,TSfmlAnimation(spr)) ;
+  end;
 
   portal:=TSfmlAnimation.Create('images'+PATH_SEP+'portal.png',4,4);
   portal.Origin:=SfmlVector2f(SfmlTextureGetSize(portal.Texture).x/2,0) ;

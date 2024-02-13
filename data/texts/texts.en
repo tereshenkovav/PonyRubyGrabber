@@ -24,6 +24,7 @@ LEVELHELP_6=   Turn into Rainbow by pressing the transformation key 4.\nThen, at
 LEVELHELP_7=   Turn into Twilight by pressing the transformation key 6.\nThen, at the right moment, use the ability of horizontal\nteleportation by five cells by pressing the action button Ctrl.\n   At this level, two transformations are available.
 LEVELHELP_8=   Turn into an Applejack by pressing the transformation key 2.\nThen, at the right moment, use the wall installation ability by pressing the\naction button Ctrl.
 LEVELHELP_9=   Turn into an Rarity by pressing the transformation key 5.\nThen, at the right moment, use the shield ability by pressing the\naction button Ctrl.
+LEVELHELP_10=   Turn into a Fluttershy by pressing the transformation key 3.\nThen, at the right moment, use the ability to suppress\nall monsters on the map by pressing action button Ctrl.
 ABOUT_TITLE=Pony and the cave of rubies
 ABOUT_VERSION=%s, commit %s, branch %s
 ABOUT_INFO=   An arcade game about pony and grabbing rubies in cave\nwith using special abilities of any ponies. Developed\nwith ObjectPascal/SFML. Author - Aleksandr V. Tereshenkov.\nHome pages: tav-developer.itch.io and github.com/tereshenkovav
