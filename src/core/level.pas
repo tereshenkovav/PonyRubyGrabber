@@ -12,6 +12,7 @@ type
     x:Integer ;
     y:Integer ;
     code:string ;
+    class operator Equal(a: THeroIcon; b: THeroIcon): Boolean;
     constructor Create(Ax, Ay: Integer; ACode: string);
   end;
 
@@ -271,6 +272,11 @@ begin
   x:=Ax ;
   y:=Ay ;
   code:=Acode ;
+end;
+
+class operator THeroIcon.Equal(a, b: THeroIcon): Boolean;
+begin
+  Result:=(a.x=b.x)and(a.y=b.y)and(a.code=b.code) ;
 end;
 
 end.

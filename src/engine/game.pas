@@ -65,9 +65,9 @@ begin
   tekscene:=initscene ;
 rebuild_window:
   if fullscr then
-    window := TSfmlRenderWindow.Create(mode, UTF8ToString(title),[sfFullscreen], nil)
+    window := TSfmlRenderWindow.Create(mode, UTF8Decode(title),[sfFullscreen], nil)
   else
-    window := TSfmlRenderWindow.Create(mode, UTF8ToString(title),[sfClose], nil);
+    window := TSfmlRenderWindow.Create(mode, UTF8Decode(title),[sfClose], nil);
   window.SetVerticalSyncEnabled(True);
   window.setFramerateLimit(60);
   window.SetMouseCursorVisible(False);
