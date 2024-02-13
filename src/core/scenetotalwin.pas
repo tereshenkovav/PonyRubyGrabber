@@ -31,7 +31,8 @@ begin
   intro:=loadSprite('images'+PATH_SEP+'totalwin.png');
   intro.Position:=SfmlVector2f(0,0) ;
   intro.Color:=SfmlColorFromRGBA(255,255,255,Trunc(stage)) ;
-  textOK:=createText(TCommonData.Font,TCommonData.texts.getText('TEXT_TOTALWIN'),24,SfmlWhite) ;
+  textOK:=createText(TCommonData.Font,TCommonData.texts.getText('TEXT_TOTALWIN'),32,
+    SfmlColorFromRGB(120,40,40)) ;
   Result:=True ;
 end ;
 
@@ -52,7 +53,7 @@ procedure TSceneTotalWin.RenderFunc() ;
 begin
   intro.Color:=SfmlColorFromRGBA(255,255,255,Trunc(stage)) ;
   window.Draw(intro) ;
-  if stage=255 then drawTextCentered(textOK,wwidth/2,50) ;
+  if stage=255 then drawTextCentered(textOK,wwidth/2,30) ;
 end ;
 
 procedure TSceneTotalWin.UnInit() ;
