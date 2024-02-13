@@ -57,6 +57,14 @@ type
     procedure Finish() ; override ;
   end;
 
+  THeroActionShield = class(THeroAction)
+  private
+    scene:TObject ;
+  public
+    function Apply(level:TLevel; herox,heroy:Integer; herodx:Integer; Ascene:TObject):Boolean ; override ;
+    procedure Finish() ; override ;
+  end;
+
 implementation
 uses SysUtils,
   SceneGame ;
@@ -79,6 +87,7 @@ begin
   if code='rainbow' then Result:=THeroActionSpeedUp.Create() else
   if code='twily' then Result:=THeroActionJump.Create() else
   if code='applejack' then Result:=THeroActionBuildWall.Create() else
+  if code='rarity' then Result:=THeroActionShield.Create() else
   Result:=THeroAction.Create() ;
 end;
 
@@ -179,6 +188,22 @@ begin
   end
   else
     Result:=False ;
+end;
+
+{ THeroActionShield }
+
+function THeroActionShield.Apply(level: TLevel; herox, heroy, herodx: Integer;
+  Ascene: TObject): Boolean;
+begin
+  scene:=Ascene ;
+  timeleft:=7 ;
+  TSceneGame(scene).shield:=True ;
+  Result:=True ;
+end;
+
+procedure THeroActionShield.Finish;
+begin
+  TSceneGame(scene).shield:=False ;
 end;
 
 initialization

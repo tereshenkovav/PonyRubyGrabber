@@ -21,6 +21,7 @@ type
     spr_spawner:TSfmlSprite ;
     spr_circle:TSfmlSprite ;
     spr_circle_gray:TSfmlSprite ;
+    spr_shield:TSfmlAnimation ;
     spr_icons,spr_icons_gray:TUniDictionary<string,TSfmlSprite> ;
     spr_monsters:array of TSfmlSprite ;
     spr_monsters_w:array of Integer ;
@@ -55,6 +56,7 @@ type
     function fixYifCrossed(stopy, dy:Single):Boolean ;
   public
     speedup:Boolean ;
+    shield:Boolean ;
     constructor Create(Aleveln:Integer) ;
     function Init():Boolean ; override ;
     function FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ; override ;
@@ -209,6 +211,10 @@ begin
   walkbot.Origin:=waitbot.Origin ;
   walkbot.Play() ;
 
+  spr_shield:=TSfmlAnimation.Create('images'+PATH_SEP+'shield.png',60,60,28,14);
+  spr_shield.Origin:=SfmlVector2f(30,10) ;
+  spr_shield.Play() ;
+
   spr_heros_wait:=TUniDictionary<string,TSfmlSprite>.Create() ;
   spr_heros_walk:=TUniDictionary<string,TSfmlAnimation>.Create() ;
 
@@ -243,6 +249,14 @@ begin
   spr.Origin:=SfmlVector2f(SfmlTextureGetSize(spr.Texture).x/2,29) ;
   TSfmlAnimation(spr).Play() ;
   spr_heros_walk.Add('applejack',TSfmlAnimation(spr)) ;
+
+  spr:=loadSprite('images'+PATH_SEP+'rarity_wait.png');
+  spr.Origin:=SfmlVector2f(SfmlTextureGetSize(spr.Texture).x/2,29) ;
+  spr_heros_wait.Add('rarity',spr) ;
+  spr:=TSfmlAnimation.Create('images'+PATH_SEP+'rarity_walk.png',5,8);
+  spr.Origin:=SfmlVector2f(SfmlTextureGetSize(spr.Texture).x/2,29) ;
+  TSfmlAnimation(spr).Play() ;
+  spr_heros_walk.Add('rarity',TSfmlAnimation(spr)) ;
 
   portal:=TSfmlAnimation.Create('images'+PATH_SEP+'portal.png',4,4);
   portal.Origin:=SfmlVector2f(SfmlTextureGetSize(portal.Texture).x/2,0) ;
@@ -284,6 +298,7 @@ begin
   active_actions:=TUniList<THeroAction>.Create() ;
 
   speedup:=False ;
+  shield:=False ;
   Result:=True ;
 end ;
 
@@ -410,6 +425,7 @@ begin
 
   for m in monsters do begin
     m.Update(dt,player_x,player_y) ;
+    if not shield then
     if (Abs(player_x-m.getX())<0.5*(1+spr_monsters_w[m.getTypeID()]/CELL_WIDTH))and
        (playermapy=Trunc(m.getY()+0.5)) then begin
       subscene:=TSubSceneMenuFin.Create(leveln,False) ;
@@ -436,7 +452,7 @@ begin
       Inc(i) ;
   end;
 
-
+  spr_shield.Update(dt) ;
   portal.Update(dt) ;
 end ;
 
@@ -504,6 +520,8 @@ begin
     DrawSprite(spr_wait, CELL_WIDTH*player_x + CELL_WIDTH/2, CELL_HEIGHT*player_y)
   else
     DrawSprite(spr_walk, CELL_WIDTH*player_x + CELL_WIDTH/2, CELL_HEIGHT*player_y) ;
+
+  if shield then DrawSprite(spr_shield,CELL_WIDTH*player_x + CELL_WIDTH/2, CELL_HEIGHT*player_y) ;
 end ;
 
 procedure TSceneGame.UnInit() ;
