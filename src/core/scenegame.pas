@@ -48,6 +48,7 @@ type
     right_scale_bot:TSfmlVector2f ;
     galop:TSfmlSound ;
     grab:TSfmlSound ;
+    teleport:TSfmlSound ;
     active_hero:THero ;
     hero_storage:TUniDictionary<string,Integer> ;
     active_actions:TUniList<THeroAction> ;
@@ -245,6 +246,8 @@ begin
   galop.Volume:=IfThen(TCommonData.soundon,100,0) ;
   grab:=TSfmlSound.Create(TSfmlSoundBuffer.Create('sounds'+PATH_SEP+'grab.ogg'));
   grab.Volume:=IfThen(TCommonData.soundon,100,0) ;
+  teleport:=TSfmlSound.Create(TSfmlSoundBuffer.Create('sounds'+PATH_SEP+'teleport.ogg'));
+  teleport.Volume:=IfThen(TCommonData.soundon,100,0) ;
 
   level:=TLevel.Create ;
   level.LoadFromFile('levels'+PATH_SEP+'level'+IntToStr(leveln)+'.dat');
@@ -317,6 +320,7 @@ begin
           if hero_storage[code]>0 then begin
             active_hero:=THero.Create(code) ;
             hero_storage[code]:=hero_storage[code]-1 ;
+            teleport.Play() ;
           end ;
       end ;
       if (event.event.Key.code = sfKeyLControl) then begin
