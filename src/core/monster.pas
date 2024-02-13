@@ -59,7 +59,7 @@ type
 implementation
 uses Classes, SysUtils, Math ;
 
-const SPEED = 2 ;
+const SPEED = 2.5 ;
       STEPX: array[0..3] of Integer = (1,0,0,-1) ;
       STEPY: array[0..3] of Integer = (0,1,-1,0) ;
 

@@ -73,7 +73,8 @@ uses Math,
 
 const CELL_HEIGHT=40 ;
       CELL_WIDTH=40 ;
-      PLAYER_SPEED = 5 ;
+      PLAYER_SPEED = 3 ;
+      SPEEDUP_K = 3 ;
 
 function cmd2sig(cmd:TCommand):Integer ;
 begin
@@ -378,8 +379,8 @@ begin
     if not level.isWayCorrect(Trunc(player_x),Trunc(player_y)+1) then
       if fixYifCrossed(Trunc(player_y),player_dy*PLAYER_SPEED*dt) then player_dy:=0 ;
 
-  player_x:=player_x+IfThen(speedup,2,1)*player_dx*PLAYER_SPEED*dt ;
-  player_y:=player_y+IfThen(speedup,2,1)*player_dy*PLAYER_SPEED*dt ;
+  player_x:=player_x+IfThen(speedup,SPEEDUP_K,1)*player_dx*PLAYER_SPEED*dt ;
+  player_y:=player_y+IfThen(speedup,SPEEDUP_K,1)*player_dy*PLAYER_SPEED*dt ;
 
   // Поедание ячеек
   if level.isCrystallAt(playermapx,playermapy) then begin
@@ -408,6 +409,7 @@ begin
     if level.getCrystallCount()=0 then begin
       TCommonData.profile.MarkLevelCompleted(leveln) ;
       subscene:=TSubSceneMenuFin.Create(leveln,True) ;
+      galop.Stop() ;
       Exit(TSceneResult.SetSubScene) ;
     end;
 
@@ -417,6 +419,7 @@ begin
     if (Abs(player_x-m.getX())<0.5*(1+spr_monsters_w[m.getTypeID()]/CELL_WIDTH))and
        (playermapy=Trunc(m.getY()+0.5)) then begin
       subscene:=TSubSceneMenuFin.Create(leveln,False) ;
+      galop.Stop() ;
       Exit(TSceneResult.SetSubScene) ;
     end ;
   end;
