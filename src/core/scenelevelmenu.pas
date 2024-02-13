@@ -31,7 +31,7 @@ begin
   logo:=loadSprite(TCommonData.languages.formatFileNameWithLang('images'+PATH_SEP+'intro.png'));
   logo.Position:=SfmlVector2f(0,0) ;
 
-  menu:=TMenuKeyboardText.Create(TCommonData.selector,wwidth div 2-50,300,40,
+  menu:=TMenuKeyboardText.Create(TCommonData.selector,wwidth div 2-50,290,38,
     TCommonData.Font,26,SfmlWhite) ;
   buildMenu() ;
   overscene:=menu ;

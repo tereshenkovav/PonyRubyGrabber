@@ -6,7 +6,14 @@ uses Types, Classes,
 
 type
 
-  TCellType = (Free, Block, Stair, Crystall) ;
+  TCellType = (Free, Block, Stair, Crystall, HeroIcon) ;
+
+  THeroIcon = record
+    x:Integer ;
+    y:Integer ;
+    code:string ;
+    constructor Create(Ax, Ay: Integer; ACode: string);
+  end;
 
   { TLevel }
 
@@ -19,6 +26,7 @@ type
     textpos:Integer ;
     textdata:string ;
     map:array of array of TCellType ;
+    icons:TUniList<THeroIcon>;
     list:TStringList ;
   public
     procedure LoadFromFile(filename:string) ;
@@ -27,6 +35,8 @@ type
     function isBlockAt(x,y:Integer):Boolean ;
     function isStairAt(x,y:Integer):Boolean ;
     function isCrystallAt(x,y:Integer):Boolean ;
+    function isHeroIconAt(x,y:Integer):Boolean ;
+    function getHeroIconAt(x,y:Integer):string ;
     procedure clearCell(x,y:Integer) ;
     procedure setWall(x,y:Integer) ;
     function getWidth():Integer ;
@@ -133,6 +143,15 @@ begin
   Result:=height ;
 end;
 
+function TLevel.getHeroIconAt(x, y: Integer): string;
+var hi:THeroIcon ;
+begin
+  if (x<0) or (x>=width) or (y<0) or (y>=height) then Exit('') ;
+  Result:='' ;
+  for hi in icons do
+    if (hi.x=x)and(hi.y=y) then Result:=hi.code ;
+end;
+
 class function TLevel.getMaxLevel(leveldir: string): Integer;
 begin
   Result:=-1 ;
@@ -173,6 +192,12 @@ begin
   Result:=(x=finish.X)and(y=finish.Y) ;
 end;
 
+function TLevel.isHeroIconAt(x, y: Integer): Boolean;
+begin
+  if (x<0) or (x>=width) or (y<0) or (y>=height) then Exit(False) ;
+  Result:=map[x][y]=TCellType.HeroIcon ;
+end;
+
 function TLevel.isStairAt(x, y: Integer): Boolean;
 begin
   if (x<0) or (x>=width) or (y<0) or (y>=height) then Exit(False) ;
@@ -206,6 +231,7 @@ begin
     for x := 0 to width-1 do
       map[x][y]:=TCellType.Free ;
 
+  icons:=TUniList<THeroIcon>.Create() ;
   for y := 0 to datah-1 do begin
     str:=list.Values['Row'+IntToStr(y)] ;
     if str.Length<dataw then str:=str+StringOfChar(chr(32),dataw-str.Length) ;
@@ -225,10 +251,27 @@ begin
       if str[x+1]='-' then begin
         ct:=TCellType.Free ; // Специальная зона, где нельзя спавнить алмазы
       end;
+      if str[x+1] in ['0','1','2','3','4','5'] then begin
+        ct:=TCellType.HeroIcon ;
+        icons.Add(THeroIcon.Create(x+left,y+top,THero.getHeroCodes()[ord(str[x+1])-ord('0')])) ;
+      end;
+      // Защита от двери спавна монстров совместно с алмазом
+      for i := 0 to StrToIntWt0(list.Values['SpawnCount'])-1 do
+        if (StrToIntWt0(list.Values[Format('Spawn%d_X',[i])])=x)and
+         (StrToIntWt0(list.Values[Format('Spawn%d_Y',[i])])=y) then ct:=TCellType.Free ;
       map[x+left][y+top]:=ct ;
     end ;
   end;
 end ;
+
+{ THeroIcon }
+
+constructor THeroIcon.Create(Ax, Ay: Integer; ACode: string);
+begin
+  x:=Ax ;
+  y:=Ay ;
+  code:=Acode ;
+end;
 
 end.
 

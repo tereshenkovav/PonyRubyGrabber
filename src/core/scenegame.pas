@@ -21,8 +21,9 @@ type
     spr_spawner:TSfmlSprite ;
     spr_circle:TSfmlSprite ;
     spr_circle_gray:TSfmlSprite ;
+    spr_circle_mini:TSfmlSprite ;
     spr_shield:TSfmlAnimation ;
-    spr_icons,spr_icons_gray:TUniDictionary<string,TSfmlSprite> ;
+    spr_icons,spr_icons_gray,spr_icons_mini:TUniDictionary<string,TSfmlSprite> ;
     spr_monsters:array of TSfmlSprite ;
     spr_monsters_w:array of Integer ;
     spr_heros_walk:TUniDictionary<string,TSfmlAnimation> ;
@@ -179,9 +180,12 @@ begin
   spr_spawner.Origin:=SfmlVector2f(SfmlTextureGetSize(spr_spawner.Texture).x/2,0) ;
   spr_circle:=loadSprite('images'+PATH_SEP+'circle.png',[sloCentered]);
   spr_circle_gray:=loadSprite('images'+PATH_SEP+'circle_gray.png',[sloCentered]);
+  spr_circle_mini:=loadSprite('images'+PATH_SEP+'circle.png',[sloCentered]);
+  spr_circle_mini.Scale(0.5,0.5);
 
   spr_icons:=TUniDictionary<string,TSfmlSprite>.Create() ;
   spr_icons_gray:=TUniDictionary<string,TSfmlSprite>.Create() ;
+  spr_icons_mini:=TUniDictionary<string,TSfmlSprite>.Create() ;
   for code in THero.getHeroCodes() do begin
     spr:=loadSprite('images'+PATH_SEP+code+'_ico.png',[sloCentered]);
     spr.Scale(0.6,0.6) ;
@@ -190,6 +194,9 @@ begin
     spr.Scale(0.6,0.6) ;
     convertSpriteTexture(spr,funcMakeGray) ;
     spr_icons_gray.Add(code,spr) ;
+    spr:=loadSprite('images'+PATH_SEP+code+'_ico.png',[sloCentered]);
+    spr.Scale(0.3,0.3) ;
+    spr_icons_mini.Add(code,spr) ;
   end;
 
   SetLength(spr_monsters,3) ;
@@ -376,6 +383,13 @@ begin
     grab.Play() ;
   end;
 
+  if level.isHeroIconAt(playermapx,playermapy) then begin
+    hero_storage[level.getHeroIconAt(playermapx,playermapy)]:=
+       hero_storage[level.getHeroIconAt(playermapx,playermapy)]+1;
+    level.clearCell(playermapx,playermapy) ;
+    grab.Play() ;
+  end;
+
   if player_dx=-1 then ismirr:=True ;
   if player_dx=1 then ismirr:=False ;
 
@@ -437,8 +451,13 @@ begin
     for j := 0 to level.getHeight-1 do begin
       if level.isBlockAt(i,j) then drawSprite(spr_block,CELL_WIDTH*i,CELL_HEIGHT*j) ;
       if level.isStairAt(i,j) then drawSprite(spr_stair,CELL_WIDTH*i,CELL_HEIGHT*j) ;
-      if level.isCrystallAt(i,j) then drawSprite(spr_crystall,CELL_WIDTH*i,CELL_HEIGHT*j) ;
       if level.isFinishAt(i,j) then DrawSprite(portal, CELL_WIDTH*(i+0.5), CELL_HEIGHT*j) ;
+      if level.isHeroIconAt(i,j) then begin
+        drawSprite(spr_circle_mini,CELL_WIDTH*i+CELL_WIDTH/2,CELL_HEIGHT*j+CELL_HEIGHT/2) ;
+        drawSprite(spr_icons_mini[level.getHeroIconAt(i,j)],
+         CELL_WIDTH*i+CELL_WIDTH/2,CELL_HEIGHT*j+CELL_HEIGHT/2) ;
+      end;
+      if level.isCrystallAt(i,j) then drawSprite(spr_crystall,CELL_WIDTH*i,CELL_HEIGHT*j) ;
     end;
 
   for i := 0 to THero.getHeroCodes().Count-1 do begin
