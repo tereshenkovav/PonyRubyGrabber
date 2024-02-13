@@ -55,6 +55,7 @@ type
     procedure setCmdToDxy();
     function fixXifCrossed(stopx, dx:Single):Boolean ;
     function fixYifCrossed(stopy, dy:Single):Boolean ;
+    function getPlayerSpeed():Single ;
   public
     speedup:Boolean ;
     shield:Boolean ;
@@ -297,6 +298,7 @@ var event:TSfmlEventEx ;
     code:string ;
     i:Integer ;
     action:THeroAction ;
+    ddt:Single ;
 begin
   Result:=Normal ;
 
@@ -338,50 +340,54 @@ begin
       end ;
     end ;
 
+  if tek_cmd=cmdStop then begin
+    player_dx:=0 ;
+    player_dy:=0 ;
+  end ;
+
+  ddt:=dt/10 ;
+  for i := 1 to 10 do begin
+
   // Движение игрока
   // Смена направления
   if (tek_cmd=cmdDown)or(tek_cmd=cmdUp) then
         if level.isWayCorrect(Trunc(player_x),Trunc(player_y)+cmd2sig(tek_cmd)) then begin
             if player_dx=1 then begin
-                if fixXifCrossed(Trunc(player_x),player_dx*PLAYER_SPEED*dt) then setCmdToDxy() ;
+                if fixXifCrossed(Trunc(player_x),player_dx*getPlayerSpeed()*ddt) then setCmdToDxy() ;
             end
             else begin
-                if (fixXifCrossed(Trunc(player_x),player_dx*PLAYER_SPEED*dt)) then setCmdToDxy() ;
+                if (fixXifCrossed(Trunc(player_x),player_dx*getPlayerSpeed()*ddt)) then setCmdToDxy() ;
             end ;
         end ;
 
   if (tek_cmd=cmdLeft)or(tek_cmd=cmdRight) then
         if level.isWayCorrect(Trunc(player_x)+cmd2sig(tek_cmd),Trunc(player_y)) then begin
             if player_dy=1 then begin
-                if fixYifCrossed(Trunc(player_y),player_dy*PLAYER_SPEED*dt) then setCmdToDxy() ;
+                if fixYifCrossed(Trunc(player_y),player_dy*getPlayerSpeed()*ddt) then setCmdToDxy() ;
             end
             else begin
-                if (fixYifCrossed(Trunc(player_y),player_dy*PLAYER_SPEED*dt)) then setCmdToDxy() ;
+                if (fixYifCrossed(Trunc(player_y),player_dy*getPlayerSpeed()*ddt)) then setCmdToDxy() ;
             end ;
         end ;
-
-  if tek_cmd=cmdStop then begin
-    player_dx:=0 ;
-    player_dy:=0 ;
-  end ;
 
   // Торможение о стены
   if player_dx=-1 then
     if not level.isWayCorrect(Trunc(player_x)-1,Trunc(player_y)) then
-      if fixXifCrossed(Trunc(player_x),player_dx*PLAYER_SPEED*dt) then player_dx:=0 ;
+      if fixXifCrossed(Trunc(player_x),player_dx*getPlayerSpeed()*ddt) then player_dx:=0 ;
   if player_dx=1 then
     if not level.isWayCorrect(Trunc(player_x)+1,Trunc(player_y)) then
-      if fixXifCrossed(Trunc(player_x),player_dx*PLAYER_SPEED*dt) then player_dx:=0 ;
+      if fixXifCrossed(Trunc(player_x),player_dx*getPlayerSpeed()*ddt) then player_dx:=0 ;
   if player_dy=-1 then
     if not level.isWayCorrect(Trunc(player_x),Trunc(player_y)-1) then
-      if fixYifCrossed(Trunc(player_y),player_dy*PLAYER_SPEED*dt) then player_dy:=0 ;
+      if fixYifCrossed(Trunc(player_y),player_dy*getPlayerSpeed()*ddt) then player_dy:=0 ;
   if player_dy=1 then
     if not level.isWayCorrect(Trunc(player_x),Trunc(player_y)+1) then
-      if fixYifCrossed(Trunc(player_y),player_dy*PLAYER_SPEED*dt) then player_dy:=0 ;
+      if fixYifCrossed(Trunc(player_y),player_dy*getPlayerSpeed()*ddt) then player_dy:=0 ;
 
-  player_x:=player_x+IfThen(speedup,SPEEDUP_K,1)*player_dx*PLAYER_SPEED*dt ;
-  player_y:=player_y+IfThen(speedup,SPEEDUP_K,1)*player_dy*PLAYER_SPEED*dt ;
+  player_x:=player_x+player_dx*getPlayerSpeed()*ddt ;
+  player_y:=player_y+player_dy*getPlayerSpeed()*ddt ;
 
+  end;
   // Поедание ячеек
   if level.isCrystallAt(playermapx,playermapy) then begin
     level.clearCell(playermapx,playermapy) ;
@@ -446,6 +452,11 @@ begin
   spr_shield.Update(dt) ;
   portal.Update(dt) ;
 end ;
+
+function TSceneGame.getPlayerSpeed(): Single;
+begin
+  Result:=IfThen(speedup,SPEEDUP_K,1)*PLAYER_SPEED ;
+end;
 
 procedure TSceneGame.RenderFunc() ;
 var i,j:Integer ;
