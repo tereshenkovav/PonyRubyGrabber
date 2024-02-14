@@ -185,7 +185,6 @@ end;
 
 destructor TGame.Destroy();
 begin
-  window.Close() ;
   window.Free ;
   if icon<>nil then icon.Free ;
   

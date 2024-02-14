@@ -46,7 +46,11 @@ end;
 function TProfile.getProfileFile(): string;
 var dir:string ;
 begin
+  {$ifdef unix}
+  dir:=GetEnvironmentVariable('HOME')+'/.local/share/'+gamedir ;
+  {$else}
   dir:=GetEnvironmentVariable('LOCALAPPDATA')+PATH_SEP+gamedir ;
+  {$endif}
   if not DirectoryExists(dir) then ForceDirectories(dir) ;
   Result:=dir+PATH_SEP+'profile.ini' ;
 end;

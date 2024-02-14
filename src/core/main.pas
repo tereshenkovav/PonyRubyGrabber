@@ -20,6 +20,7 @@ begin
   game:=TGame.Create(1024,768,TCommonData.texts.getText('GAME_TITLE'),'images'+PATH_SEP+'icon.png') ;
   TScene.closehandler:=TSceneCloseHandler.Create() ;
   game.Run(TSceneStart.Create()) ;
+  game.Free ;
   TCommonData.UnInit() ;
 end ;
 

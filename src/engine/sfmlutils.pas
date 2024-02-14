@@ -61,7 +61,7 @@ function createText(font:TSfmlFont; utf8str:string; size:Integer;
   color:TSfmlColor):TSfmlText ;
 begin
   Result:=TSfmlText.Create;
-  Result.UnicodeString:=UTF8ToString(utf8str);
+  Result.UnicodeString:=UTF8Decode(utf8str);
   Result.Font:=font.Handle;
   Result.CharacterSize:=size;
   Result.FillColor:=color;
