@@ -10,6 +10,7 @@ uses
 type
 
   TCommand = ( cmdNone, cmdStop, cmdLeft, cmdRight, cmdUp, cmdDown ) ;
+  TTeleportType = (ttIn,ttOut) ;
 
   { TSceneGame }
 
@@ -23,6 +24,7 @@ type
     spr_circle_gray:TSfmlSprite ;
     spr_circle_mini:TSfmlSprite ;
     spr_shield:TSfmlAnimation ;
+    spr_teleportation:TSfmlAnimation ;
     spr_icons,spr_icons_gray,spr_icons_mini:TUniDictionary<string,TSfmlSprite> ;
     spr_monsters:array of TSfmlSprite ;
     spr_monsters_w:array of Integer ;
@@ -52,10 +54,17 @@ type
     active_hero:THero ;
     hero_storage:TUniDictionary<string,Integer> ;
     active_actions:TUniList<THeroAction> ;
+    time_teleport:Single ;
+    tdir:TTeleportType ;
+    iswin:Boolean ;
+    time_exit:Single ;
     procedure setCmdToDxy();
     function fixXifCrossed(stopx, dx:Single):Boolean ;
     function fixYifCrossed(stopy, dy:Single):Boolean ;
     function getPlayerSpeed():Single ;
+    procedure startTeleport(Atdir:TTeleportType) ;
+    function isPonyActive():Boolean ;
+    function isPonyVisible():Boolean ;
   public
     speedup:Boolean ;
     shield:Boolean ;
@@ -118,6 +127,14 @@ begin
     end;
     tek_cmd:=cmdNone ;
   end;
+end;
+
+procedure TSceneGame.startTeleport(Atdir: TTeleportType);
+begin
+  tdir:=Atdir ;
+  time_teleport:=1.0 ;
+  teleport.Play() ;
+  spr_teleportation.PlayOnce() ;
 end;
 
 constructor TSceneGame.Create(Aleveln:Integer);
@@ -225,6 +242,9 @@ begin
   spr_shield.Origin:=SfmlVector2f(30,10) ;
   spr_shield.Play() ;
 
+  spr_teleportation:=TSfmlAnimation.Create('images'+PATH_SEP+'teleportation.png',60,60,9,9);
+  spr_teleportation.Origin:=SfmlVector2f(30,10) ;
+
   spr_heros_wait:=TUniDictionary<string,TSfmlSprite>.Create() ;
   spr_heros_walk:=TUniDictionary<string,TSfmlAnimation>.Create() ;
 
@@ -282,7 +302,22 @@ begin
   speedup:=False ;
   shield:=False ;
   Result:=True ;
+  StartTeleport(ttIn) ;
 end ;
+
+function TSceneGame.isPonyActive: Boolean;
+begin
+  Result:=time_exit<=0 ;
+end;
+
+function TSceneGame.isPonyVisible: Boolean;
+begin
+  case tdir of
+    ttIn: Result:=time_teleport<0.5 ;
+    ttOut: Result:=time_teleport>0.5 ;
+    else Result:=False ;
+  end;
+end;
 
 procedure TSceneGame.jumpHeroTo(newx, newy: Integer);
 begin
@@ -305,6 +340,8 @@ begin
   playermapx:=Trunc(player_x+0.5) ;
   playermapy:=Trunc(player_y+0.5) ;
 
+  if isPonyActive() then begin
+  // Все активности, связанные с обработкой пони
   for event in events do
     if (event.event.EventType = sfEvtKeyPressed) then begin
       if (event.event.key.code = sfKeyEscape) then begin
@@ -413,20 +450,24 @@ begin
 
   if level.isFinishAt(playermapx,playermapy) then
     if level.getCrystallCount()=0 then begin
-      TCommonData.profile.MarkLevelCompleted(leveln) ;
-      subscene:=TSubSceneMenuFin.Create(leveln,True) ;
-      galop.Stop() ;
-      Exit(TSceneResult.SetSubScene) ;
+        startTeleport(ttOut) ;
+        iswin:=True ;
+        time_exit:=1.5 ;
+        galop.Stop() ;
+        TCommonData.profile.MarkLevelCompleted(leveln) ;
     end;
+
+  end; // Действия, связанные с активным пони
 
   for m in monsters do begin
     m.Update(dt,player_x,player_y) ;
-    if not shield then
+    if (not shield)and(isPonyActive()) then
     if (Abs(player_x-m.getX())<0.5*(1+spr_monsters_w[m.getTypeID()]/CELL_WIDTH))and
        (playermapy=Trunc(m.getY()+0.5)) then begin
-      subscene:=TSubSceneMenuFin.Create(leveln,False) ;
+      startTeleport(ttOut) ;
+      iswin:=False ;
+      time_exit:=1.5 ;
       galop.Stop() ;
-      Exit(TSceneResult.SetSubScene) ;
     end ;
   end;
 
@@ -451,6 +492,16 @@ begin
 
   spr_shield.Update(dt) ;
   portal.Update(dt) ;
+  spr_teleportation.Update(dt) ;
+  if time_teleport>0 then time_teleport:=time_teleport-dt ;
+
+  if time_exit>0 then begin
+    time_exit:=time_exit-dt ;
+    if time_exit<=0 then begin
+      subscene:=TSubSceneMenuFin.Create(leveln,iswin) ;
+      Exit(TSceneResult.SetSubScene) ;
+    end;
+  end ;
 end ;
 
 function TSceneGame.getPlayerSpeed(): Single;
@@ -523,10 +574,16 @@ begin
     spr_wait.ScaleFactor:=right_scale_bot ;
     spr_walk.ScaleFactor:=right_scale_bot ;
   end;
-  if (player_dx=0)and(player_dy=0) then
-    DrawSprite(spr_wait, CELL_WIDTH*player_x + CELL_WIDTH/2, CELL_HEIGHT*player_y)
-  else
-    DrawSprite(spr_walk, CELL_WIDTH*player_x + CELL_WIDTH/2, CELL_HEIGHT*player_y) ;
+
+  if isPonyVisible() then begin
+    if (player_dx=0)and(player_dy=0) then
+      DrawSprite(spr_wait, CELL_WIDTH*player_x + CELL_WIDTH/2, CELL_HEIGHT*player_y)
+    else
+      DrawSprite(spr_walk, CELL_WIDTH*player_x + CELL_WIDTH/2, CELL_HEIGHT*player_y) ;
+  end;
+
+  if spr_teleportation.isPlayed() then
+    DrawSprite(spr_teleportation, CELL_WIDTH*player_x + CELL_WIDTH/2, CELL_HEIGHT*player_y) ;
 
   if shield then DrawSprite(spr_shield,CELL_WIDTH*player_x + CELL_WIDTH/2, CELL_HEIGHT*player_y) ;
 end ;
