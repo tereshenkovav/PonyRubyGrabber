@@ -27,6 +27,7 @@ type
     textpos:Integer ;
     textdata:string ;
     map:array of array of TCellType ;
+    map_texids:array of array of Integer ;
     icons:TUniList<THeroIcon>;
     list:TStringList ;
   public
@@ -44,6 +45,7 @@ type
     function getHeight():Integer ;
     function getTextPos():Integer ;
     function getTextData():string ;
+    function getTexId(x,y: Integer):Integer ;
     procedure fillStartXY(var x:single; var y:single);
     procedure fillMonsters(monsters:TUniList<TObject>) ;
     procedure fillSpawns(spawns:TUniList<TObject>; monsters:TUniList<TObject>) ;
@@ -57,6 +59,10 @@ function isDXDYRevers(dx1, dy1, dx2, dy2: Integer): Boolean;
 implementation
 uses SysUtils,
   Monster, Spawner, Hero ;
+
+const
+  STAIR_SYMS = '#$%^&' ;
+  BLOCK_SYMS = '*()+/' ;
 
 function isDXDYRevers(dx1, dy1, dx2, dy2: Integer): Boolean;
 begin
@@ -160,6 +166,12 @@ begin
     Inc(Result) ;
 end;
 
+function TLevel.getTexId(x, y: Integer): Integer;
+begin
+  if (x<0) or (x>=width) or (y<0) or (y>=height) then Exit(0) ;
+  Result:=map_texids[x][y] ;
+end;
+
 function TLevel.getTextData: string;
 begin
   Result:=textdata ;
@@ -225,8 +237,11 @@ begin
   width:=dataw+left ;
   height:=datah+top ;
   SetLength(map,width) ;
-  for x := 0 to width-1 do
+  SetLength(map_texids,width) ;
+  for x := 0 to width-1 do begin
     SetLength(map[x],height) ;
+    SetLength(map_texids[x],height) ;
+  end;
 
   for y := 0 to height-1 do
     for x := 0 to width-1 do
@@ -239,8 +254,14 @@ begin
     for x := 0 to dataw-1 do begin
       ct:=TCellType.Free ;
       if (x+y div 2)mod 2=0 then ct:=TCellType.Crystall ;
-      if str[x+1]='#' then ct:=TCellType.Stair ;
-      if str[x+1]='*' then ct:=TCellType.Block ;
+      if STAIR_SYMS.IndexOf(str[x+1])<>-1 then begin
+        ct:=TCellType.Stair ;
+        map_texids[x+left][y+top]:=STAIR_SYMS.IndexOf(str[x+1]) ;
+      end;
+      if BLOCK_SYMS.IndexOf(str[x+1])<>-1 then begin
+        ct:=TCellType.Block ;
+        map_texids[x+left][y+top]:=BLOCK_SYMS.IndexOf(str[x+1]) ;
+      end;
       if str[x+1]='S' then begin
         start:=Point(x+left,y+top) ;
         ct:=TCellType.Free ; // Защита от спавна поверх алмаза

@@ -16,8 +16,8 @@ type
 
   TSceneGame = class(TScene)
   private
-    spr_block:TSfmlSprite ;
-    spr_stair:TSfmlSprite ;
+    spr_block:array of TSfmlSprite ;
+    spr_stair:array of TSfmlSprite ;
     spr_crystall:TSfmlSprite ;
     spr_spawner:TSfmlSprite ;
     spr_circle:TSfmlSprite ;
@@ -193,8 +193,12 @@ var i:Integer ;
     spr:TSfmlSprite ;
     code:string ;
 begin
-  spr_block:=loadSprite('images'+PATH_SEP+'block.png');
-  spr_stair:=loadSprite('images'+PATH_SEP+'stair.png');
+  SetLength(spr_block,5) ;
+  for i := 0 to Length(spr_block)-1 do
+    spr_block[i]:=loadSprite('images'+PATH_SEP+'block'+IntToStr(i)+'.png');
+  SetLength(spr_stair,5) ;
+  for i := 0 to Length(spr_stair)-1 do
+    spr_stair[i]:=loadSprite('images'+PATH_SEP+'stair'+IntToStr(i)+'.png');
   spr_crystall:=loadSprite('images'+PATH_SEP+'crystall.png');
   spr_spawner:=loadSprite('images'+PATH_SEP+'spawner.png');
   spr_spawner.Origin:=SfmlVector2f(SfmlTextureGetSize(spr_spawner.Texture).x/2,0) ;
@@ -518,8 +522,8 @@ var i,j:Integer ;
 begin
   for i := 0 to level.getWidth()-1 do
     for j := 0 to level.getHeight-1 do begin
-      if level.isBlockAt(i,j) then drawSprite(spr_block,CELL_WIDTH*i,CELL_HEIGHT*j) ;
-      if level.isStairAt(i,j) then drawSprite(spr_stair,CELL_WIDTH*i,CELL_HEIGHT*j) ;
+      if level.isBlockAt(i,j) then drawSprite(spr_block[level.getTexId(i,j)],CELL_WIDTH*i,CELL_HEIGHT*j) ;
+      if level.isStairAt(i,j) then drawSprite(spr_stair[level.getTexId(i,j)],CELL_WIDTH*i,CELL_HEIGHT*j) ;
       if level.isFinishAt(i,j) then DrawSprite(portal, CELL_WIDTH*(i+0.5), CELL_HEIGHT*j) ;
       if level.isHeroIconAt(i,j) then begin
         drawSprite(spr_circle_mini,CELL_WIDTH*i+CELL_WIDTH/2,CELL_HEIGHT*j+CELL_HEIGHT/2) ;
@@ -589,9 +593,12 @@ begin
 end ;
 
 procedure TSceneGame.UnInit() ;
+var i:Integer ;
 begin
-  spr_block.Free ;
-  spr_stair.Free ;
+  for i := 0 to Length(spr_block)-1 do
+    spr_block[i].Free ;
+  for i := 0 to Length(spr_stair)-1 do
+    spr_stair[i].Free ;
   spr_crystall.Free ;
   walkbot.Free ;
   waitbot.Free ;
