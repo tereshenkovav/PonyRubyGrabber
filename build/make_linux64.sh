@@ -1,4 +1,4 @@
-mkdir /tmp/ppu
+mkdir x86_64-linux
 mkdir ../bin
-ppcx64 -Fu../src/sfml -Fu../src/engine -Fu../src/core -FE../bin -FU/tmp/ppu -Sm -Mdelphi -Sh ../src/PonyRubyGrabberFPC.pp
+ppcx64 @fpc-game.cfg ../src/PonyRubyGrabberFPC.pp
 
