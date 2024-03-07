@@ -51,6 +51,7 @@ type
     galop:TSfmlSound ;
     grab:TSfmlSound ;
     teleport:TSfmlSound ;
+    magic:TSfmlSound ;
     active_hero:THero ;
     hero_storage:TUniDictionary<string,Integer> ;
     active_actions:TUniList<THeroAction> ;
@@ -276,6 +277,8 @@ begin
   grab.Volume:=IfThen(TCommonData.soundon,100,0) ;
   teleport:=TSfmlSound.Create(TSfmlSoundBuffer.Create('sounds'+PATH_SEP+'teleport.ogg'));
   teleport.Volume:=IfThen(TCommonData.soundon,100,0) ;
+  magic:=TSfmlSound.Create(TSfmlSoundBuffer.Create('sounds'+PATH_SEP+'magic.ogg'));
+  magic.Volume:=IfThen(TCommonData.soundon,100,0) ;
 
   level:=TLevel.Create ;
   level.LoadFromFile('levels'+PATH_SEP+'level'+IntToStr(leveln)+'.dat');
@@ -377,6 +380,7 @@ begin
             active_hero.Free ;
             active_hero:=THero.getNoHero() ;
             active_actions.Add(action) ;
+            magic.Play() ;
           end
           else
             action.Free ;
