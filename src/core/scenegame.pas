@@ -349,7 +349,7 @@ begin
   for event in events do
     if (event.event.EventType = sfEvtKeyPressed) then begin
       if (event.event.key.code = sfKeyEscape) then begin
-        subscene:=TSubSceneMenuGame.Create() ;
+        subscene:=TSubSceneMenuGame.Create(leveln) ;
         Exit(TSceneResult.SetSubScene) ;
       end;
       if (event.event.key.code = sfKeyLeft) then tek_cmd:=cmdLeft ;
