@@ -5,7 +5,7 @@ interface
 uses
   Classes, SysUtils,
   SfmlSystem,SfmlWindow,SfmlGraphics,SfmlAudio,
-  Helpers, Scene, Level, SfmlAnimation, Monster, Spawner, Hero ;
+  Helpers, Scene, Level, SfmlAnimation, Monster, Spawner, Hero, SpriteEffects ;
 
 type
 
@@ -58,6 +58,7 @@ type
     tdir:TTeleportType ;
     iswin:Boolean ;
     time_exit:Single ;
+    pool:TSpriteEffectPool ;
     procedure setCmdToDxy();
     function fixXifCrossed(stopx, dx:Single):Boolean ;
     function fixYifCrossed(stopy, dy:Single):Boolean ;
@@ -140,6 +141,7 @@ end;
 constructor TSceneGame.Create(Aleveln:Integer);
 begin
   leveln:=Aleveln ;
+  pool:=TSpriteEffectPool.Create ;
 end;
 
 function TSceneGame.fixXifCrossed(stopx, dx:Single):Boolean ;
@@ -307,6 +309,7 @@ begin
   shield:=False ;
   Result:=True ;
   StartTeleport(ttIn) ;
+  pool.Clear() ;
 end ;
 
 function TSceneGame.isPonyActive: Boolean;
@@ -494,6 +497,7 @@ begin
       Inc(i) ;
   end;
 
+  pool.Update(dt) ;
   spr_shield.Update(dt) ;
   portal.Update(dt) ;
   spr_teleportation.Update(dt) ;
@@ -519,6 +523,8 @@ var i,j:Integer ;
     spawn:TSpawner ;
     spr_wait,spr_walk:TSfmlSprite ;
     code:string ;
+    se:TSpriteEffect ;
+    a0:Single ;
 begin
   for i := 0 to level.getWidth()-1 do
     for j := 0 to level.getHeight-1 do begin
@@ -526,9 +532,19 @@ begin
       if level.isStairAt(i,j) then drawSprite(spr_stair[level.getTexId(i,j)],CELL_WIDTH*i,CELL_HEIGHT*j) ;
       if level.isFinishAt(i,j) then DrawSprite(portal, CELL_WIDTH*(i+0.5), CELL_HEIGHT*j) ;
       if level.isHeroIconAt(i,j) then begin
-        drawSprite(spr_circle_mini,CELL_WIDTH*i+CELL_WIDTH/2,CELL_HEIGHT*j+CELL_HEIGHT/2) ;
-        drawSprite(spr_icons_mini[level.getHeroIconAt(i,j)],
-         CELL_WIDTH*i+CELL_WIDTH/2,CELL_HEIGHT*j+CELL_HEIGHT/2) ;
+        se:=pool.findEffect(i*1024+j) ;
+        if se=nil then begin
+          a0:=Random(100)/100 ;
+          se:=TSEMoveHarmonicVert.Create(spr_circle_mini,i*1024+j,5,3,a0) ;
+          pool.addEffect(se) ;
+        end;
+        drawSpriteEffect(se,CELL_WIDTH*i+CELL_WIDTH/2,CELL_HEIGHT*j+CELL_HEIGHT/2) ;
+        se:=pool.findEffect(-(i*1024+j)) ;
+        if se=nil then begin
+          se:=TSEMoveHarmonicVert.Create(spr_icons_mini[level.getHeroIconAt(i,j)],-(i*1024+j),5,3,a0) ;
+          pool.addEffect(se) ;
+        end;
+        drawSpriteEffect(se,CELL_WIDTH*i+CELL_WIDTH/2,CELL_HEIGHT*j+CELL_HEIGHT/2) ;
       end;
       if level.isCrystallAt(i,j) then drawSprite(spr_crystall,CELL_WIDTH*i,CELL_HEIGHT*j) ;
     end;

@@ -5,7 +5,7 @@ interface
 uses
   Classes, SysUtils,
   SfmlSystem,SfmlWindow,SfmlGraphics,
-  Helpers ;
+  Helpers, SpriteEffects ;
 
 type
 
@@ -32,6 +32,7 @@ type
     subscene:TScene ;
     overscene:TScene ;
     procedure drawSprite(spr:TSfmlSprite; x,y:Single) ;
+    procedure drawSpriteEffect(se:TSpriteEffect; x,y:Single) ;
     procedure drawSpriteMirr(spr:TSfmlSprite; x,y:Single; mirrors:TMirrorTypeSet) ;
     procedure drawText(text:TSfmlText; x,y:Single) ;
     procedure drawTextCentered(text:TSfmlText; x,y:Single) ;
@@ -57,7 +58,7 @@ var
 
 function IfThen(b:Boolean; v1,v2:TMirrorTypeSet):TMirrorTypeSet ; overload ;
 begin
-  if b then Result:=v1 else Result:=v2 ;  
+  if b then Result:=v1 else Result:=v2 ;
 end;
 
 { TScene }
@@ -113,6 +114,12 @@ procedure TScene.drawSprite(spr: TSfmlSprite; x,
 begin
   spr.Position:=SfmlVector2f(x,y) ;
   window.draw(spr) ;
+end;
+
+procedure TScene.drawSpriteEffect(se: TSpriteEffect; x, y: Single);
+begin
+  se.getSprite().Position:=SfmlVector2f(x,y) ;
+  se.Draw(window) ;
 end;
 
 procedure TScene.drawSpriteMirr(spr: TSfmlSprite; x, y: Single;
