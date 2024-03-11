@@ -344,6 +344,7 @@ var event:TSfmlEventEx ;
     i:Integer ;
     action:THeroAction ;
     ddt:Single ;
+    actionname:string ;
 begin
   Result:=Normal ;
 
@@ -352,28 +353,37 @@ begin
 
   if isPonyActive() then begin
   // Все активности, связанные с обработкой пони
-  for event in events do
-    if (event.event.EventType = sfEvtKeyPressed) then begin
-      if (event.event.key.code = sfKeyEscape) then begin
-        subscene:=TSubSceneMenuGame.Create(leveln) ;
-        Exit(TSceneResult.SetSubScene) ;
+    for event in events do begin
+      // Сначала системные действия
+      if (event.event.EventType = sfEvtKeyPressed) then begin
+        if (event.event.key.code = sfKeyEscape) then begin
+          subscene:=TSubSceneMenuGame.Create(leveln) ;
+         Exit(TSceneResult.SetSubScene) ;
+        end;
       end;
-      if (event.event.key.code = sfKeyLeft) then tek_cmd:=cmdLeft ;
-      if (event.event.key.code = sfKeyRight) then tek_cmd:=cmdRight ;
-      if (event.event.key.code = sfKeyUp) then tek_cmd:=cmdUp ;
-      if (event.event.key.code = sfKeyDown) then tek_cmd:=cmdDown ;
-      if (event.event.key.code = sfKeySpace) then tek_cmd:=cmdStop ;
-      if (event.event.Key.code in
-        [sfKeyNum1,sfKeyNum2,sfKeyNum3,sfKeyNum4,sfKeyNum5,sfKeyNum6]) then begin
-        code:=THero.getHeroCodes()[ord(event.event.Key.code)-ord(sfKeyNum1)] ;
-        if active_hero.isNoHero() then
+
+      // Обработка команд
+      if not TCommonData.actionconfig.isMatchEvent(event.event,actionname) then Continue ;
+
+      if actionname=ACTION_LEFT then tek_cmd:=cmdLeft ;
+      if actionname=ACTION_RIGHT then tek_cmd:=cmdRight ;
+      if actionname=ACTION_UP then tek_cmd:=cmdUp ;
+      if actionname=ACTION_DOWN then tek_cmd:=cmdDown ;
+      if actionname=ACTION_STOP then tek_cmd:=cmdStop ;
+      code:='' ;
+      if actionname=ACTION_TRANSFORM_0 then code:=THero.getHeroCodes()[0] ;
+      if actionname=ACTION_TRANSFORM_1 then code:=THero.getHeroCodes()[1] ;
+      if actionname=ACTION_TRANSFORM_2 then code:=THero.getHeroCodes()[2] ;
+      if actionname=ACTION_TRANSFORM_3 then code:=THero.getHeroCodes()[3] ;
+      if actionname=ACTION_TRANSFORM_4 then code:=THero.getHeroCodes()[4] ;
+      if actionname=ACTION_TRANSFORM_5 then code:=THero.getHeroCodes()[5] ;
+      if (code<>'')and active_hero.isNoHero() then
           if hero_storage[code]>0 then begin
             active_hero:=THero.Create(code) ;
             hero_storage[code]:=hero_storage[code]-1 ;
             teleport.Play() ;
           end ;
-      end ;
-      if (event.event.Key.code = sfKeyLControl) then begin
+      if actionname=ACTION_USE then begin
         if not active_hero.isNoHero() then begin
           action:=active_hero.createAction() ;
           if action.Apply(level,playermapx,playermapy,IfThen(ismirr,-1,1),Self) then begin
