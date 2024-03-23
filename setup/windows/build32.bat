@@ -1,7 +1,7 @@
 move ..\..\bin\PonyRubyGrabberDelphi.exe ..\..\bin\PonyRubyGrabber.exe
 
 @echo off
-for /F %%i in ('git tag') do set BUILDTAG=%%i
+for /F %%i in ('git tag --list --sort=committerdate') do set BUILDTAG=%%i
 for /F %%i in ('git rev-parse HEAD') do set BUILDCOMMIT=%%i
 set BUILDCOMMIT=%BUILDCOMMIT:~0,8%
 for /F %%i in ('git branch --show-current') do set BUILDBRANCH=%%i

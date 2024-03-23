@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for i in `git tag`; do BUILDTAG=$i; done
+for i in `git tag --list --sort=committerdate`; do BUILDTAG=$i; done
 
 for i in `git rev-parse HEAD`; do BUILDCOMMIT=$i; done
 BUILDCOMMIT=${BUILDCOMMIT:0:8}
