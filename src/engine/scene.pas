@@ -25,7 +25,7 @@ type
   TScene = class
   private
   protected
-    window:TSfmlRenderWindow ;
+    window:TSfmlRenderTarget ;
     wwidth:Integer ;
     wheight:Integer ;
     nextscene:TScene ;
@@ -38,7 +38,7 @@ type
     procedure drawTextCentered(text:TSfmlText; x,y:Single) ;
   public
     class var closehandler:TScene ;
-    procedure setWindow(Awindow:TSfmlRenderWindow; Awidth,Aheight:Integer);
+    procedure setWindow(Awindow:TSfmlRenderTarget; Awidth,Aheight:Integer);
     function getNextScene():TScene ;
     function getSubScene():TScene ;
     function getOverScene():TScene ;
@@ -92,7 +92,7 @@ procedure TScene.RenderFunc() ;
 begin
 end ;
 
-procedure TScene.setWindow(Awindow: TSfmlRenderWindow; Awidth,
+procedure TScene.setWindow(Awindow: TSfmlRenderTarget; Awidth,
   Aheight: Integer);
 begin
   window:=Awindow ;

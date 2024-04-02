@@ -124,6 +124,7 @@
         <DCCReference Include="core\spawner.pas"/>
         <DCCReference Include="core\hero.pas"/>
         <DCCReference Include="core\scenectrlmenu.pas"/>
+        <DCCReference Include="core\sceneminimaprender.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

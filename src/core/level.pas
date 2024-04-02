@@ -122,6 +122,7 @@ var i:Integer ;
 begin
   left:=StrToIntWt0(list.Values['Left']) ;
   top:=StrToIntWt0(list.Values['Top']) ;
+  spawns.Clear() ;
   for i := 0 to StrToIntWt0(list.Values['SpawnCount'])-1 do
     spawns.Add(TSpawner.Create(StrToIntWt0(list.Values[Format('Spawn%d_X',[i])])+left,
       StrToIntWt0(list.Values[Format('Spawn%d_Y',[i])])+top,

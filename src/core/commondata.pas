@@ -21,8 +21,10 @@ type
     class var languages:TLanguages ;
     class var soundon:Boolean ;
     class var actionconfig:TActionConfig ;
+    class var minimaps:array of TSfmlSprite ;
     class function Init():Boolean ;
     class procedure reloadTexts() ;
+    class procedure preloadMiniMaps() ;
     class procedure UnInit() ;
   end;
 
@@ -40,7 +42,8 @@ const ACTION_TRANSFORM_4 = 'transform_4' ;
 const ACTION_TRANSFORM_5 = 'transform_5' ;
 
 implementation
-uses SfmlUtils, Helpers ;
+uses SfmlUtils, Helpers, Scene,
+  SceneMiniMapRender, Level ;
 
 { TCommonData }
 
@@ -58,6 +61,8 @@ begin
   languages.setCurrentByFile('texts'+PATH_SEP+'deflang');
   texts:=TTexts.Create() ;
   reloadTexts() ;
+  preloadMiniMaps() ;
+
   // Инициализация действий
   actionconfig:=TActionConfig.Create() ;
   actionconfig.addAction(ACTION_LEFT,sfKeyLeft) ;
@@ -76,12 +81,48 @@ begin
   Result:=True ;
 end ;
 
+class procedure TCommonData.preloadMiniMaps;
+var scene:TSceneMiniMapRender ;
+    texdraw,tex:TSfmlRenderTexture ;
+    spr:TSfmlSprite ;
+    i:Integer ;
+const MAPSCALE = 8 ;
+begin
+  texdraw:=TSfmlRenderTexture.Create(1024,768) ;
+
+  SetLength(minimaps,TLevel.getMaxLevel('levels')+1) ;
+  scene:=TSceneMiniMapRender.Create() ;
+  scene.setWindow(texdraw,1024,768) ;
+  scene.Init() ;
+  spr:=TSfmlSprite.Create() ;
+  spr.Scale(1.0/MAPSCALE,1.0/MAPSCALE) ;
+  spr.Position:=SfmlVector2f(0,0) ;
+
+  for i := 0 to TLevel.getMaxLevel('levels') do begin
+    texdraw.Clear(SfmlColorFromRGB(64,64,64)) ;
+    scene.SetLevel(i) ;
+    scene.RenderFunc() ;
+    texdraw.Display() ;
+
+    spr.SetTexture(texdraw.Texture) ;
+    tex:=TSfmlRenderTexture.Create(1024 div MAPSCALE,768 div MAPSCALE) ;
+    tex.Draw(spr) ;
+    tex.Display() ;
+    minimaps[i]:=TSfmlSprite.Create(tex.Texture) ;
+  end;
+  texdraw.Free ;
+  spr.Free ;
+  scene.UnInit() ;
+  scene.Free ;
+end;
+
 class procedure TCommonData.reloadTexts;
 begin
   texts.loadFromFile('texts'+PATH_SEP+'texts.'+languages.getCurrent()) ;
 end;
 
 class procedure TCommonData.UnInit() ;
+var i:Integer ;
 begin
   Font.Free ;
   selector.Free ;
@@ -89,6 +130,9 @@ begin
   texts.Free ;
   actionconfig.Free ;
   languages.Free ;
+  for i:=0 to Length(minimaps)-1 do
+    minimaps[i].Free ;
+  SetLength(minimaps,0) ;
 end ;
 
 end.

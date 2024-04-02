@@ -16,7 +16,7 @@ type
     tag:Integer ;
   public
     constructor Create(Aspr:TSfmlSprite; Atag:Integer) ;
-    procedure Draw(render:TSfmlRenderWindow) ; virtual ; abstract ;
+    procedure Draw(render:TSfmlRenderTarget) ; virtual ; abstract ;
     procedure Update(dt:Single) ; virtual ; abstract ;
     function getSprite():TSfmlSprite ;
   end;
@@ -42,7 +42,7 @@ type
   public
     constructor Create(Aspr:TSfmlSprite; Atag:Integer; 
       Ady:Integer; Aperiod:Single; Aa0:Single) ;
-    procedure Draw(render:TSfmlRenderWindow) ; override ;
+    procedure Draw(render:TSfmlRenderTarget) ; override ;
     procedure Update(dt:Single) ; override ;
   end ;
 
@@ -111,7 +111,7 @@ begin
   t:=0 ;
 end;
 
-procedure TSEMoveHarmonicVert.Draw(render: TSfmlRenderWindow);
+procedure TSEMoveHarmonicVert.Draw(render: TSfmlRenderTarget);
 begin
   spr.Position := SfmlVector2f(spr.Position.X,
     spr.Position.Y + dy*Sin(2*PI*(a0+t/period))) ;

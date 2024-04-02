@@ -21,7 +21,8 @@ uses
   monster in 'core\monster.pas',
   spawner in 'core\spawner.pas',
   hero in 'core\hero.pas',
-  scenectrlmenu in 'core\scenectrlmenu.pas';
+  scenectrlmenu in 'core\scenectrlmenu.pas',
+  sceneminimaprender in 'core\sceneminimaprender.pas';
 
 begin
   with TMain.Create() do begin

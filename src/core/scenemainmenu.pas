@@ -79,7 +79,8 @@ begin
           1: begin
             TCommonData.languages.switchCurrent() ;
             TCommonData.reloadTexts() ;
-            window.SetTitle(UTF8Decode(TCommonData.texts.getText('GAME_TITLE'))) ;
+            // Исправить архитектуру
+            TSfmlRenderWindow(window).SetTitle(UTF8Decode(TCommonData.texts.getText('GAME_TITLE'))) ;
             loadLogo() ;
             buildMenu() ;
           end;

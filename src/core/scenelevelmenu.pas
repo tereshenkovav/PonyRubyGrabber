@@ -67,8 +67,12 @@ begin
 end ;
 
 procedure TSceneLevelMenu.RenderFunc() ;
+var i:Integer ;
 begin
   window.Draw(logo) ;
+
+  for i := 0 to 11 do
+    drawSprite(TCommonData.minimaps[i],50+(i mod 6)*160,300+(i div 6)*140) ;
 end ;
 
 procedure TSceneLevelMenu.UnInit() ;
