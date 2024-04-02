@@ -20,7 +20,8 @@ uses
   sceneabout in 'core\sceneabout.pas',
   monster in 'core\monster.pas',
   spawner in 'core\spawner.pas',
-  hero in 'core\hero.pas';
+  hero in 'core\hero.pas',
+  scenectrlmenu in 'core\scenectrlmenu.pas';
 
 begin
   with TMain.Create() do begin

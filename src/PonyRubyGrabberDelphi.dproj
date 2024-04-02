@@ -123,6 +123,7 @@
         <DCCReference Include="core\monster.pas"/>
         <DCCReference Include="core\spawner.pas"/>
         <DCCReference Include="core\hero.pas"/>
+        <DCCReference Include="core\scenectrlmenu.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

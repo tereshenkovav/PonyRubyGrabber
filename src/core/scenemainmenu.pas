@@ -26,13 +26,14 @@ type
 
 implementation
 uses StrUtils,
- SceneLevelMenu, SceneAbout, SfmlUtils, CommonData, Game ;
+ SceneLevelMenu, SceneAbout, SceneCtrlMenu,
+ SfmlUtils, CommonData, Game ;
 
 function TSceneMainMenu.Init():Boolean ;
 begin
   loadLogo() ;
 
-  menu:=TMenuKeyboardText.Create(TCommonData.selector,wwidth div 2-100,350,55,
+  menu:=TMenuKeyboardText.Create(TCommonData.selector,wwidth div 2-100,320,55,
     TCommonData.Font,32,SfmlWhite) ;
   buildMenu() ;
   overscene:=menu ;
@@ -56,6 +57,7 @@ begin
     TCommonData.texts.getText('TEXT_ON'),TCommonData.texts.getText('TEXT_OFF'))) ;
   menu.addItem(TCommonData.texts.getText('MENU_FULLSCR')+': '+IfThen(TGame.fullscr,
     TCommonData.texts.getText('TEXT_ON'),TCommonData.texts.getText('TEXT_OFF'))) ;
+  menu.addItem(TCommonData.texts.getText('MENU_CTRL')) ;
   menu.addItem(TCommonData.texts.getText('MENU_ABOUT')) ;
   menu.addItem(TCommonData.texts.getText('MENU_EXIT')) ;
 end;
@@ -91,10 +93,14 @@ begin
             Exit(TSceneResult.RebuildWindow) ;
           end;
           4: begin
+            nextscene:=TSceneCtrlMenu.Create() ;
+            Exit(TSceneResult.Switch) ;
+          end;
+          5: begin
             nextscene:=TSceneAbout.Create() ;
             Exit(TSceneResult.Switch) ;
           end;
-          5: Exit(TSceneResult.Close) ;
+          6: Exit(TSceneResult.Close) ;
         end;
       end;
 
