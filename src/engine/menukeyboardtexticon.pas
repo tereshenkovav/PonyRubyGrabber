@@ -113,7 +113,7 @@ begin
     items[i].Color:=ConvertSFMLColorBright(Color,IfThen(i=selindex,1.0,0.66)) ;
     icons[i].Color:=CreateSFMLColor(IfThen(i=selindex,$FFFFFF,$A0A0A0)) ;
 
-    drawText(items[i],x+(i mod cols)*w - items[i].LocalBounds.Width/2,y+(i div cols)*h) ;
+    drawTextCentered(items[i],x+(i mod cols)*w,y+(i div cols)*h) ;
     drawSprite(icons[i],x+(i mod cols)*w,y+(i div cols)*h+maxh+15) ;
     if i=selindex then begin
       rect.Position:=SfmlVector2f(icons[i].Position.X-5,icons[i].Position.Y-5) ;
