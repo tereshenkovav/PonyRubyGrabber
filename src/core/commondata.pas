@@ -86,6 +86,7 @@ var scene:TSceneMiniMapRender ;
     texdraw,tex:TSfmlRenderTexture ;
     spr:TSfmlSprite ;
     i:Integer ;
+    w,h:Integer ;
 const MAPSCALE = 8 ;
 begin
   texdraw:=TSfmlRenderTexture.Create(1024,768) ;
@@ -98,6 +99,8 @@ begin
   spr.Scale(1.0/MAPSCALE,1.0/MAPSCALE) ;
   spr.Position:=SfmlVector2f(0,0) ;
 
+  w:=1024 div MAPSCALE ;
+  h:=768 div MAPSCALE ;
   for i := 0 to TLevel.getMaxLevel('levels') do begin
     texdraw.Clear(SfmlColorFromRGB(64,64,64)) ;
     scene.SetLevel(i) ;
@@ -105,10 +108,11 @@ begin
     texdraw.Display() ;
 
     spr.SetTexture(texdraw.Texture) ;
-    tex:=TSfmlRenderTexture.Create(1024 div MAPSCALE,768 div MAPSCALE) ;
+    tex:=TSfmlRenderTexture.Create(w,h) ;
     tex.Draw(spr) ;
     tex.Display() ;
     minimaps[i]:=TSfmlSprite.Create(tex.Texture) ;
+    minimaps[i].Origin:=SfmlVector2f(w/2,0) ;
   end;
   texdraw.Free ;
   spr.Free ;

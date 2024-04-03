@@ -14,12 +14,13 @@ function createText(Font:TSfmlFont; utf8str:string; size:Integer;
   color:TSfmlColor):TSfmlText ;
 function createSFMLColor(color:Cardinal):TSfmlColor ;
 function createSFMLColorAlpha(color:Cardinal; alpha:Byte):TSfmlColor ;
+function convertSFMLColorBright(color:TSfmlColor; bright:Single):TSfmlColor ;
 function SfmlVector2i(X, Y: Integer): TSfmlVector2i;
 procedure convertSpriteTexture(sprite:TSfmlSprite; converter:TFuncConvertPixel) ;
 function funcMakeGray(c:TSfmlColor):TSfmlColor ;
 
 implementation
-uses SysUtils, Helpers ;
+uses SysUtils, Math, Helpers ;
 
 function funcMakeGray(c:TSfmlColor):TSfmlColor ;
 var gr:Integer ;
@@ -81,6 +82,14 @@ begin
   Result.B:=color and $FF ;
   Result.G:=(color shr 8) and $FF ;
   Result.R:=(color shr 16) and $FF ;
+end;
+
+function convertSFMLColorBright(color:TSfmlColor; bright:Single):TSfmlColor ;
+begin
+  Result.A:=$FF ;
+  Result.B:=Min(Round(color.B*bright),255) ;
+  Result.G:=Min(Round(color.G*bright),255) ;
+  Result.R:=Min(Round(color.R*bright),255) ;
 end;
 
 function SfmlVector2i(X, Y: Integer): TSfmlVector2i;

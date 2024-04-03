@@ -5,7 +5,7 @@ interface
 uses
   Classes, SysUtils,
   SfmlSystem,SfmlWindow,SfmlGraphics,SfmlAudio,
-  Scene, Helpers, SfmlAnimation, MenuKeyboardText ;
+  Scene, Helpers, SfmlAnimation, MenuKeyboardTextIcon ;
 
 type
 
@@ -14,7 +14,7 @@ type
   TSceneLevelMenu = class(TScene)
   private
     logo:TSfmlSprite ;
-    menu:TMenuKeyboardText ;
+    menu:TMenuKeyboardTextIcon ;
     procedure buildMenu() ;
   public
     function Init():Boolean ; override ;
@@ -31,8 +31,8 @@ begin
   logo:=loadSprite(TCommonData.languages.formatFileNameWithLang('images'+PATH_SEP+'intro.png'));
   logo.Position:=SfmlVector2f(0,0) ;
 
-  menu:=TMenuKeyboardText.Create(TCommonData.selector,wwidth div 2-50,290,38,
-    TCommonData.Font,26,SfmlWhite) ;
+  menu:=TMenuKeyboardTextIcon.Create(110,300,160,140,6,
+    TCommonData.Font,22,SfmlWhite) ;
   buildMenu() ;
   overscene:=menu ;
 
@@ -43,8 +43,9 @@ procedure TSceneLevelMenu.buildMenu;
 var i:Integer ;
 begin
   menu.clearItems() ;
-  for I := 0 to TCommonData.profile.getAvailLevel() do
-     menu.addItem(TCommonData.texts.getText('LEVEL')+' '+IntToStr(i+1)) ;
+  for i := 0 to TCommonData.profile.getAvailLevel() do
+     menu.addItem(TCommonData.texts.getText('LEVEL')+' '+IntToStr(i+1),
+     TCommonData.minimaps[i]) ;
 end;
 
 function TSceneLevelMenu.FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ;
@@ -62,17 +63,11 @@ begin
         Exit(TSceneResult.Switch) ;
       end;
     end ;
-
-  TCommonData.selector.Update(dt) ;
 end ;
 
 procedure TSceneLevelMenu.RenderFunc() ;
-var i:Integer ;
 begin
   window.Draw(logo) ;
-
-  for i := 0 to 11 do
-    drawSprite(TCommonData.minimaps[i],50+(i mod 6)*160,300+(i div 6)*140) ;
 end ;
 
 procedure TSceneLevelMenu.UnInit() ;
