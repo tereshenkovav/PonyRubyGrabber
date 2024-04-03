@@ -18,7 +18,7 @@ begin
   ChDir(ExtractFilePath(ParamStr(0))+PATH_SEP+'..'+PATH_SEP+'data') ;
   TCommonData.Init() ;
   game:=TGame.Create(1024,768,TCommonData.texts.getText('GAME_TITLE'),'images'+PATH_SEP+'icon.png') ;
-  TScene.closehandler:=TSceneCloseHandler.Create() ;
+  game.setCloseHandler(TSceneCloseHandler.Create()) ;
   game.Run(TSceneStart.Create()) ;
   game.Free ;
   TCommonData.UnInit() ;

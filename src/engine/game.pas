@@ -21,10 +21,12 @@ type
     prevscene: TScene ;
     icon:TSfmlImage ;
     title:string ;
+    closehandler:TScene ;
   public
     // Нужно переместить в правильное место
     class var fullscr:Boolean ;
     constructor Create(width,height:Integer; Atitle:string; iconfile:string='') ;
+    procedure setCloseHandler(Ascene:TScene) ;
     procedure Run(initscene:TScene) ;
     destructor Destroy() ; override ;
   end;
@@ -74,9 +76,9 @@ rebuild_window:
   if icon<>nil then window.SetIcon(icon.Size.X,icon.Size.Y,icon.getPixelsPtr());
 
   // Дублирование инициализации при смене окна
-  if TScene.closehandler<>nil then begin
-    TScene.closehandler.setWindow(window,mode.Width,mode.Height) ;
-    TScene.closehandler.Init() ;
+  if closehandler<>nil then begin
+    closehandler.setWindow(window,mode.Width,mode.Height) ;
+    closehandler.Init() ;
   end;
 
   tekscene.setWindow(window,mode.Width,mode.Height) ;
@@ -161,14 +163,14 @@ rebuild_window:
     lasttime:=newtime ;
 
     if closehandled then begin
-      if TScene.closehandler=nil then begin
+      if closehandler=nil then begin
         window.Close() ;
         break ;
       end
       else begin
-        if tekscene<>TScene.closehandler then begin
+        if tekscene<>closehandler then begin
           prevscene:=tekscene ;
-          tekscene:=TScene.closehandler ;
+          tekscene:=closehandler ;
         end;
       end;
     end ;
@@ -179,8 +181,13 @@ rebuild_window:
     if tekscene.getOverScene()<>nil then tekscene.getOverScene().RenderFunc() ;
     window.Display;
   end;
-  if tekscene<>TScene.closehandler then tekscene.UnInit() ;
-  if TScene.closehandler<>nil then TScene.closehandler.UnInit() ;
+  if tekscene<>closehandler then tekscene.UnInit() ;
+  if closehandler<>nil then closehandler.UnInit() ;
+end;
+
+procedure TGame.setCloseHandler(Ascene: TScene);
+begin
+  closehandler:=Ascene ;
 end;
 
 destructor TGame.Destroy();

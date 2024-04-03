@@ -37,7 +37,6 @@ type
     procedure drawText(text:TSfmlText; x,y:Single) ;
     procedure drawTextCentered(text:TSfmlText; x,y:Single) ;
   public
-    class var closehandler:TScene ;
     procedure setWindow(Awindow:TSfmlRenderTarget; Awidth,Aheight:Integer);
     function getNextScene():TScene ;
     function getSubScene():TScene ;
