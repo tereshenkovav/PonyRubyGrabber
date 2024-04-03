@@ -39,6 +39,7 @@ type
     function getActionName(i:Integer):string ;
     function getActionView(i:Integer):string ;
     procedure unsetAction(i:Integer) ;
+    function formatTextWithActionCodes(const str:string):string ;
     constructor Create() ;
     destructor Destroy() ; override ;
   end;
@@ -61,6 +62,14 @@ destructor TActionConfig.Destroy();
 begin
   actions.Free ;
   inherited Destroy();
+end;
+
+function TActionConfig.formatTextWithActionCodes(const str: string): string;
+var action:TActionInfo ;
+begin
+  Result:=str ;
+  for action in actions do
+    Result:=Result.Replace('{action_'+action.actionname+'}',action.getView()) ;
 end;
 
 function TActionConfig.getActionName(i: Integer): string;

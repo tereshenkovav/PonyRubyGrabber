@@ -285,7 +285,8 @@ begin
 
   if level.getTextData()<>'' then
     textHelp:=createText(TCommonData.Font,
-      TCommonData.texts.getText(level.getTextData()),24,SfmlWhite) ;
+      TCommonData.actionconfig.formatTextWithActionCodes(
+        TCommonData.texts.getText(level.getTextData())),24,SfmlWhite) ;
 
   tek_cmd:=cmdNone ;
   player_dx:=0 ;
