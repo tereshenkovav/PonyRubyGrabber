@@ -15,11 +15,9 @@ type
   private
   public
     class var Font:TSfmlFont ;
-    class var profile:TProfile ;
     class var selector:TSfmlAnimation ;
     class var texts:TTexts ;
     class var languages:TLanguages ;
-    class var soundon:Boolean ;
     class var actionconfig:TActionConfig ;
     class var minimaps:array of TSfmlSprite ;
     class function Init():Boolean ;
@@ -55,7 +53,6 @@ begin
   selector.Scale(0.75,0.75) ;
   selector.Origin:=SfmlVector2f(100,30) ;
   selector.Play() ;
-  profile:=TProfile.Create('PonyRubyGrabber') ;
   languages:=TLanguages.Create() ;
   languages.loadFromFile('texts'+PATH_SEP+'languages');
   languages.setCurrentByFile('texts'+PATH_SEP+'deflang');
@@ -77,7 +74,6 @@ begin
   actionconfig.addAction(ACTION_TRANSFORM_3,sfKeyNum4) ;
   actionconfig.addAction(ACTION_TRANSFORM_4,sfKeyNum5) ;
   actionconfig.addAction(ACTION_TRANSFORM_5,sfKeyNum6) ;
-  soundon:=True ;
   Result:=True ;
 end ;
 
@@ -130,7 +126,6 @@ var i:Integer ;
 begin
   Font.Free ;
   selector.Free ;
-  profile.Free ;
   texts.Free ;
   actionconfig.Free ;
   languages.Free ;

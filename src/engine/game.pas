@@ -5,7 +5,7 @@ interface
 uses
   Classes, SysUtils,
   SfmlGraphics,SfmlSystem,SfmlWindow,
-  Scene;
+  Scene, Profile;
 
 type
 
@@ -22,11 +22,12 @@ type
     icon:TSfmlImage ;
     title:string ;
     closehandler:TScene ;
+    profile:TProfile ;
+    procedure initNewScene(scene:TScene) ;
   public
-    // Нужно переместить в правильное место
-    class var fullscr:Boolean ;
     constructor Create(width,height:Integer; Atitle:string; iconfile:string='') ;
     procedure setCloseHandler(Ascene:TScene) ;
+    procedure setProfile(Aprofile:TProfile) ;
     procedure Run(initscene:TScene) ;
     destructor Destroy() ; override ;
   end;
@@ -61,12 +62,11 @@ var lasttime,newtime:Single ;
     closehandled:Boolean ;
 label rebuild_window ;
 begin
-  fullscr:=False ;
   prevscene:=nil ;
   subscene:=nil ;
   tekscene:=initscene ;
 rebuild_window:
-  if fullscr then
+  if profile.isFullScreen() then
     window := TSfmlRenderWindow.Create(mode, UTF8Decode(title),[sfFullscreen], nil)
   else
     window := TSfmlRenderWindow.Create(mode, UTF8Decode(title),[sfClose], nil);
@@ -76,17 +76,9 @@ rebuild_window:
   if icon<>nil then window.SetIcon(icon.Size.X,icon.Size.Y,icon.getPixelsPtr());
 
   // Дублирование инициализации при смене окна
-  if closehandler<>nil then begin
-    closehandler.setWindow(window,mode.Width,mode.Height) ;
-    closehandler.Init() ;
-  end;
-
-  tekscene.setWindow(window,mode.Width,mode.Height) ;
-  tekscene.Init() ;
-  if tekscene.getOverScene()<>nil then begin
-     tekscene.getOverScene().setWindow(window,mode.Width,mode.Height) ;
-     tekscene.getOverScene().Init() ;
-   end ;
+  initNewScene(closehandler) ;
+  initNewScene(tekscene) ;
+  initNewScene(tekscene.getOverScene()) ;
 
   events:=TUniList<TSfmlEventEx>.Create() ;
 
@@ -129,12 +121,8 @@ rebuild_window:
         if tekscene.getOverScene()<>nil then tekscene.getOverScene().UnInit() ;
         tekscene.UnInit();
         tekscene:=activescene.getNextScene();
-        tekscene.setWindow(window,mode.Width,mode.Height) ;
-        tekscene.Init();
-        if tekscene.getOverScene()<>nil then begin
-          tekscene.getOverScene().setWindow(window,mode.Width,mode.Height) ;
-          tekscene.getOverScene().Init() ;
-        end ;
+        initNewScene(tekscene) ;
+        initNewScene(tekscene.getOverScene()) ;
         end ;
         continue ;
       end ;
@@ -147,8 +135,7 @@ rebuild_window:
       end;
       TSceneResult.SetSubScene: begin
         subscene:=tekscene.getSubScene() ;
-        subscene.setWindow(window,mode.Width,mode.Height) ;
-        subscene.Init();
+        initNewScene(subscene) ;
         continue ;
       end ;
       TSceneResult.ExitSubScene: begin
@@ -190,12 +177,26 @@ begin
   closehandler:=Ascene ;
 end;
 
+procedure TGame.setProfile(Aprofile: TProfile);
+begin
+  profile:=Aprofile ;
+end;
+
 destructor TGame.Destroy();
 begin
   window.Free ;
   if icon<>nil then icon.Free ;
   
   inherited Destroy();
+end;
+
+procedure TGame.initNewScene(scene: TScene);
+begin
+  if scene=nil then Exit ;
+
+  scene.setWindow(window,mode.Width,mode.Height) ;
+  scene.setProfile(profile) ;
+  scene.Init() ;
 end;
 
 end.

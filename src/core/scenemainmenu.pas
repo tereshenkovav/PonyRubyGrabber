@@ -53,9 +53,9 @@ begin
   menu.clearItems() ;
   menu.addItem(TCommonData.texts.getText('MENU_START')) ;
   menu.addItem(TCommonData.texts.getText('MENU_LANG')+': '+TCommonData.languages.getCurrent().ToUpper()) ;
-  menu.addItem(TCommonData.texts.getText('MENU_SOUND')+': '+IfThen(TCommonData.soundon,
+  menu.addItem(TCommonData.texts.getText('MENU_SOUND')+': '+IfThen(profile.IsSoundOn(),
     TCommonData.texts.getText('TEXT_ON'),TCommonData.texts.getText('TEXT_OFF'))) ;
-  menu.addItem(TCommonData.texts.getText('MENU_FULLSCR')+': '+IfThen(TGame.fullscr,
+  menu.addItem(TCommonData.texts.getText('MENU_FULLSCR')+': '+IfThen(profile.isFullScreen(),
     TCommonData.texts.getText('TEXT_ON'),TCommonData.texts.getText('TEXT_OFF'))) ;
   menu.addItem(TCommonData.texts.getText('MENU_CTRL')) ;
   menu.addItem(TCommonData.texts.getText('MENU_ABOUT')) ;
@@ -85,11 +85,11 @@ begin
             buildMenu() ;
           end;
           2: begin
-            TCommonData.soundon:=not TCommonData.soundon ;
+            profile.switchSoundOn() ;
             buildMenu() ;
           end;
           3: begin
-            TGame.fullscr:=not TGame.fullscr ;
+            profile.switchFullScreen() ;
             nextscene:=TSceneMainMenu.Create() ;
             Exit(TSceneResult.RebuildWindow) ;
           end;

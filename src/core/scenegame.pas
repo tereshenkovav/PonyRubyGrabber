@@ -81,7 +81,7 @@ type
 
 implementation
 uses Math,
-  SfmlUtils, CommonData, SubSceneMenuFin, SubSceneMenuGame ;
+  SfmlUtils, CommonData, SubSceneMenuFin, SubSceneMenuGame, ProfileLevel ;
 
 const CELL_HEIGHT=40 ;
       CELL_WIDTH=40 ;
@@ -272,13 +272,13 @@ begin
   galop:=TSfmlSound.Create(TSfmlSoundBuffer.Create('sounds'+PATH_SEP+'galop.ogg'));
   galop.Loop:=True ;
   galop.Stop() ;
-  galop.Volume:=IfThen(TCommonData.soundon,100,0) ;
+  galop.Volume:=IfThen(profile.IsSoundOn(),100,0) ;
   grab:=TSfmlSound.Create(TSfmlSoundBuffer.Create('sounds'+PATH_SEP+'grab.ogg'));
-  grab.Volume:=IfThen(TCommonData.soundon,100,0) ;
+  grab.Volume:=IfThen(profile.IsSoundOn(),100,0) ;
   teleport:=TSfmlSound.Create(TSfmlSoundBuffer.Create('sounds'+PATH_SEP+'teleport.ogg'));
-  teleport.Volume:=IfThen(TCommonData.soundon,100,0) ;
+  teleport.Volume:=IfThen(profile.IsSoundOn(),100,0) ;
   magic:=TSfmlSound.Create(TSfmlSoundBuffer.Create('sounds'+PATH_SEP+'magic.ogg'));
-  magic.Volume:=IfThen(TCommonData.soundon,100,0) ;
+  magic.Volume:=IfThen(profile.IsSoundOn(),100,0) ;
 
   level:=TLevel.Create ;
   level.LoadFromFile('levels'+PATH_SEP+'level'+IntToStr(leveln)+'.dat');
@@ -476,7 +476,7 @@ begin
         iswin:=True ;
         time_exit:=1.5 ;
         galop.Stop() ;
-        TCommonData.profile.MarkLevelCompleted(leveln) ;
+        TProfileLevel(profile).MarkLevelCompleted(leveln) ;
     end;
 
   end; // Действия, связанные с активным пони

@@ -24,7 +24,8 @@ type
   end;
 
 implementation
-uses SceneGame, SceneMainMenu, SfmlUtils, CommonData ;
+uses SceneGame, SceneMainMenu, SfmlUtils, CommonData,
+  ProfileLevel ;
 
 function TSceneLevelMenu.Init():Boolean ;
 begin
@@ -43,7 +44,7 @@ procedure TSceneLevelMenu.buildMenu;
 var i:Integer ;
 begin
   menu.clearItems() ;
-  for i := 0 to TCommonData.profile.getAvailLevel() do
+  for i := 0 to TProfileLevel(profile).getAvailLevel() do
      menu.addItem(TCommonData.texts.getText('LEVEL')+' '+IntToStr(i+1),
      TCommonData.minimaps[i]) ;
 end;

@@ -114,7 +114,7 @@
         <DCCReference Include="core\scenestart.pas"/>
         <DCCReference Include="core\subscenemenufin.pas"/>
         <DCCReference Include="core\subscenemenugame.pas"/>
-        <DCCReference Include="core\profile.pas"/>
+        <DCCReference Include="core\profilelevel.pas"/>
         <DCCReference Include="core\scenemainmenu.pas"/>
         <DCCReference Include="core\scenelevelmenu.pas"/>
         <DCCReference Include="core\scenetotalwin.pas"/>
