@@ -21,6 +21,8 @@ type
     mousebutton:TSfmlMouseButton ;
     isset:Boolean ;
     function getView():string ;
+    function getPacked():string ;
+    procedure setFromPacked(str:string) ;
     function isMatchTypeAndValue(const action:TActionInfo):Boolean ;
     class operator Equal(a: TActionInfo; b: TActionInfo): Boolean;
   end;
@@ -38,13 +40,16 @@ type
     function Count():Integer ;
     function getActionName(i:Integer):string ;
     function getActionView(i:Integer):string ;
+    function getActionPacked(i:Integer):string ;
     procedure unsetAction(i:Integer) ;
     function formatTextWithActionCodes(const str:string):string ;
+    procedure setActionFromPacked(i:Integer; str:string) ;
     constructor Create() ;
     destructor Destroy() ; override ;
   end;
 
 implementation
+uses Math ;
 
 { TActionConfig }
 
@@ -80,6 +85,11 @@ end;
 function TActionConfig.getActionView(i: Integer): string;
 begin
   Result:=actions[i].getView() ;
+end;
+
+function TActionConfig.getActionPacked(i: Integer): string;
+begin
+  Result:=actions[i].getPacked() ;
 end;
 
 function TActionConfig.isMatchEvent(const event: TSfmlEvent;
@@ -131,6 +141,14 @@ begin
   end;
 end;
 
+procedure TActionConfig.setActionFromPacked(i: Integer; str: string);
+var action:TActionInfo ;
+begin
+  action:=actions[i] ;
+  action.setFromPacked(str) ;
+  actions[i]:=action ;
+end;
+
 procedure TActionConfig.unsetAction(i: Integer);
 var action:TActionInfo ;
 begin
@@ -161,11 +179,26 @@ begin
   actions.Add(keyinfo) ;
 end ;
 
-{ TSfmlEventEx }
+{ TActionInfo }
 
 class operator TActionInfo.Equal(a: TActionInfo; b: TActionInfo): Boolean;
 begin
   Result:=a.actionname=b.actionname ;
+end;
+
+function TActionInfo.getPacked: string;
+begin
+  if not isset then
+    Result:='Null'
+  else begin
+    if actiontype=TActionType.atKey then
+      Result:='Key_'+IntToStr(ord(key))
+    else
+    if actiontype=TActionType.atMouseButton then
+      Result:='MouseButton_'+IntToStr(ord(mousebutton))
+    else
+      Result:='Null' ;
+  end;
 end;
 
 function TActionInfo.getView: string;
@@ -288,6 +321,24 @@ begin
   if (actiontype=TActionType.atMouseButton)and(action.actiontype=TActionType.atMouseButton) then
     if mousebutton=action.mousebutton then Exit(True) ;
   Result:=False ;
+end;
+
+procedure TActionInfo.setFromPacked(str: string);
+var arr:TArray<string> ;
+begin
+  if str='' then Exit ;
+  arr:=str.Split(['_']) ;
+  isset:=False ;
+  if arr[0]='Key' then begin
+    actiontype:=TActionType.atKey ;
+    key:=TSfmlKeyCode(StrToInt(arr[1])) ;
+    isset:=True ;
+  end ;
+  if arr[0]='MouseButton' then begin
+    actiontype:=TActionType.atMouseButton ;
+    mousebutton:=TSfmlMouseButton(StrToInt(arr[1])) ;
+    isset:=True ;
+  end;
 end;
 
 end.

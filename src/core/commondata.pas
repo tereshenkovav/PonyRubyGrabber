@@ -18,7 +18,6 @@ type
     class var selector:TSfmlAnimation ;
     class var texts:TTexts ;
     class var languages:TLanguages ;
-    class var actionconfig:TActionConfig ;
     class var minimaps:array of TSfmlSprite ;
     class function Init():Boolean ;
     class procedure reloadTexts() ;
@@ -60,20 +59,6 @@ begin
   reloadTexts() ;
   preloadMiniMaps() ;
 
-  // Инициализация действий
-  actionconfig:=TActionConfig.Create() ;
-  actionconfig.addAction(ACTION_LEFT,sfKeyLeft) ;
-  actionconfig.addAction(ACTION_RIGHT,sfKeyRight) ;
-  actionconfig.addAction(ACTION_UP,sfKeyUp) ;
-  actionconfig.addAction(ACTION_DOWN,sfKeyDown) ;
-  actionconfig.addAction(ACTION_STOP,sfKeySpace) ;
-  actionconfig.addAction(ACTION_USE,sfKeyLControl) ;
-  actionconfig.addAction(ACTION_TRANSFORM_0,sfKeyNum1) ;
-  actionconfig.addAction(ACTION_TRANSFORM_1,sfKeyNum2) ;
-  actionconfig.addAction(ACTION_TRANSFORM_2,sfKeyNum3) ;
-  actionconfig.addAction(ACTION_TRANSFORM_3,sfKeyNum4) ;
-  actionconfig.addAction(ACTION_TRANSFORM_4,sfKeyNum5) ;
-  actionconfig.addAction(ACTION_TRANSFORM_5,sfKeyNum6) ;
   Result:=True ;
 end ;
 
@@ -127,7 +112,6 @@ begin
   Font.Free ;
   selector.Free ;
   texts.Free ;
-  actionconfig.Free ;
   languages.Free ;
   for i:=0 to Length(minimaps)-1 do
     minimaps[i].Free ;

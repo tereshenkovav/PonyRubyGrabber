@@ -47,10 +47,10 @@ procedure TSceneCtrlMenu.buildMenu;
 var i:Integer ;
 begin
   menu.clearItems() ;
-  for i := 0 to TCommonData.actionconfig.Count-1 do
+  for i := 0 to profile.getActionConfig().Count-1 do
      menu.addItem(TCommonData.texts.getText('ACTION_'+
-       TCommonData.actionconfig.getActionName(i))+': '+
-       IfThen(active_idx=i,'_',TCommonData.actionconfig.getActionView(i))) ;
+       profile.getActionConfig().getActionName(i))+': '+
+       IfThen(active_idx=i,'_',profile.getActionConfig().getActionView(i))) ;
 end;
 
 function TSceneCtrlMenu.FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ;
@@ -70,7 +70,8 @@ begin
         end;
       end
       else begin
-        TCommonData.actionconfig.setActionByEvent(active_idx,event.event) ;
+        profile.getActionConfig().setActionByEvent(active_idx,event.event) ;
+        profile.Save() ;
         active_idx:=-1 ;
         buildMenu() ;
       end;

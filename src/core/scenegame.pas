@@ -285,7 +285,7 @@ begin
 
   if level.getTextData()<>'' then
     textHelp:=createText(TCommonData.Font,
-      TCommonData.actionconfig.formatTextWithActionCodes(
+      profile.getActionConfig().formatTextWithActionCodes(
         TCommonData.texts.getText(level.getTextData())),24,SfmlWhite) ;
 
   tek_cmd:=cmdNone ;
@@ -364,7 +364,7 @@ begin
       end;
 
       // Обработка команд
-      if not TCommonData.actionconfig.isMatchEvent(event.event,actionname) then Continue ;
+      if not profile.getActionConfig().isMatchEvent(event.event,actionname) then Continue ;
 
       if actionname=ACTION_LEFT then tek_cmd:=cmdLeft ;
       if actionname=ACTION_RIGHT then tek_cmd:=cmdRight ;

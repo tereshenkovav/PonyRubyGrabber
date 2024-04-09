@@ -29,6 +29,7 @@ type
     constructor Create(width,height:Integer; Agamecode,Atitle:string; iconfile:string='') ;
     procedure setCloseHandler(Ascene:TScene) ;
     procedure setCustomProfile(profileclass:TProfileClass) ;
+    function getProfile():TProfile ;
     procedure Run(initscene:TScene) ;
     destructor Destroy() ; override ;
   end;
@@ -65,6 +66,7 @@ var lasttime,newtime:Single ;
     closehandled:Boolean ;
 label rebuild_window ;
 begin
+  profile.Load() ;
   prevscene:=nil ;
   subscene:=nil ;
   tekscene:=initscene ;
@@ -192,6 +194,11 @@ begin
   if icon<>nil then icon.Free ;
   
   inherited Destroy();
+end;
+
+function TGame.getProfile: TProfile;
+begin
+  Result:=profile ;
 end;
 
 procedure TGame.initNewScene(scene: TScene);

@@ -1,7 +1,8 @@
 ﻿unit Profile;
 
 interface
-uses IniFiles ;
+uses IniFiles,
+  ActionConfig ;
 
 type
   { TProfile }
@@ -13,6 +14,7 @@ type
     gamedir:string ;
     fullscr:Boolean ;
     soundon:Boolean ;
+    actionconfig:TActionConfig ;
     function getProfileFile():string ;
   protected
     procedure WriteExData(ini:TIniFile) ; virtual ;
@@ -24,6 +26,8 @@ type
     function isFullScreen():Boolean ;
     procedure switchSoundOn() ;
     function isSoundOn():Boolean ;
+    function getActionConfig():TActionConfig ;
+    procedure Load() ;
     procedure Save() ;
   end;
 
@@ -34,21 +38,14 @@ uses Classes, SysUtils,
 { TProfile }
 
 constructor TProfile.Create(Agamedir:string);
-var ini:TIniFile ;
 begin
   gamedir:=Agamedir ;
-  if FileExists(getProfileFile()) then begin
-    ini:=TIniFile.Create(getProfileFile()) ;
-    fullscr:=ini.ReadBool('Profile','Fullscr',False) ;
-    soundon:=ini.ReadBool('Profile','SoundOn',True) ;
-    ReadExData(ini) ;
-    ini.Free ;
-  end
-  else begin
-    fullscr:=False ;
-    soundon:=True ;
-    InitExData() ;
-  end;
+  actionconfig:=TActionConfig.Create() ;
+end;
+
+function TProfile.getActionConfig: TActionConfig;
+begin
+  Result:=actionconfig ;
 end;
 
 function TProfile.getProfileFile(): string;
@@ -77,16 +74,41 @@ begin
   Result:=soundon ;
 end;
 
+procedure TProfile.Load;
+var ini:TIniFile ;
+    i:Integer ;
+begin
+  if FileExists(getProfileFile()) then begin
+    ini:=TIniFile.Create(getProfileFile()) ;
+    fullscr:=ini.ReadBool('Profile','Fullscr',False) ;
+    soundon:=ini.ReadBool('Profile','SoundOn',True) ;
+    for i := 0 to actionconfig.Count-1 do
+      actionconfig.setActionFromPacked(i,
+        ini.ReadString('Actions','Action_'+actionconfig.getActionName(i),'')) ;
+    ReadExData(ini) ;
+    ini.Free ;
+  end
+  else begin
+    fullscr:=False ;
+    soundon:=True ;
+    InitExData() ;
+  end;
+end;
+
 procedure TProfile.ReadExData(ini: TIniFile);
 begin
 end;
 
 procedure TProfile.Save();
 var ini:TIniFile ;
+    i:Integer ;
 begin
   ini:=TIniFile.Create(getProfileFile()) ;
   ini.WriteBool('Profile','FullScr',fullscr) ;
   ini.WriteBool('Profile','SoundOn',soundon) ;
+    for i := 0 to actionconfig.Count-1 do
+      ini.WriteString('Actions','Action_'+actionconfig.getActionName(i),
+        actionconfig.getActionPacked(i)) ;
   WriteExData(ini) ;
   ini.Free ;
 end;
