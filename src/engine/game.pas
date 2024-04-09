@@ -21,13 +21,14 @@ type
     prevscene: TScene ;
     icon:TSfmlImage ;
     title:string ;
+    gamecode:string ;
     closehandler:TScene ;
     profile:TProfile ;
     procedure initNewScene(scene:TScene) ;
   public
-    constructor Create(width,height:Integer; Atitle:string; iconfile:string='') ;
+    constructor Create(width,height:Integer; Agamecode,Atitle:string; iconfile:string='') ;
     procedure setCloseHandler(Ascene:TScene) ;
-    procedure setProfile(Aprofile:TProfile) ;
+    procedure setCustomProfile(profileclass:TProfileClass) ;
     procedure Run(initscene:TScene) ;
     destructor Destroy() ; override ;
   end;
@@ -37,7 +38,7 @@ uses Helpers ;
 
 { TGame }
 
-constructor TGame.Create(width,height:Integer; Atitle:string; iconfile:string='');
+constructor TGame.Create(width,height:Integer; Agamecode,Atitle:string; iconfile:string='');
 begin
   Randomize() ;
 
@@ -50,6 +51,8 @@ begin
   {$endif}
 
   title:=Atitle ;
+  gamecode:=Agamecode ;
+  profile:=TProfile.Create(gamecode) ;
   if iconfile<>'' then icon:=TSfmlImage.Create(iconfile) else icon:=nil ;
 end ;
 
@@ -177,9 +180,10 @@ begin
   closehandler:=Ascene ;
 end;
 
-procedure TGame.setProfile(Aprofile: TProfile);
+procedure TGame.setCustomProfile(profileclass: TProfileClass);
 begin
-  profile:=Aprofile ;
+  if profile<>nil then profile.Free ;
+  profile:=profileclass.Create(gamecode) ;
 end;
 
 destructor TGame.Destroy();

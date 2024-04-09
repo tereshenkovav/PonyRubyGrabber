@@ -6,6 +6,8 @@ uses IniFiles ;
 type
   { TProfile }
 
+  TProfileClass = class of TProfile ;
+
   TProfile = class
   private
     gamedir:string ;
