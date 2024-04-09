@@ -9,7 +9,7 @@ uses
 
 type
 
-  TSceneResult = (Normal,Close,Switch,SetSubScene,ExitSubScene,RebuildWindow) ;
+  TSceneResult = (Normal,Close,Switch,SetSubScene,ExitSubScene,RebuildWindow,SetWindowTitle) ;
 
   TSfmlEventEx = record
     event:TSfmlEvent ;
@@ -32,6 +32,7 @@ type
     nextscene:TScene ;
     subscene:TScene ;
     overscene:TScene ;
+    newwindowtitle:string ;
     procedure drawSprite(spr:TSfmlSprite; x,y:Single) ;
     procedure drawSpriteEffect(se:TSpriteEffect; x,y:Single) ;
     procedure drawSpriteMirr(spr:TSfmlSprite; x,y:Single; mirrors:TMirrorTypeSet) ;
@@ -43,6 +44,7 @@ type
     function getNextScene():TScene ;
     function getSubScene():TScene ;
     function getOverScene():TScene ;
+    function getNewWindowTitle():string ;
     function Init():Boolean ; virtual ;
     function FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ; virtual ;
     procedure RenderFunc() ; virtual ;
@@ -73,6 +75,11 @@ function TScene.FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult
 begin
   Result:=TSceneResult.Normal ;
 end ;
+
+function TScene.getNewWindowTitle: string;
+begin
+  Result:=newwindowtitle ;
+end;
 
 function TScene.getNextScene: TScene;
 begin

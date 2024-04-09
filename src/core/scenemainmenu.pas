@@ -79,10 +79,10 @@ begin
           1: begin
             TCommonData.languages.switchCurrent() ;
             TCommonData.reloadTexts() ;
-            // Исправить архитектуру
-            TSfmlRenderWindow(window).SetTitle(UTF8Decode(TCommonData.texts.getText('GAME_TITLE'))) ;
+            newwindowtitle:=TCommonData.texts.getText('GAME_TITLE') ;
             loadLogo() ;
             buildMenu() ;
+            Exit(TSceneResult.SetWindowTitle) ;
           end;
           2: begin
             profile.switchSoundOn() ;
