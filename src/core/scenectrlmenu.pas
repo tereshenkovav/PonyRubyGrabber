@@ -66,6 +66,7 @@ begin
       if active_idx=-1 then begin
         if (event.event.key.code in [sfKeySpace,sfKeyReturn]) then begin
           active_idx:=menu.getSelIndex() ;
+          menu.AllowEvents(False) ;
           buildMenu() ;
         end;
       end
@@ -73,6 +74,7 @@ begin
         profile.getActionConfig().setActionByEvent(active_idx,event.event) ;
         profile.Save() ;
         active_idx:=-1 ;
+        menu.AllowEvents(True) ;
         buildMenu() ;
       end;
     end ;

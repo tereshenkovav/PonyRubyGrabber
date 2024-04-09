@@ -19,6 +19,7 @@ type
     selector:TSfmlSprite ;
     items:TUniList<TSfmlText> ;
     selindex:Integer ;
+    allowedevents:Boolean;
   protected
   public
     constructor Create(Aselector:TSfmlSprite; Ax,Ay,Ah:Integer; Afont:TSfmlFont;
@@ -30,6 +31,7 @@ type
     function FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ; override ;
     procedure RenderFunc() ; override ;
     procedure UnInit() ; override ;
+    procedure AllowEvents(Aallowedevents:Boolean) ;
   end;
 
 implementation
@@ -45,6 +47,11 @@ end ;
 procedure TMenuKeyboardText.addItem(str: string);
 begin
   items.Add(createText(font,str,size,color)) ;
+end;
+
+procedure TMenuKeyboardText.AllowEvents(Aallowedevents: Boolean);
+begin
+  allowedevents:=Aallowedevents ;
 end;
 
 procedure TMenuKeyboardText.clearItems;
@@ -66,6 +73,7 @@ begin
   color:=Acolor ;
   size:=Asize ;
   selindex:=0 ;
+  allowedevents:=True ;
   items:=TUniList<TSfmlText>.Create() ;
 end;
 
@@ -73,6 +81,8 @@ function TMenuKeyboardText.FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):T
 var event:TSfmlEventEx ;
 begin
   Result:=TSceneResult.Normal ;
+  if not allowedevents then Exit ;
+
   for event in events do
     if (event.event.EventType = sfEvtKeyPressed) then begin
       if (event.event.key.code = sfKeyUp) then
