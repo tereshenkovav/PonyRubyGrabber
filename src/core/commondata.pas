@@ -45,7 +45,6 @@ uses SfmlUtils, Helpers, Scene,
 { TCommonData }
 
 class function TCommonData.Init():Boolean ;
-var i:Integer ;
 begin
   Font:=TSfmlFont.Create('fonts'+PATH_SEP+'arial.ttf');
   selector:=TSfmlAnimation.Create('images'+PATH_SEP+'walkbot.png',5,8);
@@ -58,45 +57,37 @@ begin
   texts:=TTexts.Create() ;
   reloadTexts() ;
   preloadMiniMaps() ;
-
   Result:=True ;
 end ;
 
 class procedure TCommonData.preloadMiniMaps;
 var scene:TSceneMiniMapRender ;
-    texdraw,tex:TSfmlRenderTexture ;
-    spr:TSfmlSprite ;
+    texdraw:TSfmlRenderTexture ;
     i:Integer ;
     w,h:Integer ;
 const MAPSCALE = 8 ;
 begin
-  texdraw:=TSfmlRenderTexture.Create(1024,768) ;
-
-  SetLength(minimaps,TLevel.getMaxLevel('levels')+1) ;
-  scene:=TSceneMiniMapRender.Create() ;
-  scene.setWindow(texdraw,1024,768) ;
-  scene.Init() ;
-  spr:=TSfmlSprite.Create() ;
-  spr.Scale(1.0/MAPSCALE,1.0/MAPSCALE) ;
-  spr.Position:=SfmlVector2f(0,0) ;
-
   w:=1024 div MAPSCALE ;
   h:=768 div MAPSCALE ;
+
+  texdraw:=TSfmlRenderTexture.Create(w,h) ;
+
+  SetLength(minimaps,TLevel.getMaxLevel('levels')+1) ;
+  scene:=TSceneMiniMapRender.Create(MAPSCALE) ;
+  scene.setWindow(texdraw,w,h) ;
+  scene.Init() ;
+
   for i := 0 to TLevel.getMaxLevel('levels') do begin
-    texdraw.Clear(SfmlColorFromRGB(64,64,64)) ;
     scene.SetLevel(i) ;
+
+    texdraw.Clear(SfmlColorFromRGB(64,64,64)) ;
     scene.RenderFunc() ;
     texdraw.Display() ;
 
-    spr.SetTexture(texdraw.Texture) ;
-    tex:=TSfmlRenderTexture.Create(w,h) ;
-    tex.Draw(spr) ;
-    tex.Display() ;
-    minimaps[i]:=TSfmlSprite.Create(tex.Texture) ;
+    minimaps[i]:=TSfmlSprite.Create(texdraw.Texture.Copy()) ;
     minimaps[i].Origin:=SfmlVector2f(w/2,0) ;
   end;
   texdraw.Free ;
-  spr.Free ;
   scene.UnInit() ;
   scene.Free ;
 end;

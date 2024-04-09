@@ -79,13 +79,14 @@ type
     procedure jumpHeroTo(newx,newy:Integer) ;
   end;
 
+const CELL_HEIGHT=40 ;
+      CELL_WIDTH=40 ;
+
 implementation
 uses Math,
   SfmlUtils, CommonData, SubSceneMenuFin, SubSceneMenuGame, ProfileLevel ;
 
-const CELL_HEIGHT=40 ;
-      CELL_WIDTH=40 ;
-      PLAYER_SPEED = 3 ;
+const PLAYER_SPEED = 3 ;
       SPEEDUP_K = 3 ;
 
 function cmd2sig(cmd:TCommand):Integer ;
