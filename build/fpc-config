@@ -1,0 +1,8 @@
+-Fu../src/sfml
+-Fu../src/core
+-Fu../src/engine
+-FE../bin
+-FU$fpctarget
+-Sm
+-Mdelphi
+-Sh 
