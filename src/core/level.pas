@@ -250,7 +250,9 @@ begin
 
   icons:=TUniList<THeroIcon>.Create() ;
   for y := 0 to datah-1 do begin
-    str:=list.Values['Row'+IntToStr(y)] ;
+    str:=list.Values[Format('Row%d',[y])] ;
+    if str='' then str:=list.Values[Format('Row%.2d',[y])] ;
+
     if str.Length<dataw then str:=str+StringOfChar(chr(32),dataw-str.Length) ;
     for x := 0 to dataw-1 do begin
       ct:=TCellType.Free ;
