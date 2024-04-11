@@ -28,7 +28,7 @@ The game "Pony collect rubies", Pacman-styled gameplay with MLP:FiM heroes and a
 ## Инструменты сборки
 
 Для сборки проекта нужен либо установленный
-[Delphi](https://dotnet.microsoft.com/en-us/download/dotnet/3.1)
+[Delphi](https://delphi.embarcadero.com/)
 (проверено с версиями 10 и 11),
 либо [FreePascalCompiler](https://www.freepascal.org)
 (проверено с версией 3.0.4)
