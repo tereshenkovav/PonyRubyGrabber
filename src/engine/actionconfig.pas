@@ -266,7 +266,9 @@ begin
                 if (key = TSfmlKeyCode.sfKeyBackslash) then Exit('Backslash');
                 if (key = TSfmlKeyCode.sfKeyTilde) then Exit('Tilde');
                 if (key = TSfmlKeyCode.sfKeyEqual) then Exit('Equal');
+                if (key = TSfmlKeyCode.sfKeyDash) then Exit('Dash');
                 if (key = TSfmlKeyCode.sfKeySpace) then Exit('Space');
+                if (key = TSfmlKeyCode.sfKeyBack) then Exit('BackSpace');
                 if (key = TSfmlKeyCode.sfKeyReturn) then Exit('Enter');
                 if (key = TSfmlKeyCode.sfKeyTab) then Exit('Tab');
                 if (key = TSfmlKeyCode.sfKeyPageUp) then Exit('PageUp');
