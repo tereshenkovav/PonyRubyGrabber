@@ -6,7 +6,7 @@ uses Types, Classes,
 
 type
 
-  TCellType = (Free, Block, Stair, Crystall, HeroIcon) ;
+  TCellType = (OutMap, Free, Block, Stair, Crystall, HeroIcon) ;
 
   THeroIcon = record
     x:Integer ;
@@ -35,6 +35,7 @@ type
     class function getMaxLevel(leveldir:string):Integer ;
     function isWayCorrect(x, y: Integer): Boolean;
     function isBlockAt(x,y:Integer):Boolean ;
+    function isOutMapAt(x,y:Integer):Boolean ;
     function isStairAt(x,y:Integer):Boolean ;
     function isCrystallAt(x,y:Integer):Boolean ;
     function isHeroIconAt(x,y:Integer):Boolean ;
@@ -63,6 +64,8 @@ uses SysUtils,
 const
   STAIR_SYMS = '#$%^&' ;
   BLOCK_SYMS = '*()+/' ;
+  FULLSCRWIDTH = 23 ;
+  FULLSCRHEIGHT = 19 ;
 
 function isDXDYRevers(dx1, dy1, dx2, dy2: Integer): Boolean;
 begin
@@ -81,6 +84,7 @@ begin
   if x>=getWidth() then Exit ;
   if y>=getHeight() then Exit ;
   if isBlockAt(x,y) then Exit ;
+  if isOutMapAt(x,y) then Exit ;
   Result:=True ;
 end;
 
@@ -212,6 +216,12 @@ begin
   Result:=map[x][y]=TCellType.HeroIcon ;
 end;
 
+function TLevel.isOutMapAt(x, y: Integer): Boolean;
+begin
+  if (x<0) or (x>=width) or (y<0) or (y>=height) then Exit(False) ;
+  Result:=map[x][y]=TCellType.OutMap ;
+end;
+
 function TLevel.isStairAt(x, y: Integer): Boolean;
 begin
   if (x<0) or (x>=width) or (y<0) or (y>=height) then Exit(False) ;
@@ -235,8 +245,8 @@ begin
   top:=StrToIntWt0(list.Values['Top']) ;
   textpos:=StrToIntWt0(list.Values['TextPos']) ;
   textdata:=list.Values['TextData'] ;
-  width:=dataw+left ;
-  height:=datah+top ;
+  width:=FULLSCRWIDTH ;
+  height:=FULLSCRHEIGHT ;
   SetLength(map,width) ;
   SetLength(map_texids,width) ;
   for x := 0 to width-1 do begin
@@ -246,7 +256,7 @@ begin
 
   for y := 0 to height-1 do
     for x := 0 to width-1 do
-      map[x][y]:=TCellType.Free ;
+      map[x][y]:=TCellType.OutMap ;
 
   icons:=TUniList<THeroIcon>.Create() ;
   for y := 0 to datah-1 do begin
@@ -274,7 +284,7 @@ begin
         ct:=TCellType.Free ; // Защита от портала поверх алмаза
       end;
       if str[x+1]='-' then begin
-        ct:=TCellType.Free ; // Специальная зона, где нельзя спавнить алмазы
+        ct:=TCellType.OutMap ; // Специальная зона, где нельзя спавнить алмазы
       end;
       if str[x+1] in ['0','1','2','3','4','5'] then begin
         ct:=TCellType.HeroIcon ;

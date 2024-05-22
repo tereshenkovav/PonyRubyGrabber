@@ -178,7 +178,7 @@ end;
 function THeroActionJump.Apply(level: TLevel; herox, heroy, herodx: Integer;
   Ascene: TObject): Boolean;
 begin
-  if not level.isBlockAt(herox+DIST_TELEPORT*herodx,heroy) then begin
+  if level.isWayCorrect(herox+DIST_TELEPORT*herodx,heroy) then begin
     TSceneGame(Ascene).jumpHeroTo(herox+DIST_TELEPORT*herodx,heroy) ;
     Result:=True ;
   end
