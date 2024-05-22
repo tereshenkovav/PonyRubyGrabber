@@ -393,6 +393,11 @@ begin
           if action.Apply(level,playermapx,playermapy,IfThen(ismirr,-1,1),Self) then begin
             active_hero.Free ;
             active_hero:=THero.getNoHero() ;
+            for i:=0 to active_actions.Count-1 do
+              if active_actions[i].ClassType=action.ClassType then begin
+                active_actions.ExtractAt(i) ;
+                break ;
+              end;
             active_actions.Add(action) ;
             magic.Play() ;
           end
