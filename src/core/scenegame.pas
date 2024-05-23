@@ -395,7 +395,7 @@ begin
             active_hero:=THero.getNoHero() ;
             for i:=0 to active_actions.Count-1 do
               if active_actions[i].ClassType=action.ClassType then begin
-                active_actions.ExtractAt(i) ;
+                active_actions.Remove(active_actions[i]) ;
                 break ;
               end;
             active_actions.Add(action) ;
