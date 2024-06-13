@@ -15,6 +15,7 @@ type
   private
     intro:TSfmlSprite ;
     stage:Single ;
+    t:Single ;
   public
     function Init():Boolean ; override ;
     function FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ; override ;
@@ -27,9 +28,9 @@ uses SceneMainMenu, SfmlUtils, CommonData ;
 
 function TSceneStart.Init():Boolean ;
 begin
-  intro:=loadSprite(TCommonData.languages.formatFileNameWithLang('images'+PATH_SEP+'intro.png'));
+  intro:=loadSprite('images'+PATH_SEP+'totalwin.png');
   intro.Position:=SfmlVector2f(0,0) ;
-  intro.Color:=SfmlColorFromRGBA(255,255,255,Trunc(stage)) ;
+  intro.Color:=SfmlColorFromRGBA(255,255,255,0) ;
   Result:=True ;
 end ;
 
@@ -43,12 +44,19 @@ begin
       Exit(TSceneResult.Switch) ;
     end ;
 
-  if Trunc(stage)<255 then stage:=stage+100*dt else stage:=255 ;
+  t:=t+dt ;
+  if t>5.0 then begin
+    nextscene:=TSceneMainMenu.Create() ;
+    Exit(TSceneResult.Switch) ;
+  end;
 end ;
 
 procedure TSceneStart.RenderFunc() ;
 begin
-  intro.Color:=SfmlColorFromRGBA(255,255,255,Trunc(stage)) ;
+  if Trunc(100*t)<255 then
+    intro.Color:=SfmlColorFromRGBA(255,255,255,Trunc(100*t))
+  else
+    intro.Color:=SfmlColorFromRGBA(255,255,255,255) ;
   window.Draw(intro) ;
 end ;
 
