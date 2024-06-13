@@ -15,9 +15,12 @@ type
   private
     logo:TSfmlSprite ;
     menu:TMenuKeyboardText ;
+    activeidx:Integer ;
+    class var lastindex:Integer ;
     procedure buildMenu() ;
     procedure loadLogo() ;
   public
+    constructor Create(Aactiveidx:Integer=0) ;
     function Init():Boolean ; override ;
     function FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ; override ;
     procedure RenderFunc() ; override ;
@@ -36,6 +39,7 @@ begin
   menu:=TMenuKeyboardText.Create(TCommonData.selector,wwidth div 2-100,320,55,
     TCommonData.Font,32,SfmlWhite) ;
   buildMenu() ;
+  menu.setIndex(activeidx) ;
   overscene:=menu ;
 
   Result:=True ;
@@ -60,6 +64,16 @@ begin
   menu.addItem(TCommonData.texts.getText('MENU_CTRL')) ;
   menu.addItem(TCommonData.texts.getText('MENU_ABOUT')) ;
   menu.addItem(TCommonData.texts.getText('MENU_EXIT')) ;
+end;
+
+constructor TSceneMainMenu.Create(Aactiveidx: Integer);
+begin
+  if lastindex<>-1 then begin
+    activeidx:=lastindex ;
+    lastindex:=0 ;
+  end
+  else
+    activeidx:=Aactiveidx ;
 end;
 
 function TSceneMainMenu.FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ;
@@ -90,15 +104,17 @@ begin
           end;
           3: begin
             profile.switchFullScreen() ;
-            nextscene:=TSceneMainMenu.Create() ;
+            nextscene:=TSceneMainMenu.Create(menu.getSelIndex()) ;
             Exit(TSceneResult.RebuildWindow) ;
           end;
           4: begin
             nextscene:=TSceneCtrlMenu.Create() ;
+            lastindex:=menu.getSelIndex() ;
             Exit(TSceneResult.Switch) ;
           end;
           5: begin
             nextscene:=TSceneAbout.Create() ;
+            lastindex:=menu.getSelIndex() ;
             Exit(TSceneResult.Switch) ;
           end;
           6: Exit(TSceneResult.Close) ;
@@ -120,5 +136,9 @@ begin
   logo.Free ;
   menu.Free ;
 end ;
+
+initialization
+
+  TSceneMainMenu.lastindex:=-1 ;
 
 end.

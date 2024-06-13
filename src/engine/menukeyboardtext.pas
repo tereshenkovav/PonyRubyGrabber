@@ -25,8 +25,9 @@ type
     constructor Create(Aselector:TSfmlSprite; Ax,Ay,Ah:Integer; Afont:TSfmlFont;
       Asize:Integer; Acolor:TSfmlColor) ;
     procedure clearItems() ;
-    procedure addItem(str:string) ;
+    function addItem(str:string):Integer ;
     function getSelIndex():Integer ;
+    procedure setIndex(idx:Integer) ;
     function Init():Boolean ; override ;
     function FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ; override ;
     procedure RenderFunc() ; override ;
@@ -44,9 +45,9 @@ begin
   Result:=True ;
 end ;
 
-procedure TMenuKeyboardText.addItem(str: string);
+function TMenuKeyboardText.addItem(str: string):Integer;
 begin
-  items.Add(createText(font,str,size,color)) ;
+  Result:=items.Add(createText(font,str,size,color)) ;
 end;
 
 procedure TMenuKeyboardText.AllowEvents(Aallowedevents: Boolean);
@@ -104,6 +105,11 @@ begin
     drawText(items[i],x,y+i*h) ;
   drawSprite(selector,x,y+selindex*h) ;
 end ;
+
+procedure TMenuKeyboardText.setIndex(idx: Integer);
+begin
+  selindex:=idx ;
+end;
 
 procedure TMenuKeyboardText.UnInit() ;
 begin
