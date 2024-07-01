@@ -11,8 +11,9 @@ The game "Pony collect rubies", Pacman-styled gameplay with MLP:FiM heroes and a
 ![PonyRubyGrabber](screen1.png) ![PonyRubyGrabber](screen2.png)
 
 Проект разработан на языке ObjectPascal, в качестве графической библиотеки
-используется [SFML](https://www.sfml-dev.org) и его биндинги для Паскаля  [PasSFML](https://github.com/CWBudde/PasSFML). 
-Версия для Windows может быть собрана как при помощи Delphi, 
+используется [SFML](https://www.sfml-dev.org), в качестве игрового движка -
+проект [PascalGameEngine](https://github.com/tereshenkovav/PascalGameEngine).
+Версия для Windows может быть собрана как при помощи Delphi,
 так и при помощи [FreePascalCompiler](https://www.freepascal.org). Версия для Linux собирается
 только через FreePascalCompiler.
 
@@ -21,9 +22,9 @@ The game "Pony collect rubies", Pacman-styled gameplay with MLP:FiM heroes and a
 * `build` - cкрипты сборки игры с использованием FreePascalCompiler
 * `data` - каталог контента игры (графика, звуки, тексты, уровни)
 * `graphics` - иконки игры для дистрибутива и AppImage
+* `PascalGameEngine` - субмодуль движка PascalGameEngine
 * `setup` - скрипты создания дистрибутивов/архивов для Windows, и AppImage для Linux
 * `src` - исходный код игры в виде проектов для Delphi и FreePascalCompiler.
-Включает код биндинга SFML из репозитория [PasSFML](https://github.com/CWBudde/PasSFML) 
 
 ## Инструменты сборки
 
@@ -46,6 +47,15 @@ The game "Pony collect rubies", Pacman-styled gameplay with MLP:FiM heroes and a
 
 ### Сборка
 
+После получения файлов репозитория, нужно обновить субмодуль движка `PascalGameEngine`,
+выполнив в каталоге проекта команды
+
+```
+git submodule init
+git submodule update
+
+```
+
 Для сборки проекта в Windows при помощи Delphi нужно открыть проект
 `src\PonyRubyGrabberDelphi.dproj` и выполнить его сборку в конфигурации Release.
 В каталоге bin появится исполняемый файл `PonyRubyGrabberDelphi.exe`.
@@ -57,17 +67,14 @@ The game "Pony collect rubies", Pacman-styled gameplay with MLP:FiM heroes and a
 Для сборки проекта в Linux при помощи FreePascal нужно открыть каталог
 `build` и запустить файл `make_linux64.sh`
 В каталоге bin появится исполняемый файл `PonyRubyGrabberFPC`.
-Чтобы выполнить сборку, понадобятся установленные
-библиотеки SFML и CSFML.
+Чтобы выполнить сборку и запуск проекта, понадобятся установленные
+библиотеки `sfml` и `csfml`.
 
 ### Запуск
 
 Чтобы запустить версию для Windows, вне зависимости от способа сборки,
-нужно скопировать в каталог `bin` файлы из репозитория библиотеки 
-[PasSFML](https://github.com/CWBudde/PasSFML) 
-из каталога
-`Binaries\Win32` или `Binaries\Win64`, в завимости от того, в какой разрядности
-был собран проект.
+нужно скопировать в каталог `bin` файлы субмодуля движка
+из каталога `PascalGameEngine\csfml\win32`
 
 * `csfml-audio-2.dll`
 * `csfml-graphics-2.dll`
@@ -87,10 +94,8 @@ The game "Pony collect rubies", Pacman-styled gameplay with MLP:FiM heroes and a
 В файле сборки нужно указать путь к компилятору NSIS.\
 В первой строке файла сборки нужно указать, какой исполнимый файл будет включен
 в дистрибутив - `PonyRubyGrabberDelphi.exe` или `PonyRubyGrabberFPC.exe`\
-Также в файле нужно задать правильное значение переменной `PASSFMLDIR` - указав 
-каталог, куда был загружен репозиторий PasSFML.
 
 Создание AppImage для Linux выполняется 
-после сборки проекта запуском файла `build64.sh` 
+после сборки проекта запуском файла `build64.sh`
 из каталога `setup/linux`. В каталоге `/tmp`
 появятся готовые образы AppImage для 64-битной версии Linux.

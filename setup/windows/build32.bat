@@ -13,9 +13,8 @@ echo %BUILDCOMMIT% >> ..\..\data\texts\version.txt
 echo %BUILDBRANCH% >> ..\..\data\texts\version.txt
 
 SET VERSION=%BUILDTAG:~1%
-SET PASSFMLDIR=F:\LIBS\PasSFML\PasSFML-master
-"C:\Program Files (x86)\NSIS\makensis.exe" /DPASSFMLDIR=%PASSFMLDIR% /DVERSION=%VERSION% /DGAMELANG=ru /DUPPERLANG=RU PonyRubyGrabber.nsi
-"C:\Program Files (x86)\NSIS\makensis.exe" /DPASSFMLDIR=%PASSFMLDIR% /DVERSION=%VERSION% /DGAMELANG=en /DUPPERLANG=EN PonyRubyGrabber.nsi
+"C:\Program Files (x86)\NSIS\makensis.exe" /DVERSION=%VERSION% /DGAMELANG=ru /DUPPERLANG=RU PonyRubyGrabber.nsi
+"C:\Program Files (x86)\NSIS\makensis.exe" /DVERSION=%VERSION% /DGAMELANG=en /DUPPERLANG=EN PonyRubyGrabber.nsi
 
 call create_zip32.bat ru RU
 call create_zip32.bat en EN

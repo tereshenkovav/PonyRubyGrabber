@@ -11,11 +11,11 @@ rm -f PonyRubyGrabber-%2-%VERSION%-Win32.zip
 
 SET TMPDIR=%TEMP%\Uyf72198fGCaH
 mkdir %TMPDIR%\bin
-copy %PASSFMLDIR%\Binaries\Win32\csfml-audio-2.dll    %TMPDIR%\bin
-copy %PASSFMLDIR%\Binaries\Win32\csfml-graphics-2.dll %TMPDIR%\bin
-copy %PASSFMLDIR%\Binaries\Win32\csfml-system-2.dll   %TMPDIR%\bin
-copy %PASSFMLDIR%\Binaries\Win32\csfml-window-2.dll   %TMPDIR%\bin
-copy %PASSFMLDIR%\Binaries\Win32\openal32.dll         %TMPDIR%\bin
+copy ..\..\PascalGameEngine\csfml\win32\csfml-audio-2.dll    %TMPDIR%\bin
+copy ..\..\PascalGameEngine\csfml\win32\csfml-graphics-2.dll %TMPDIR%\bin
+copy ..\..\PascalGameEngine\csfml\win32\csfml-system-2.dll   %TMPDIR%\bin
+copy ..\..\PascalGameEngine\csfml\win32\csfml-window-2.dll   %TMPDIR%\bin
+copy ..\..\PascalGameEngine\csfml\win32\openal32.dll         %TMPDIR%\bin
 
 mkdir %TMPDIR%\data\texts
 echo %1> %TMPDIR%\data\texts\deflang

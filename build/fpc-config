@@ -1,6 +1,6 @@
--Fu../src/sfml
+-Fu../PascalGameEngine/sfml
+-Fu../PascalGameEngine/engine
 -Fu../src/core
--Fu../src/engine
 -FE../bin
 -FU$fpctarget
 -Sm

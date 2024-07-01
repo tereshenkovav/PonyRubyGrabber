@@ -92,11 +92,11 @@ Section "$(GameGameName)"
   SetOutPath $INSTDIR\bin
   File ..\..\bin\PonyRubyGrabber.exe
 
-  File ${PASSFMLDIR}\Binaries\Win32\csfml-audio-2.dll
-  File ${PASSFMLDIR}\Binaries\Win32\csfml-graphics-2.dll
-  File ${PASSFMLDIR}\Binaries\Win32\csfml-system-2.dll
-  File ${PASSFMLDIR}\Binaries\Win32\csfml-window-2.dll
-  File ${PASSFMLDIR}\Binaries\Win32\openal32.dll
+  File ..\..\PascalGameEngine\csfml\win32\csfml-audio-2.dll
+  File ..\..\PascalGameEngine\csfml\win32\csfml-graphics-2.dll
+  File ..\..\PascalGameEngine\csfml\win32\csfml-system-2.dll
+  File ..\..\PascalGameEngine\csfml\win32\csfml-window-2.dll
+  File ..\..\PascalGameEngine\csfml\win32\openal32.dll
 
   SetOutPath $INSTDIR\data
   File /r ..\..\data\*
