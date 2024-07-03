@@ -1,0 +1,12 @@
+SetCompressor LZMA
+SetCompressionLevel 9
+ZipFile PonyRubyGrabber-$LANGH$-%VERSION%-Win32.zip
+
+Dir ..\..\data
+
+SetOutPath data\texts
+Text $LANGL$\r\n deflang
+
+SetOutPath bin
+File ..\..\bin\PonyRubyGrabber.exe
+Files ..\..\PascalGameEngine\csfml\win32\*.dll

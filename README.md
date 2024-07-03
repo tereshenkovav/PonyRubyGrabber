@@ -37,8 +37,8 @@ The game "Pony collect rubies", Pacman-styled gameplay with MLP:FiM heroes and a
 Создание дистрибутива для Windows выполняется с помощью программы
 [NSIS](https://nsis.sourceforge.io)
 
-Создание архива для Windows выполняется с помощью консольной версии архиватора 
-[7-Zip](https://www.7-zip.org)
+Создание архива для Windows выполняется с помощью скриптовой утилиты построения архивов
+[SmartZipBuilder](https://github.com/tereshenkovav/SmartZipBuilder)
 
 Для создания AppImage под Linux необходим инструмент сборки AppImageKit - 
 [appimagetool-x86_64.AppImage](https://github.com/AppImage/AppImageKit/releases)
@@ -93,7 +93,7 @@ git submodule update
 из каталога `setup/windows`\
 В файле сборки нужно указать путь к компилятору NSIS.\
 В первой строке файла сборки нужно указать, какой исполнимый файл будет включен
-в дистрибутив - `PonyRubyGrabberDelphi.exe` или `PonyRubyGrabberFPC.exe`\
+в дистрибутив - `PonyRubyGrabberDelphi.exe` или `PonyRubyGrabberFPC.exe`
 
 Создание AppImage для Linux выполняется 
 после сборки проекта запуском файла `build64.sh`

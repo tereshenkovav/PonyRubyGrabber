@@ -12,6 +12,8 @@ echo %BUILDTAG% > ..\..\data\texts\version.txt
 echo %BUILDCOMMIT% >> ..\..\data\texts\version.txt
 echo %BUILDBRANCH% >> ..\..\data\texts\version.txt
 
+del ..\..\data\texts\deflang
+
 SET VERSION=%BUILDTAG:~1%
 "C:\Program Files (x86)\NSIS\makensis.exe" /DVERSION=%VERSION% /DGAMELANG=ru /DUPPERLANG=RU PonyRubyGrabber.nsi
 "C:\Program Files (x86)\NSIS\makensis.exe" /DVERSION=%VERSION% /DGAMELANG=en /DUPPERLANG=EN PonyRubyGrabber.nsi
