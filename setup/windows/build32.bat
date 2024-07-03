@@ -18,5 +18,5 @@ SET VERSION=%BUILDTAG:~1%
 "C:\Program Files (x86)\NSIS\makensis.exe" /DVERSION=%VERSION% /DGAMELANG=ru /DUPPERLANG=RU PonyRubyGrabber.nsi
 "C:\Program Files (x86)\NSIS\makensis.exe" /DVERSION=%VERSION% /DGAMELANG=en /DUPPERLANG=EN PonyRubyGrabber.nsi
 
-call create_zip32.bat ru RU
-call create_zip32.bat en EN
+SmartZipBuilder.exe script.szb /LANGL=ru /LANGH=RU
+SmartZipBuilder.exe script.szb /LANGL=en /LANGH=EN
