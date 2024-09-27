@@ -6,7 +6,7 @@ Unicode True
 RequestExecutionLevel admin
 SetCompressor /SOLID zlib
 AutoCloseWindow true
-Icon main.ico
+Icon ..\..\graphics\main.ico
 XPStyle on
 
 !include LangData_${GAMELANG}.nsi
@@ -87,7 +87,7 @@ Section "$(GameGameName)"
   SkipSleep:
 
   SetOutPath $INSTDIR
-  File main.ico
+  File ..\..\graphics\main.ico
 
   SetOutPath $INSTDIR\bin
   File ..\..\bin\PonyRubyGrabber.exe

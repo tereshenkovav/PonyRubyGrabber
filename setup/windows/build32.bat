@@ -8,9 +8,9 @@ for /F %%i in ('git branch --show-current') do set BUILDBRANCH=%%i
 
 echo %BUILDTAG% %BUILDCOMMIT% %BUILDBRANCH%
 
-echo %BUILDTAG% > ..\..\data\texts\version.txt
-echo %BUILDCOMMIT% >> ..\..\data\texts\version.txt
-echo %BUILDBRANCH% >> ..\..\data\texts\version.txt
+echo %BUILDTAG%> ..\..\data\texts\version.txt
+echo %BUILDCOMMIT%>> ..\..\data\texts\version.txt
+echo %BUILDBRANCH%>> ..\..\data\texts\version.txt
 
 del ..\..\data\texts\deflang
 
