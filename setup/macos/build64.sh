@@ -41,10 +41,10 @@ cp -R /Library/Frameworks/vorbisfile.framework $appdir/Contents/Frameworks
 
 cd /tmp 
 
-echo en > $appdir/Contents/MacOS/data/texts/deflang
+echo en > $appdir/Contents/data/texts/deflang
 zip -r9 PonyRubyGrabber-EN-$VERSION-MacOS.app.zip PonyRubyGrabber.app
 hdiutil create -srcfolder $appdir -volname "PonyRubyGrabber" -fs HFS+ -fsargs "-c c=64,a=16,e=16" -format UDZO -size 30000k -imagekey zlib-level=9 PonyRubyGrabber-EN-$VERSION-MacOS.dmg
 
-echo ru > $appdir/Contents/MacOS/data/texts/deflang
+echo ru > $appdir/Contents/data/texts/deflang
 zip -r9 PonyRubyGrabber-RU-$VERSION-MacOS.app.zip PonyRubyGrabber.app
 hdiutil create -srcfolder $appdir -volname "PonyRubyGrabber" -fs HFS+ -fsargs "-c c=64,a=16,e=16" -format UDZO -size 30000k -imagekey zlib-level=9 PonyRubyGrabber-RU-$VERSION-MacOS.dmg
