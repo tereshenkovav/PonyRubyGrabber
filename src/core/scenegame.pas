@@ -61,6 +61,7 @@ type
     iswin:Boolean ;
     time_exit:Single ;
     pool:TSpriteEffectPool ;
+    flag_entered_menu:Boolean ;
     procedure setCmdToDxy();
     function fixXifCrossed(stopx, dx:Single):Boolean ;
     function fixYifCrossed(stopy, dy:Single):Boolean ;
@@ -78,6 +79,7 @@ type
     procedure RenderFunc() ; override ;
     procedure UnInit() ; override ;
     procedure jumpHeroTo(newx,newy:Integer) ;
+    procedure FocusChanged(isfocus: Boolean); override ;
   end;
 
 const CELL_HEIGHT=40 ;
@@ -317,6 +319,8 @@ begin
   Result:=True ;
   StartTeleport(ttIn) ;
   pool.Clear() ;
+
+  flag_entered_menu:=False ;
 end ;
 
 function TSceneGame.isPonyActive: Boolean;
@@ -337,6 +341,15 @@ procedure TSceneGame.jumpHeroTo(newx, newy: Integer);
 begin
   player_x:=newx ;
   player_y:=newy ;
+end;
+
+procedure TSceneGame.FocusChanged(isfocus: Boolean);
+begin
+  if (isfocus) then begin
+    if Galop.Status=sfPaused then Galop.Play ;
+  end
+  else
+    Galop.Pause() ;
 end;
 
 function TSceneGame.FrameFunc(dt:Single; events:TUniList<TSfmlEventEx>):TSceneResult ;
@@ -362,6 +375,8 @@ begin
       if (event.event.EventType = sfEvtKeyPressed) then begin
         if (event.event.key.code = sfKeyEscape) then begin
           subscene:=TSubSceneMenuGame.Create(leveln) ;
+          Galop.Pause;
+          flag_entered_menu:=True ;
          Exit(TSceneResult.SetSubScene) ;
         end;
       end;
@@ -533,6 +548,13 @@ begin
       Exit(TSceneResult.SetSubScene) ;
     end;
   end ;
+
+  // Возобновление после паузы при входе в меню
+  if flag_entered_menu then begin
+    if Galop.Status=sfPaused then Galop.Play ;
+    flag_entered_menu:=False ;
+  end;
+
 end ;
 
 function TSceneGame.getPlayerSpeed(): Single;
