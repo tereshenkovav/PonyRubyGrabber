@@ -1,4 +1,4 @@
-SetCompressor LZMA
+SetCompressor Deflate
 SetCompressionLevel 9
 ZipFile PonyRubyGrabber-$LANGH$-%VERSION%-Win32.zip
 
